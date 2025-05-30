@@ -1,5 +1,5 @@
 // กำหนดชื่อแคชและเวอร์ชัน
-const CACHE_NAME = 'usd-stock-tracker-v1.0.6'; // อัปเดตเวอร์ชันเมื่อมีการเปลี่ยนแปลงไฟล์
+const CACHE_NAME = 'usd-stock-tracker-v2.0.0'; // อัปเดตเวอร์ชันเมื่อมีการเปลี่ยนแปลงไฟล์
 const urlsToCache = [
   '/', // หรือ '/index.html' หากไฟล์หลักของคุณชื่อ index.html
   '/Untitled-1.html', // ชื่อไฟล์ HTML หลักของคุณ
