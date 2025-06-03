@@ -2090,7 +2090,7 @@
         let currentStockHoldings = {}; // New global variable to store current stock holdings and average rates
         let stockSettings = { 
             targetCurrency: 'THB', 
-            stockTargetRates: {},
+            stockTargetPricesUSD: {}, // Changed from stockTargetRates
             stockTargetExchangeRates: {}
         };
         
@@ -2105,9 +2105,9 @@
         let stockHistorySearchInput;
         let stockSummaryDashboard;
         let stockSummaryStockDetails;
-        let stockStockTargetRatesContainer; // Declared here
+        let stockStockTargetRatesContainer;
         let stockAddStockTargetRateBtn;
-        let stockStockTargetExchangeRatesContainer; // Declared here
+        let stockStockTargetExchangeRatesContainer;
         let stockAddStockTargetUsdRateBtn;
         let stockTvSymbolInput;
         let stockTvLoadSymbolBtn;
@@ -2147,6 +2147,8 @@
         let stockSellModalTotalTHBReceivedInput;
         let stockSellModalPricePerShareInput;
         let stockSellModalSubmitBtn;
+
+        let stockUseAvgUsdRateBtn; // New element for "Use AvgRate USD Current" button
 
 
         // Color mapping for stock icons
@@ -2302,7 +2304,7 @@
                 sellPricePerShareTHB = totalTHBReceived / quantity;
             }
             stockSellCalculatedTotalTHBReceivedInput.value = totalTHBReceived.toFixed(2);
-            stockSellCalculatedSellPricePerShareInput.value = sellPricePerShareTHB.toFixed(2);
+            stockSellCalculatedPricePerShareInput.value = sellPricePerShareTHB.toFixed(2);
         }
 
         // This function is for the dedicated sell form on the record page (not the modal)
@@ -2642,13 +2644,24 @@
                 const response = await fetch(API_URL, { method: 'POST', body: formData });
                 const data = await response.json();
                 if (data.success && data.settings) {
-                    stockSettings.stockTargetRates = {}; stockSettings.stockTargetExchangeRates = {};
+                    stockSettings.stockTargetPricesUSD = {}; // Initialize the new object
+                    stockSettings.stockTargetExchangeRates = {};
                     for (const key in data.settings) {
-                        if (key.startsWith('TargetRate_')) stockSettings.stockTargetRates[key.replace('TargetRate_', '')] = parseFloat(data.settings[key]);
-                        else if (key.startsWith('ExchangeRate_')) stockSettings.stockTargetExchangeRates[key.replace('ExchangeRate_', '')] = parseFloat(data.settings[key]);
-                        else if (key === 'TargetCurrency') stockSettings.targetCurrency = data.settings[key];
+                        if (key.startsWith('TargetPriceUSD_')) { // New key for USD target price
+                            stockSettings.stockTargetPricesUSD[key.replace('TargetPriceUSD_', '')] = parseFloat(data.settings[key]);
+                        }
+                        else if (key.startsWith('TargetRate_')) { // Old key, for backward compatibility
+                            stockSettings.stockTargetPricesUSD[key.replace('TargetRate_', '')] = parseFloat(data.settings[key]);
+                        }
+                        else if (key.startsWith('ExchangeRate_')) {
+                            stockSettings.stockTargetExchangeRates[key.replace('ExchangeRate_', '')] = parseFloat(data.settings[key]);
+                        }
+                        else if (key === 'TargetCurrency') {
+                            stockSettings.targetCurrency = data.settings[key];
+                        }
                     }
                     stockRenderStockTargetRates(); stockRenderStockTargetExchangeRates();
+                    populateStockSettingsSymbolDropdowns(); // Populate dropdowns after settings are loaded
                 } else {
                     if (stockStockTargetRatesContainer) {
                         stockStockTargetRatesContainer.innerHTML = '<p class="text-sm text-gray-500">ยังไม่มีการตั้งค่า Rate เป้าหมาย</p>';
@@ -2656,6 +2669,7 @@
                     if (stockStockTargetExchangeRatesContainer) {
                         stockStockTargetExchangeRatesContainer.innerHTML = '<p class="text-sm text-gray-500">ยังไม่มีการตั้งค่า Rate แลกเปลี่ยนเป้าหมาย</p>';
                     }
+                    populateStockSettingsSymbolDropdowns(); // Populate dropdowns even if no settings
                 }
             } catch (error) {
                 console.error('Error fetching stock settings:', error);
@@ -2666,6 +2680,7 @@
                 if (stockStockTargetExchangeRatesContainer) {
                     stockStockTargetExchangeRatesContainer.innerHTML = '<p class="text-sm text-red-500">ไม่สามารถโหลดการตั้งค่าหุ้นได้</p>';
                 }
+                populateStockSettingsSymbolDropdowns(); // Attempt to populate dropdowns even on error
             }
         }
 
@@ -2707,17 +2722,17 @@
         function stockRenderStockTargetRates() {
             if (!stockStockTargetRatesContainer) return;
             stockStockTargetRatesContainer.innerHTML = '';
-            const targetRates = Object.keys(stockSettings.stockTargetRates).sort();
+            const targetRates = Object.keys(stockSettings.stockTargetPricesUSD).sort(); // Use stockTargetPricesUSD
             if (targetRates.length === 0) {
                 stockStockTargetRatesContainer.innerHTML = '<p class="text-sm text-slate-500">ยังไม่มีการตั้งค่า Rate เป้าหมาย</p>'; return;
             }
             targetRates.forEach(symbol => {
-                const rate = stockSettings.stockTargetRates[symbol];
+                const rate = stockSettings.stockTargetPricesUSD[symbol]; // Use stockTargetPricesUSD
                 const div = document.createElement('div');
                 div.className = 'flex justify-between items-center p-2 bg-slate-50 rounded-md border border-slate-200';
                 div.innerHTML = `
                     <span class="font-medium text-slate-700">${symbol}:</span>
-                    <span class="text-slate-600">${parseFloat(rate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${stockSettings.targetCurrency}</span>
+                    <span class="text-slate-600">${parseFloat(rate).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} USD</span>
                     <button onclick="stockRemoveStockTargetRate('${symbol}')" class="text-red-500 hover:text-red-700 text-sm font-medium">ลบ</button>
                 `; // onclick calls global function
                 stockStockTargetRatesContainer.appendChild(div);
@@ -2726,9 +2741,9 @@
         // Make stockRemoveStockTargetRate globally accessible
         window.stockRemoveStockTargetRate = (symbol) => {
             showCustomModal('ยืนยันการลบ', `คุณแน่ใจหรือไม่ว่าต้องการลบ Rate เป้าหมายสำหรับ ${symbol}?`, async () => {
-                const success = await stockUpdateSettingInSheet(`TargetRate_${symbol}`, ''); 
+                const success = await stockUpdateSettingInSheet(`TargetPriceUSD_${symbol}`, ''); // Use TargetPriceUSD_
                 if (success) {
-                    delete stockSettings.stockTargetRates[symbol]; 
+                    delete stockSettings.stockTargetPricesUSD[symbol]; // Use stockTargetPricesUSD
                     stockRenderStockTargetRates(); stockFetchAndRenderSummary();
                 }
             });
@@ -2736,20 +2751,20 @@
 
 
         async function stockHandleAddStockTargetRate() {
-            const symbolInput = document.getElementById('stockNewTargetStockSymbol');
+            const symbolSelect = document.getElementById('stockNewTargetStockSymbol'); // Changed to select
             const rateInput = document.getElementById('stockNewTargetStockRate');
-            if (!symbolInput || !rateInput) return;
-            const symbol = symbolInput.value.toUpperCase().trim();
+            if (!symbolSelect || !rateInput) return;
+            const symbol = symbolSelect.value.toUpperCase().trim(); // Get value from select
             const rate = parseFloat(rateInput.value);
             if (symbol && !isNaN(rate) && rate > 0) {
-                const success = await stockUpdateSettingInSheet(`TargetRate_${symbol}`, rate);
+                const success = await stockUpdateSettingInSheet(`TargetPriceUSD_${symbol}`, rate); // Use TargetPriceUSD_
                 if (success) {
-                    stockSettings.stockTargetRates[symbol] = rate; 
+                    stockSettings.stockTargetPricesUSD[symbol] = rate; // Use stockTargetPricesUSD
                     stockRenderStockTargetRates(); stockFetchAndRenderSummary();
-                    symbolInput.value = ''; rateInput.value = '';
+                    symbolSelect.value = ''; rateInput.value = '';
                 }
             } else {
-                showNotification(errorNotification, 'กรุณากรอกชื่อหุ้นและ Rate เป้าหมายให้ถูกต้อง');
+                showNotification(errorNotification, 'กรุณาเลือกหุ้นและ Rate เป้าหมายให้ถูกต้อง');
             }
         }
 
@@ -2784,20 +2799,20 @@
         }
 
         async function stockHandleAddStockTargetUsdRate() {
-            const symbolInput = document.getElementById('stockNewTargetStockSymbolUsd');
+            const symbolSelect = document.getElementById('stockNewTargetStockSymbolUsd'); // Changed to select
             const rateInput = document.getElementById('stockNewTargetUsdRate');
-            if (!symbolInput || !rateInput) return;
-            const symbol = symbolInput.value.toUpperCase().trim();
+            if (!symbolSelect || !rateInput) return;
+            const symbol = symbolSelect.value.toUpperCase().trim(); // Get value from select
             const rate = parseFloat(rateInput.value);
             if (symbol && !isNaN(rate) && rate > 0) {
                 const success = await stockUpdateSettingInSheet(`ExchangeRate_${symbol}`, rate);
                 if (success) {
                     stockSettings.stockTargetExchangeRates[symbol] = rate; 
                     stockRenderStockTargetExchangeRates(); stockFetchAndRenderSummary();
-                    symbolInput.value = ''; rateInput.value = '';
+                    symbolSelect.value = ''; rateInput.value = '';
                 }
             } else {
-                showNotification(errorNotification, 'กรุณากรอกชื่อหุ้นและ Rate แลกเปลี่ยนเป้าหมายให้ถูกต้อง');
+                showNotification(errorNotification, 'กรุณาเลือกหุ้นและ Rate แลกเปลี่ยนเป้าหมายให้ถูกต้อง');
             }
         }
 
@@ -2819,18 +2834,29 @@
 
                 calculateCurrentHoldings(); // NEW: Calculate holdings after fetching transactions
                 populateStockSellSymbolDropdown(); // NEW: Populate dropdown after holdings are calculated
+                populateStockSettingsSymbolDropdowns(); // NEW: Populate settings dropdowns
 
                 const stockSettingsFormData = new FormData(); stockSettingsFormData.append('action', 'getStockSettings'); stockSettingsFormData.append('sheetId', window.userSheetId);
                 const stockSettingsResponse = await fetch(API_URL, { method: 'POST', body: stockSettingsFormData });
                 const stockSettingsData = await stockSettingsResponse.json();
                 if (stockSettingsData.success && stockSettingsData.settings) {
-                    stockSettings.stockTargetRates = {}; stockSettings.stockTargetExchangeRates = {};
+                    stockSettings.stockTargetPricesUSD = {}; // Initialize the new object
+                    stockSettings.stockTargetExchangeRates = {};
                     for (const key in stockSettingsData.settings) {
-                        if (key.startsWith('TargetRate_')) stockSettings.stockTargetRates[key.replace('TargetRate_', '')] = parseFloat(stockSettingsData.settings[key]);
-                        else if (key.startsWith('ExchangeRate_')) stockSettings.stockTargetExchangeRates[key.replace('ExchangeRate_', '')] = parseFloat(stockSettingsData.settings[key]);
-                        else if (key === 'TargetCurrency') stockSettings.targetCurrency = stockSettingsData.settings[key]; 
+                        if (key.startsWith('TargetPriceUSD_')) { // New key for USD target price
+                            stockSettings.stockTargetPricesUSD[key.replace('TargetPriceUSD_', '')] = parseFloat(stockSettingsData.settings[key]);
+                        }
+                        else if (key.startsWith('TargetRate_')) { // Old key, for backward compatibility
+                            stockSettings.stockTargetPricesUSD[key.replace('TargetRate_', '')] = parseFloat(data.settings[key]);
+                        }
+                        else if (key.startsWith('ExchangeRate_')) {
+                            stockSettings.stockTargetExchangeRates[key.replace('ExchangeRate_', '')] = parseFloat(stockSettingsData.settings[key]);
+                        }
+                        else if (key === 'TargetCurrency') {
+                            stockSettings.targetCurrency = stockSettingsData.settings[key]; 
+                        }
                     }
-                } else { stockSettings.stockTargetRates = {}; stockSettings.stockTargetExchangeRates = {}; }
+                } else { stockSettings.stockTargetPricesUSD = {}; stockSettings.stockTargetExchangeRates = {}; }
                 stockRenderSummaryContent();
             } catch (error) {
                 console.error('Error fetching stock data for summary:', error);
@@ -2862,7 +2888,7 @@
                 } else if (type === 'Sell') {
                     if (stocksData[stockSymbol]) {
                         const originalShares = stocksData[stockSymbol].totalShares;
-                        const originalTHBSpent = stocksData[symbol].totalTHBSpent;
+                        const originalTHBSpent = stocksData[stockSymbol].totalTHBSpent;
                         if (originalShares > 0) { // Avoid division by zero if selling stock not previously bought (or data inconsistency)
                              const avgCostOfSoldShares = originalTHBSpent / originalShares;
                              stocksData[stockSymbol].totalTHBSpent -= (avgCostOfSoldShares * quantity);
@@ -2884,8 +2910,13 @@
                 const data = stocksData[stockSymbol];
                 const averageCostPerShare = data.totalShares > 0 ? data.totalTHBSpent / data.totalShares : 0;
                 const actualAverageUsdRateAtPurchase = data.totalShares > 0 && data.usdRateTxCount > 0 ? data.totalUsdRateWeighted / data.usdRateTxCount : 0; // Corrected this line, should be totalUsdRateWeighted / totalShares if weighted by shares
-                const targetRate = stockSettings.stockTargetRates[stockSymbol] || 0;
-                const targetUsdExchangeRate = stockSettings.stockTargetExchangeRates[stockSymbol] || 0;
+                
+                const targetPriceUSD = stockSettings.stockTargetPricesUSD[stockSymbol] || 0; // Get USD target price
+                // Determine the effective exchange rate for calculation and display
+                const effectiveExchangeRate = stockSettings.stockTargetExchangeRates[stockSymbol] || (summaryData ? summaryData.currentRate : 0) || (summaryData ? summaryData.avgRate : 0);
+
+                const targetRateTHB = targetPriceUSD * effectiveExchangeRate; // Convert target USD price to THB for display
+
                 const iconColor = stockGetStockIconColor(stockSymbol);
                 let displayValue = data.totalTHBSpent >= 1000000 ? (data.totalTHBSpent / 1000000).toFixed(1) + 'M' : (data.totalTHBSpent >= 1000 ? (data.totalTHBSpent / 1000).toFixed(0) + 'K' : data.totalTHBSpent.toFixed(0));
                 const stockItemContainer = document.createElement('div'); stockItemContainer.className = 'stock-list-item-container mb-3';
@@ -2897,15 +2928,16 @@
                         <p class="text-sm text-gray-500">จำนวนหุ้น: ${data.totalShares.toLocaleString(undefined, {minimumFractionDigits: 7, maximumFractionDigits: 7})}</p>
                         <p class="text-sm text-gray-500">ต้นทุนเฉลี่ย (THB/หุ้น): ${averageCostPerShare.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}</p>
                         ${actualAverageUsdRateAtPurchase > 0 ? `<p class="text-sm text-gray-500">Rate แลกเปลี่ยนเฉลี่ย (THB/USD): ${actualAverageUsdRateAtPurchase.toFixed(2)}</p>` : ''}
-                        ${targetRate > 0 ? `<p class="text-sm text-blue-600 font-medium">เป้าหมายราคา (THB/หุ้น): ${targetRate.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}</p>` : ''}
-                        ${targetUsdExchangeRate > 0 ? `<p class="text-sm text-blue-600 font-medium">เป้าหมาย Rate แลกเปลี่ยน (THB/USD): ${targetUsdExchangeRate.toFixed(2)}</p>` : ''}
+                        ${targetPriceUSD > 0 ? `<p class="text-sm text-blue-600 font-medium">เป้าหมายราคา (USD/หุ้น): ${targetPriceUSD.toLocaleString(undefined, {minimumFractionDigits: 2})} USD</p>` : ''}
+                        ${targetRateTHB > 0 && targetPriceUSD > 0 ? `<p class="text-xs text-gray-500">(ประมาณ ${targetRateTHB.toLocaleString(undefined, {minimumFractionDigits: 2})} THB/หุ้น)</p>` : ''}
+                        ${stockSettings.stockTargetExchangeRates[stockSymbol] > 0 ? `<p class="text-sm text-blue-600 font-medium">เป้าหมาย Rate แลกเปลี่ยน (THB/USD): ${stockSettings.stockTargetExchangeRates[stockSymbol].toFixed(2)}</p>` : ''}
                     </div>
                     <div class="stock-value-tag"><span class="value-amount">${displayValue}</span><span class="value-label">${stockSettings.targetCurrency}</span></div>`;
                 const actionsDiv = document.createElement('div'); actionsDiv.className = 'stock-actions hidden';
                 actionsDiv.innerHTML = `
                     <div class="grid grid-cols-1 gap-2">
                          <div><label for="currentMarketPrice_${stockSymbol}" class="block text-xs font-medium text-gray-700 mb-1">Rate ปัจจุบัน (ราคาตลาด/หุ้น):</label><input type="number" id="currentMarketPrice_${stockSymbol}" step="any" placeholder="กรอกราคาตลาด" class="w-full p-2 border border-gray-300 rounded-md shadow-sm text-sm focus:ring-blue-500 focus:border-blue-500"></div>
-                        <button onclick="stockCalculateAdditionalPurchase('${stockSymbol}', ${data.totalShares}, ${data.totalTHBSpent}, ${targetRate})" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-3 rounded-md shadow-sm text-xs">คำนวณซื้อเพิ่ม</button>
+                        <button onclick="stockCalculateAdditionalPurchase('${stockSymbol}', ${data.totalShares}, ${data.totalTHBSpent}, ${targetPriceUSD}, ${effectiveExchangeRate})" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-3 rounded-md shadow-sm text-xs">คำนวณซื้อเพิ่ม</button>
                     </div>
                     <div id="additionalPurchaseResult_${stockSymbol}" class="mt-2 text-xs text-gray-600"></div>`;
                 stockItemContainer.appendChild(stockDiv); stockItemContainer.appendChild(actionsDiv); stockSummaryStockDetails.appendChild(stockItemContainer);
@@ -2914,32 +2946,36 @@
         }
 
         // Make stockCalculateAdditionalPurchase globally accessible
-        window.stockCalculateAdditionalPurchase = (symbol, currentShares, currentTotalCost, targetAvgPrice) => {
+        window.stockCalculateAdditionalPurchase = (symbol, currentShares, currentTotalCost, targetPriceUSD, effectiveExchangeRate) => {
             const marketPriceInput = document.getElementById(`currentMarketPrice_${symbol}`);
             const resultDiv = document.getElementById(`additionalPurchaseResult_${symbol}`);
             if(!marketPriceInput || !resultDiv) return;
             const marketPrice = parseFloat(marketPriceInput.value);
             resultDiv.innerHTML = '';
             if (isNaN(marketPrice) || marketPrice <= 0) { resultDiv.innerHTML = '<p class="text-red-600">กรุณากรอกราคาตลาดปัจจุบันให้ถูกต้อง</p>'; return; }
-            if (targetAvgPrice <= 0) { resultDiv.innerHTML = '<p class="text-orange-600">กรุณาตั้ง Rate เป้าหมายสำหรับหุ้นนี้ในหน้า "ตั้งค่า" ก่อน</p>'; return; }
-            if (Math.abs(marketPrice - targetAvgPrice) < 0.001) {
+            if (targetPriceUSD <= 0) { resultDiv.innerHTML = '<p class="text-orange-600">กรุณาตั้งราคาเป้าหมาย (USD/หุ้น) สำหรับหุ้นนี้ในหน้า "ตั้งค่า" ก่อน</p>'; return; }
+            if (effectiveExchangeRate <= 0) { resultDiv.innerHTML = '<p class="text-orange-600">ไม่พบอัตราแลกเปลี่ยนที่ใช้ในการคำนวณ โปรดตรวจสอบ Rate ปัจจุบัน หรือตั้งค่า Rate แลกเปลี่ยนเป้าหมายสำหรับหุ้นนี้</p>'; return; }
+
+            const targetAvgPriceTHB = targetPriceUSD * effectiveExchangeRate; // Convert target USD price to THB
+            
+            if (Math.abs(marketPrice - targetAvgPriceTHB) < 0.001) {
                 const currentAvgCost = currentShares > 0 ? currentTotalCost / currentShares : 0;
-                if (Math.abs(currentAvgCost - targetAvgPrice) < 0.001) resultDiv.innerHTML = `<p class="text-green-600">ต้นทุนเฉลี่ยและราคาตลาดปัจจุบันเท่ากับ Rate เป้าหมายแล้ว ไม่จำเป็นต้องซื้อเพิ่ม</p>`;
+                if (Math.abs(currentAvgCost - targetAvgPriceTHB) < 0.001) resultDiv.innerHTML = `<p class="text-green-600">ต้นทุนเฉลี่ยและราคาตลาดปัจจุบันเท่ากับ Rate เป้าหมายแล้ว ไม่จำเป็นต้องซื้อเพิ่ม</p>`;
                 else resultDiv.innerHTML = `<p class="text-orange-600">ราคาตลาดปัจจุบันเท่ากับ Rate เป้าหมาย ไม่สามารถใช้สูตรนี้เพื่อปรับ Rate เฉลี่ยได้โดยตรง</p>`;
                 return;
             }
-            const amountTHBtoBuy = (targetAvgPrice * currentShares - currentTotalCost) * marketPrice / (marketPrice - targetAvgPrice);
+            const amountTHBtoBuy = (targetAvgPriceTHB * currentShares - currentTotalCost) * marketPrice / (marketPrice - targetAvgPriceTHB);
             let message = '';
             if (amountTHBtoBuy > 0) {
                 const newShares = amountTHBtoBuy / marketPrice; const newTotalShares = currentShares + newShares;
                 const newTotalCost = currentTotalCost + amountTHBtoBuy; const newAvgCost = newTotalCost / newTotalShares;
-                message = `<p class="text-green-700 font-semibold">หากต้องการ Rate เฉลี่ยที่ ${targetAvgPrice.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}:</p><ul class="list-disc list-inside ml-2 mt-1"><li>ซื้อเพิ่ม: <strong class="font-medium">${amountTHBtoBuy.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}</strong></li><li>(ที่ราคา ${marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}/หุ้น)</li><li>ได้หุ้นเพิ่ม: ${newShares.toLocaleString(undefined, {minimumFractionDigits: 7})} หุ้น</li><li>Rate เฉลี่ยใหม่: ${newAvgCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${stockSettings.targetCurrency}</li></ul>`;
+                message = `<p class="text-green-700 font-semibold">หากต้องการ Rate เฉลี่ยที่ ${targetPriceUSD.toLocaleString(undefined, {minimumFractionDigits: 2})} USD/หุ้น (ประมาณ ${targetAvgPriceTHB.toLocaleString(undefined, {minimumFractionDigits: 2})} THB/หุ้น):</p><ul class="list-disc list-inside ml-2 mt-1"><li>ซื้อเพิ่ม: <strong class="font-medium">${amountTHBtoBuy.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}</strong></li><li>(ที่ราคา ${marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}/หุ้น)</li><li>ได้หุ้นเพิ่ม: ${newShares.toLocaleString(undefined, {minimumFractionDigits: 7})} หุ้น</li><li>Rate เฉลี่ยใหม่: ${newAvgCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${stockSettings.targetCurrency}</li></ul>`;
             } else {
                  const currentAvgCost = currentShares > 0 ? currentTotalCost / currentShares : 0;
-                 if (Math.abs(currentAvgCost - targetAvgPrice) < 0.001) message = `<p class="text-green-600">ต้นทุนเฉลี่ยปัจจุบันของคุณอยู่ที่ประมาณ Rate เป้าหมายแล้ว (${currentAvgCost.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}).</p>`;
-                 else if (targetAvgPrice > currentAvgCost && marketPrice < targetAvgPrice) message = `<p class="text-orange-500">Rate เป้าหมาย (${targetAvgPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) สูงกว่าต้นทุนเฉลี่ยปัจจุบัน แต่ราคาตลาด (${marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) ต่ำกว่า Rate เป้าหมาย การซื้อที่ราคานี้จะทำให้ต้นทุนเฉลี่ยต่ำลง/เข้าใกล้ราคาตลาด</p`;
-                 else if (targetAvgPrice < currentAvgCost && marketPrice > targetAvgPrice) message = `<p class="text-orange-500">Rate เป้าหมาย (${targetAvgPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) ต่ำกว่าต้นทุนเฉลี่ยปัจจุบัน แต่ราคาตลาด (${marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) สูงกว่า Rate เป้าหมาย การซื้อที่ราคานี้จะทำให้ต้นทุนเฉลี่ยสูงขึ้น/เข้าใกล้ราคาตลาด</p>`;
-                 else message = `<p class="text-orange-500">การซื้อหุ้นที่ราคาตลาดปัจจุบัน (${marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) อาจไม่ช่วยให้ไปถึง Rate เป้าหมาย (${targetAvgPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) ตามที่ต้องการ หรือเงื่อนไขไม่เหมาะสม</p>`;
+                 if (Math.abs(currentAvgCost - targetAvgPriceTHB) < 0.001) message = `<p class="text-green-600">ต้นทุนเฉลี่ยปัจจุบันของคุณอยู่ที่ประมาณ Rate เป้าหมายแล้ว (${currentAvgCost.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}).</p>`;
+                 else if (targetAvgPriceTHB > currentAvgCost && marketPrice < targetAvgPriceTHB) message = `<p class="text-orange-500">Rate เป้าหมาย (${targetAvgPriceTHB.toLocaleString(undefined, {minimumFractionDigits: 2})}) สูงกว่าต้นทุนเฉลี่ยปัจจุบัน แต่ราคาตลาด (${marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) ต่ำกว่า Rate เป้าหมาย การซื้อที่ราคานี้จะทำให้ต้นทุนเฉลี่ยต่ำลง/เข้าใกล้ราคาตลาด</p`;
+                 else if (targetAvgPriceTHB < currentAvgCost && marketPrice > targetAvgPriceTHB) message = `<p class="text-orange-500">Rate เป้าหมาย (${targetAvgPriceTHB.toLocaleString(undefined, {minimumFractionDigits: 2})}) ต่ำกว่าต้นทุนเฉลี่ยปัจจุบัน แต่ราคาตลาด (${marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) สูงกว่า Rate เป้าหมาย การซื้อที่ราคานี้จะทำให้ต้นทุนเฉลี่ยสูงขึ้น/เข้าใกล้ราคาตลาด</p>`;
+                 else message = `<p class="text-orange-500">การซื้อหุ้นที่ราคาตลาดปัจจุบัน (${marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) อาจไม่ช่วยให้ไปถึง Rate เป้าหมาย (${targetAvgPriceTHB.toLocaleString(undefined, {minimumFractionDigits: 2})}) ตามที่ต้องการ หรือเงื่อนไขไม่เหมาะสม</p>`;
             }
             resultDiv.innerHTML = message;
         }
@@ -3126,6 +3162,34 @@
                 stockSellQuantityInput.value = '';
                 stockCalculateSellAmounts(); // Clear amounts
             }
+        }
+
+        // NEW: Function to populate the stock settings symbol dropdowns
+        function populateStockSettingsSymbolDropdowns() {
+            const stockNewTargetStockSymbolSelect = document.getElementById('stockNewTargetStockSymbol');
+            const stockNewTargetStockSymbolUsdSelect = document.getElementById('stockNewTargetStockSymbolUsd');
+
+            if (!stockNewTargetStockSymbolSelect || !stockNewTargetStockSymbolUsdSelect) return;
+
+            // Clear existing options
+            stockNewTargetStockSymbolSelect.innerHTML = '<option value="">เลือกหุ้น</option>';
+            stockNewTargetStockSymbolUsdSelect.innerHTML = '<option value="">เลือกหุ้น</option>';
+
+            const sortedSymbols = Object.keys(currentStockHoldings).sort();
+
+            sortedSymbols.forEach(symbol => {
+                if (currentStockHoldings[symbol].quantity > 0) {
+                    const option1 = document.createElement('option');
+                    option1.value = symbol;
+                    option1.textContent = symbol;
+                    stockNewTargetStockSymbolSelect.appendChild(option1);
+
+                    const option2 = document.createElement('option');
+                    option2.value = symbol;
+                    option2.textContent = symbol;
+                    stockNewTargetStockSymbolUsdSelect.appendChild(option2);
+                }
+            });
         }
 
 
@@ -3417,6 +3481,8 @@
             stockSellModalPricePerShareInput = document.getElementById('stockSellModalPricePerShare');
             stockSellModalSubmitBtn = document.getElementById('stockSellModalSubmitBtn');
 
+            stockUseAvgUsdRateBtn = document.getElementById('stockUseAvgUsdRateBtn'); // Get the new button element
+
             const stockBuyFormToggleBtn = document.getElementById('stockBuyFormToggleBtn');
             const stockSellFormToggleBtn = document.getElementById('stockSellFormToggleBtn');
             const stockBuyFormContainer = document.getElementById('stockBuyFormContainer');
@@ -3430,6 +3496,17 @@
             if (stockSettingsForm) stockSettingsForm.addEventListener('submit', stockHandleSettingsSubmit); 
             if (stockAddStockTargetRateBtn) stockAddStockTargetRateBtn.addEventListener('click', stockHandleAddStockTargetRate);
             if (stockAddStockTargetUsdRateBtn) stockAddStockTargetUsdRateBtn.addEventListener('click', stockHandleAddStockTargetUsdRate);
+            if (stockUseAvgUsdRateBtn) { // Add listener for the new button
+                stockUseAvgUsdRateBtn.addEventListener('click', () => {
+                    if (summaryData && summaryData.avgRate) {
+                        if (document.getElementById('stockNewTargetUsdRate')) {
+                            document.getElementById('stockNewTargetUsdRate').value = parseFloat(summaryData.avgRate).toFixed(2);
+                        }
+                    } else {
+                        showNotification(errorNotification, 'ไม่พบข้อมูล AvgRate USD ปัจจุบัน');
+                    }
+                });
+            }
             if (stockHistorySearchInput) stockHistorySearchInput.addEventListener('input', () => stockFetchAndRenderHistory(stockHistorySearchInput.value.trim())); 
             if (stockTvLoadSymbolBtn) stockTvLoadSymbolBtn.addEventListener('click', stockLoadTradingViewWidget); // Added listener for load button
             if (stockTvFullscreenBtn) stockTvFullscreenBtn.addEventListener('click', stockOpenTradingViewFullscreen);
@@ -3751,14 +3828,27 @@
                                 <div><label for="stockSettingsSheetId" class="block text-sm font-medium text-gray-300 mb-1">Google Sheet ID:</label><input type="text" id="stockSettingsSheetId" placeholder="Sheet ID" class="stock-form-input w-full p-3" readonly><p class="text-xs text-gray-400 mt-1">สามารถตั้งค่า Sheet ID ได้ที่หน้า "ตั้งค่า" ของ USD</p></div>
                             </div>
                             <div class="stock-settings-card bg-[#2C2C2E] p-6 rounded-xl shadow-lg space-y-4 border border-gray-700 mt-6">
-                                <h3 class="text-lg font-semibold text-gray-100 mb-4">ตั้งค่า Rate เป้าหมาย (THB/หุ้น)</h3>
+                                <h3 class="text-lg font-semibold text-gray-100 mb-4">ตั้งค่าราคาเป้าหมาย (USD/หุ้น)</h3>
                                 <div class="space-y-2" id="stockTargetRatesContainer"></div>
-                                <div class="flex space-x-2 mt-4"><input type="text" id="stockNewTargetStockSymbol" placeholder="Symbol หุ้น (เช่น AAPL)" class="stock-form-input flex-1 p-2"><input type="number" id="stockNewTargetStockRate" step="0.01" min="0" placeholder="Rate เป้าหมาย (THB)" class="stock-form-input w-24 p-2"><button id="stockAddStockTargetRateBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm">เพิ่ม</button></div>
+                                <div class="flex space-x-2 mt-4">
+                                    <select id="stockNewTargetStockSymbol" class="stock-form-input flex-1 p-2">
+                                        <option value="">เลือกหุ้น</option>
+                                    </select>
+                                    <input type="number" id="stockNewTargetStockRate" step="0.01" min="0" placeholder="ราคาเป้าหมาย (USD)" class="stock-form-input w-24 p-2">
+                                    <button id="stockAddStockTargetRateBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm">เพิ่ม</button>
+                                </div>
                             </div>
                             <div class="stock-settings-card bg-[#2C2C2E] p-6 rounded-xl shadow-lg space-y-4 border border-gray-700 mt-6">
                                 <h3 class="text-lg font-semibold text-gray-100 mb-4">ตั้งค่า Rate แลกเปลี่ยนเป้าหมาย (THB/USD)</h3>
                                 <div class="space-y-2" id="stockTargetExchangeRatesContainer"></div>
-                                <div class="flex space-x-2 mt-4"><input type="text" id="stockNewTargetStockSymbolUsd" placeholder="Symbol หุ้น (เช่น AAPL)" class="stock-form-input flex-1 p-2"><input type="number" id="stockNewTargetUsdRate" step="0.01" min="0" placeholder="Rate เป้าหมาย (THB/USD)" class="stock-form-input w-24 p-2"><button id="stockAddStockTargetUsdRateBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm">เพิ่ม</button></div>
+                                <div class="flex space-x-2 mt-4">
+                                    <select id="stockNewTargetStockSymbolUsd" class="stock-form-input flex-1 p-2">
+                                        <option value="">เลือกหุ้น</option>
+                                    </select>
+                                    <input type="number" id="stockNewTargetUsdRate" step="0.01" min="0" placeholder="Rate เป้าหมาย (THB/USD)" class="stock-form-input w-24 p-2">
+                                    <button id="stockAddStockTargetUsdRateBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm">เพิ่ม</button>
+                                </div>
+                                <button id="stockUseAvgUsdRateBtn" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm mt-2">ใช้ AvgRate USD ปัจจุบัน</button>
                             </div>
                         </section>
                     </div>
