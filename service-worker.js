@@ -1,6 +1,6 @@
 // service-worker.js
 
-const CACHE_NAME = 'usd-stock-tracker-v1';
+const CACHE_NAME = 'usd-stock-tracker-v1.1';
 const urlsToCache = [
     '/',
     '/index.html', // Assuming app0.html is served as index.html
