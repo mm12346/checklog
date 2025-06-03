@@ -672,6 +672,7 @@
             text-align: center;
             width: 90%;
             max-width: 400px;
+            position: relative; /* Ensure this is relative for absolute positioning of close button */
         }
         .custom-modal-content h3 {
             font-size: 1.25rem;
@@ -1429,7 +1430,7 @@
 
         // Function to display summary data
         function displaySummary(summary) {
-            // avgRate is now avgRate_overall_currency_buy from getSummary
+            // avgRate is now avgRate_overall_currency_buy
             // totalTHB is current_totalTHB_for_currency_summary
             // totalUSD is current_totalUSD_available_for_exchange
 
@@ -2104,13 +2105,14 @@
         let stockHistorySearchInput;
         let stockSummaryDashboard;
         let stockSummaryStockDetails;
-        let stockStockTargetRatesContainer;
+        let stockStockTargetRatesContainer; // Declared here
         let stockAddStockTargetRateBtn;
-        let stockStockTargetExchangeRatesContainer;
+        let stockStockTargetExchangeRatesContainer; // Declared here
         let stockAddStockTargetUsdRateBtn;
         let stockTvSymbolInput;
         let stockTvLoadSymbolBtn;
         let stockTvFullscreenBtn;
+        let stockTvFullscreenModal; 
         let stockTradingViewWidgetContainer;
         let stockTradingViewFullscreenModal; 
         let stockTradingViewFullscreenContent; 
@@ -2136,7 +2138,7 @@
         let stockSellModalOverlay;
         let stockSellModalTitle;
         let stockSellModalSymbolDisplay;
-        let closeStockSellModalBtn;
+        let closeStockSellModalBtn; // This is the close button for the sell stock modal
         let stockSellModalForm;
         let stockSellModalDate;
         let stockSellModalUsdPricePerShareInput;
@@ -2439,7 +2441,7 @@
                 // Determine display values based on type
                 let primaryAmountDisplay = `${usdAmountPerShare.toFixed(2)} USD`;
                 let secondaryDetails = `
-                    <span>จำนวน: ${quantity.toLocaleString()} หุ้น</span>
+                    <span>จำนวน: ${quantity.toLocaleString(undefined, {minimumFractionDigits: 7, maximumFractionDigits: 7})} หุ้น</span>
                     <span>Rate: ${exchangeRate.toFixed(2)} THB/USD</span>
                 `;
                 let totalAmountDisplay = `รวมเงิน: ${totalAmountTHB.toLocaleString(undefined, {minimumFractionDigits: 2})} ฿`;
@@ -2570,6 +2572,10 @@
                 swipeContent.addEventListener('mouseup', handleEnd);
                 swipeContent.addEventListener('mouseleave', () => { if (isSwiping) handleEnd(); });
             });
+
+            if (stockHistoryList.children.length === 0) {
+                stockHistoryList.innerHTML = '<p class="text-gray-500 text-center py-4">ไม่พบข้อมูล</p>';
+            }
         }
 
 
@@ -2608,12 +2614,26 @@
         
         // --- Stock Settings Form Handling ---
         async function stockFetchAndRenderSettingsForm() {
-            if (!stockStockTargetRatesContainer || !stockStockTargetExchangeRatesContainer) return;
+            // Explicitly check if elements are available before using them
+            if (!stockStockTargetRatesContainer) {
+                console.error("stockStockTargetRatesContainer is null. Cannot render settings form.");
+                return;
+            }
+            if (!stockStockTargetExchangeRatesContainer) {
+                console.error("stockStockTargetExchangeRatesContainer is null. Cannot render settings form.");
+                return;
+            }
+
             const stockSettingsSheetIdEl = document.getElementById('stockSettingsSheetId');
             if(stockSettingsSheetIdEl) stockSettingsSheetIdEl.value = window.userSheetId || ''; 
             if (!window.userSheetId) {
-                stockStockTargetRatesContainer.innerHTML = '<p class="text-sm text-red-500">กรุณาตั้งค่า Google Sheet ID ในหน้าตั้งค่าหลักก่อน</p>';
-                stockStockTargetExchangeRatesContainer.innerHTML = '<p class="text-sm text-red-500">กรุณาตั้งค่า Google Sheet ID ในหน้าตั้งค่าหลักก่อน</p>';
+                // Add explicit null checks here before setting innerHTML
+                if (stockStockTargetRatesContainer) {
+                    stockStockTargetRatesContainer.innerHTML = '<p class="text-sm text-red-500">กรุณาตั้งค่า Google Sheet ID ในหน้าตั้งค่าหลักก่อน</p>';
+                }
+                if (stockStockTargetExchangeRatesContainer) {
+                    stockStockTargetExchangeRatesContainer.innerHTML = '<p class="text-sm text-red-500">กรุณาตั้งค่า Google Sheet ID ในหน้าตั้งค่าหลักก่อน</p>';
+                }
                 return;
             }
             const formData = new FormData();
@@ -2630,14 +2650,22 @@
                     }
                     stockRenderStockTargetRates(); stockRenderStockTargetExchangeRates();
                 } else {
-                    stockStockTargetRatesContainer.innerHTML = '<p class="text-sm text-gray-500">ยังไม่มีการตั้งค่า Rate เป้าหมาย</p>';
-                    stockStockTargetExchangeRatesContainer.innerHTML = '<p class="text-sm text-gray-500">ยังไม่มีการตั้งค่า Rate แลกเปลี่ยนเป้าหมาย</p>';
+                    if (stockStockTargetRatesContainer) {
+                        stockStockTargetRatesContainer.innerHTML = '<p class="text-sm text-gray-500">ยังไม่มีการตั้งค่า Rate เป้าหมาย</p>';
+                    }
+                    if (stockStockTargetExchangeRatesContainer) {
+                        stockStockTargetExchangeRatesContainer.innerHTML = '<p class="text-sm text-gray-500">ยังไม่มีการตั้งค่า Rate แลกเปลี่ยนเป้าหมาย</p>';
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching stock settings:', error);
                 showNotification(errorNotification, 'ไม่สามารถโหลดการตั้งค่าหุ้นได้: ' + error.message);
-                stockStockTargetRatesContainer.innerHTML = '<p class="text-sm text-red-500">ไม่สามารถโหลดการตั้งค่าหุ้นได้</p>';
-                stockStockTargetExchangeRatesContainer.innerHTML = '<p class="text-sm text-red-500">ไม่สามารถโหลดการตั้งค่าหุ้นได้</p>';
+                if (stockStockTargetRatesContainer) {
+                    stockStockTargetRatesContainer.innerHTML = '<p class="text-sm text-red-500">ไม่สามารถโหลดการตั้งค่าหุ้นได้</p>';
+                }
+                if (stockStockTargetExchangeRatesContainer) {
+                    stockStockTargetExchangeRatesContainer.innerHTML = '<p class="text-sm text-red-500">ไม่สามารถโหลดการตั้งค่าหุ้นได้</p>';
+                }
             }
         }
 
@@ -2834,7 +2862,7 @@
                 } else if (type === 'Sell') {
                     if (stocksData[stockSymbol]) {
                         const originalShares = stocksData[stockSymbol].totalShares;
-                        const originalTHBSpent = stocksData[stockSymbol].totalTHBSpent;
+                        const originalTHBSpent = stocksData[symbol].totalTHBSpent;
                         if (originalShares > 0) { // Avoid division by zero if selling stock not previously bought (or data inconsistency)
                              const avgCostOfSoldShares = originalTHBSpent / originalShares;
                              stocksData[stockSymbol].totalTHBSpent -= (avgCostOfSoldShares * quantity);
@@ -2852,21 +2880,21 @@
             uniqueStocksCard.innerHTML = `<p class="summary-card-title">จำนวนหุ้นที่ถือครอง</p><p class="summary-card-value">${uniqueStockSymbols.size}<span class="summary-card-currency">ตัว</span></p><p class="text-xs text-gray-400 mt-1">หุ้นที่ไม่ซ้ำกัน</p>`;
             stockSummaryDashboard.appendChild(uniqueStocksCard);
             if (Object.keys(stocksData).length === 0) stockSummaryStockDetails.innerHTML = `<p class="text-gray-400 p-4 text-center">ยังไม่มีข้อมูลหุ้นรายตัว</p>`;
-            Object.keys(stocksData).sort().forEach(symbol => {
-                const data = stocksData[symbol];
+            Object.keys(stocksData).sort().forEach(stockSymbol => { // Changed 'symbol' to 'stockSymbol'
+                const data = stocksData[stockSymbol];
                 const averageCostPerShare = data.totalShares > 0 ? data.totalTHBSpent / data.totalShares : 0;
                 const actualAverageUsdRateAtPurchase = data.totalShares > 0 && data.usdRateTxCount > 0 ? data.totalUsdRateWeighted / data.usdRateTxCount : 0; // Corrected this line, should be totalUsdRateWeighted / totalShares if weighted by shares
-                const targetRate = stockSettings.stockTargetRates[symbol] || 0;
-                const targetUsdExchangeRate = stockSettings.stockTargetExchangeRates[symbol] || 0;
-                const iconColor = stockGetStockIconColor(symbol);
+                const targetRate = stockSettings.stockTargetRates[stockSymbol] || 0;
+                const targetUsdExchangeRate = stockSettings.stockTargetExchangeRates[stockSymbol] || 0;
+                const iconColor = stockGetStockIconColor(stockSymbol);
                 let displayValue = data.totalTHBSpent >= 1000000 ? (data.totalTHBSpent / 1000000).toFixed(1) + 'M' : (data.totalTHBSpent >= 1000 ? (data.totalTHBSpent / 1000).toFixed(0) + 'K' : data.totalTHBSpent.toFixed(0));
                 const stockItemContainer = document.createElement('div'); stockItemContainer.className = 'stock-list-item-container mb-3';
                 const stockDiv = document.createElement('div'); stockDiv.className = 'stock-list-item';
                 stockDiv.innerHTML = `
-                    <div class="stock-icon-placeholder ${iconColor}">${symbol.charAt(0)}</div>
+                    <div class="stock-icon-placeholder ${iconColor}">${stockSymbol.charAt(0)}</div>
                     <div class="stock-info">
-                        <h3 class="stock-info-title">${symbol}</h3>
-                        <p class="text-sm text-gray-500">จำนวนหุ้น: ${data.totalShares.toLocaleString()}</p>
+                        <h3 class="stock-info-title">${stockSymbol}</h3>
+                        <p class="text-sm text-gray-500">จำนวนหุ้น: ${data.totalShares.toLocaleString(undefined, {minimumFractionDigits: 7, maximumFractionDigits: 7})}</p>
                         <p class="text-sm text-gray-500">ต้นทุนเฉลี่ย (THB/หุ้น): ${averageCostPerShare.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}</p>
                         ${actualAverageUsdRateAtPurchase > 0 ? `<p class="text-sm text-gray-500">Rate แลกเปลี่ยนเฉลี่ย (THB/USD): ${actualAverageUsdRateAtPurchase.toFixed(2)}</p>` : ''}
                         ${targetRate > 0 ? `<p class="text-sm text-blue-600 font-medium">เป้าหมายราคา (THB/หุ้น): ${targetRate.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}</p>` : ''}
@@ -2876,10 +2904,10 @@
                 const actionsDiv = document.createElement('div'); actionsDiv.className = 'stock-actions hidden';
                 actionsDiv.innerHTML = `
                     <div class="grid grid-cols-1 gap-2">
-                         <div><label for="currentMarketPrice_${symbol}" class="block text-xs font-medium text-gray-700 mb-1">Rate ปัจจุบัน (ราคาตลาด/หุ้น):</label><input type="number" id="currentMarketPrice_${symbol}" step="any" placeholder="กรอกราคาตลาด" class="w-full p-2 border border-gray-300 rounded-md shadow-sm text-sm focus:ring-blue-500 focus:border-blue-500"></div>
-                        <button onclick="stockCalculateAdditionalPurchase('${symbol}', ${data.totalShares}, ${data.totalTHBSpent}, ${targetRate})" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-3 rounded-md shadow-sm text-xs">คำนวณซื้อเพิ่ม</button>
+                         <div><label for="currentMarketPrice_${stockSymbol}" class="block text-xs font-medium text-gray-700 mb-1">Rate ปัจจุบัน (ราคาตลาด/หุ้น):</label><input type="number" id="currentMarketPrice_${stockSymbol}" step="any" placeholder="กรอกราคาตลาด" class="w-full p-2 border border-gray-300 rounded-md shadow-sm text-sm focus:ring-blue-500 focus:border-blue-500"></div>
+                        <button onclick="stockCalculateAdditionalPurchase('${stockSymbol}', ${data.totalShares}, ${data.totalTHBSpent}, ${targetRate})" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-3 rounded-md shadow-sm text-xs">คำนวณซื้อเพิ่ม</button>
                     </div>
-                    <div id="additionalPurchaseResult_${symbol}" class="mt-2 text-xs text-gray-600"></div>`;
+                    <div id="additionalPurchaseResult_${stockSymbol}" class="mt-2 text-xs text-gray-600"></div>`;
                 stockItemContainer.appendChild(stockDiv); stockItemContainer.appendChild(actionsDiv); stockSummaryStockDetails.appendChild(stockItemContainer);
                 stockDiv.addEventListener('click', () => { actionsDiv.classList.toggle('hidden'); if (!actionsDiv.classList.contains('hidden')) setTimeout(() => actionsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100); });
             });
@@ -2905,11 +2933,11 @@
             if (amountTHBtoBuy > 0) {
                 const newShares = amountTHBtoBuy / marketPrice; const newTotalShares = currentShares + newShares;
                 const newTotalCost = currentTotalCost + amountTHBtoBuy; const newAvgCost = newTotalCost / newTotalShares;
-                message = `<p class="text-green-700 font-semibold">หากต้องการ Rate เฉลี่ยที่ ${targetAvgPrice.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}:</p><ul class="list-disc list-inside ml-2 mt-1"><li>ซื้อเพิ่ม: <strong class="font-medium">${amountTHBtoBuy.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}</strong></li><li>(ที่ราคา ${marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}/หุ้น)</li><li>ได้หุ้นเพิ่ม: ${newShares.toLocaleString(undefined, {minimumFractionDigits: 4})} หุ้น</li><li>Rate เฉลี่ยใหม่: ${newAvgCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${stockSettings.targetCurrency}</li></ul>`;
+                message = `<p class="text-green-700 font-semibold">หากต้องการ Rate เฉลี่ยที่ ${targetAvgPrice.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}:</p><ul class="list-disc list-inside ml-2 mt-1"><li>ซื้อเพิ่ม: <strong class="font-medium">${amountTHBtoBuy.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}</strong></li><li>(ที่ราคา ${marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}/หุ้น)</li><li>ได้หุ้นเพิ่ม: ${newShares.toLocaleString(undefined, {minimumFractionDigits: 7})} หุ้น</li><li>Rate เฉลี่ยใหม่: ${newAvgCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${stockSettings.targetCurrency}</li></ul>`;
             } else {
                  const currentAvgCost = currentShares > 0 ? currentTotalCost / currentShares : 0;
                  if (Math.abs(currentAvgCost - targetAvgPrice) < 0.001) message = `<p class="text-green-600">ต้นทุนเฉลี่ยปัจจุบันของคุณอยู่ที่ประมาณ Rate เป้าหมายแล้ว (${currentAvgCost.toLocaleString(undefined, {minimumFractionDigits: 2})} ${stockSettings.targetCurrency}).</p>`;
-                 else if (targetAvgPrice > currentAvgCost && marketPrice < targetAvgPrice) message = `<p class="text-orange-500">Rate เป้าหมาย (${targetAvgPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) สูงกว่าต้นทุนเฉลี่ยปัจจุบัน แต่ราคาตลาด (${marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) ต่ำกว่า Rate เป้าหมาย การซื้อที่ราคานี้จะทำให้ต้นทุนเฉลี่ยต่ำลง/เข้าใกล้ราคาตลาด</p>`;
+                 else if (targetAvgPrice > currentAvgCost && marketPrice < targetAvgPrice) message = `<p class="text-orange-500">Rate เป้าหมาย (${targetAvgPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) สูงกว่าต้นทุนเฉลี่ยปัจจุบัน แต่ราคาตลาด (${marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) ต่ำกว่า Rate เป้าหมาย การซื้อที่ราคานี้จะทำให้ต้นทุนเฉลี่ยต่ำลง/เข้าใกล้ราคาตลาด</p`;
                  else if (targetAvgPrice < currentAvgCost && marketPrice > targetAvgPrice) message = `<p class="text-orange-500">Rate เป้าหมาย (${targetAvgPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) ต่ำกว่าต้นทุนเฉลี่ยปัจจุบัน แต่ราคาตลาด (${marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) สูงกว่า Rate เป้าหมาย การซื้อที่ราคานี้จะทำให้ต้นทุนเฉลี่ยสูงขึ้น/เข้าใกล้ราคาตลาด</p>`;
                  else message = `<p class="text-orange-500">การซื้อหุ้นที่ราคาตลาดปัจจุบัน (${marketPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) อาจไม่ช่วยให้ไปถึง Rate เป้าหมาย (${targetAvgPrice.toLocaleString(undefined, {minimumFractionDigits: 2})}) ตามที่ต้องการ หรือเงื่อนไขไม่เหมาะสม</p>`;
             }
@@ -3073,7 +3101,7 @@
                 if (currentStockHoldings[symbol].quantity > 0) { // Only show stocks with positive holdings
                     const option = document.createElement('option');
                     option.value = symbol;
-                    option.textContent = `${symbol} (คงเหลือ: ${currentStockHoldings[symbol].quantity.toLocaleString()} หุ้น)`;
+                    option.textContent = `${symbol} (คงเหลือ: ${currentStockHoldings[symbol].quantity.toLocaleString(undefined, {minimumFractionDigits: 7, maximumFractionDigits: 7})} หุ้น)`;
                     selectElement.appendChild(option);
                 }
             });
@@ -3350,8 +3378,10 @@
             stockSummaryDashboard = document.getElementById('stockSummaryDashboard');
             stockSummaryStockDetails = document.getElementById('stockSummaryStockDetails');
             stockStockTargetRatesContainer = document.getElementById('stockTargetRatesContainer');
+            console.log('Assigned stockStockTargetRatesContainer:', stockStockTargetRatesContainer); // Debug log
             stockAddStockTargetRateBtn = document.getElementById('stockAddStockTargetRateBtn');
             stockStockTargetExchangeRatesContainer = document.getElementById('stockTargetExchangeRatesContainer');
+            console.log('Assigned stockStockTargetExchangeRatesContainer:', stockStockTargetExchangeRatesContainer); // Debug log
             stockAddStockTargetUsdRateBtn = document.getElementById('stockAddStockTargetUsdRateBtn');
             stockTvSymbolInput = document.getElementById('stockTvSymbolInput');
             stockTvLoadSymbolBtn = document.getElementById('stockTvLoadSymbolBtn');
@@ -3377,7 +3407,7 @@
             stockSellModalOverlay = document.getElementById('stockSellModalOverlay');
             stockSellModalTitle = document.getElementById('stockSellModalTitle');
             stockSellModalSymbolDisplay = document.getElementById('stockSellModalSymbolDisplay');
-            closeStockSellModalBtn = document.getElementById('closeStockSellModalBtn');
+            closeStockSellModalBtn = document.getElementById('closeStockSellModalBtn'); // This is the close button for the sell stock modal
             stockSellModalForm = document.getElementById('stockSellModalForm');
             stockSellModalDate = document.getElementById('stockSellModalDate');
             stockSellModalUsdPricePerShareInput = document.getElementById('stockSellModalUsdPricePerShare');
@@ -3423,7 +3453,7 @@
             if (stockSellModalUsdExchangeRateAtSaleInput) stockSellModalUsdExchangeRateAtSaleInput.addEventListener('input', stockCalculateSellModalAmounts);
             if (stockSellModalQuantityInput) stockSellModalQuantityInput.addEventListener('input', stockCalculateSellModalAmounts);
             if (stockSellModalForm) stockSellModalForm.addEventListener('submit', stockHandleSellModalSubmit); // Submit for the modal form
-            if (closeStockSellModalBtn) closeStockSellModalBtn.addEventListener('click', stockCloseSellModal);
+            if (closeStockSellModalBtn) closeStockSellModalBtn.addEventListener('click', stockCloseSellModal); // This is the close button for the sell stock modal
 
             if (stockBuyFormToggleBtn) stockBuyFormToggleBtn.addEventListener('click', () => {
                 stockBuyFormToggleBtn.classList.add('active-toggle'); if(stockSellFormToggleBtn) stockSellFormToggleBtn.classList.remove('active-toggle');
@@ -3675,7 +3705,7 @@
                                     <div><label for="stockRecordDate" class="block text-sm font-medium text-gray-300 mb-1">วันที่:</label><input type="date" id="stockRecordDate" class="stock-form-input w-full p-3" required></div>
                                     <div><label for="stockRecordStockSymbol" class="block text-sm font-medium text-gray-300 mb-1">ชื่อหุ้น (Symbol):</label><input type="text" id="stockRecordStockSymbol" placeholder="เช่น AAPL" class="stock-form-input w-full p-3" required></div>
                                     <div><label for="stockRecordUsdAmountPerShare" class="block text-sm font-medium text-gray-300 mb-1">ราคาซื้อ (USD/หุ้น):</label><input type="number" id="stockRecordUsdAmountPerShare" step="0.0001" min="0.0001" placeholder="ราคาซื้อต่อหุ้นเป็น USD" class="stock-form-input w-full p-3" required></div>
-                                    <div><label for="stockRecordQuantity" class="block text-sm font-medium text-gray-300 mb-1">จำนวนหุ้น:</label><input type="number" id="stockRecordQuantity" step="1" min="1" placeholder="จำนวนหุ้นที่ซื้อ" class="stock-form-input w-full p-3" required></div>
+                                    <div><label for="stockRecordQuantity" class="block text-sm font-medium text-gray-300 mb-1">จำนวนหุ้น:</label><input type="number" id="stockRecordQuantity" step="0.0000001" min="0.0000001" placeholder="จำนวนหุ้นที่ซื้อ" class="stock-form-input w-full p-3" required></div>
                                     <div><label for="stockRecordUsdRate" class="block text-sm font-medium text-gray-300 mb-1">อัตราแลกเปลี่ยน (THB/USD):</label><input type="number" id="stockRecordUsdRate" step="0.01" min="0.01" placeholder="Rate THB/USD ณ วันที่ซื้อ" class="stock-form-input w-full p-3" required></div>
                                     <div class="grid grid-cols-2 gap-4">
                                         <div><label for="stockRecordTotalTHB" class="block text-sm font-medium text-gray-300 mb-1">รวมเงิน (THB):</label><input type="number" id="stockRecordTotalTHB" step="0.01" min="0" class="stock-form-input w-full p-3" readonly></div>
@@ -3693,7 +3723,7 @@
                                             </select>
                                     </div>
                                     <div><label for="stockSellUsdPricePerShare" class="block text-sm font-medium text-gray-300 mb-1">ราคาขาย (USD/หุ้น):</label><input type="number" id="stockSellUsdPricePerShare" step="0.0001" min="0.0001" placeholder="ราคาขายต่อหุ้นเป็น USD" class="stock-form-input w-full p-3" required></div>
-                                    <div><label for="stockSellQuantity" class="block text-sm font-medium text-gray-300 mb-1">จำนวนหุ้น:</label><input type="number" id="stockSellQuantity" step="1" min="1" placeholder="จำนวนหุ้นที่ขาย" class="stock-form-input w-full p-3" required></div>
+                                    <div><label for="stockSellQuantity" class="block text-sm font-medium text-gray-300 mb-1">จำนวนหุ้น:</label><input type="number" id="stockSellQuantity" step="0.0000001" min="0.0000001" placeholder="จำนวนหุ้นที่ขาย" class="stock-form-input w-full p-3" required></div>
                                     <div><label for="stockSellUsdRate" class="block text-sm font-medium text-gray-300 mb-1">อัตราแลกเปลี่ยน (THB/USD):</label><input type="number" id="stockSellUsdRate" step="0.01" min="0.01" placeholder="Rate THB/USD ณ วันที่ขาย" class="stock-form-input w-full p-3" required></div>
                                     <div class="grid grid-cols-2 gap-4">
                                         <div><label for="stockSellTotalTHBReceived" class="block text-sm font-medium text-gray-300 mb-1">รวมเงินที่ได้รับ (THB):</label><input type="number" id="stockSellTotalTHBReceived" step="0.01" min="0" class="stock-form-input w-full p-3" readonly></div>
@@ -3767,11 +3797,11 @@
     <div id="stockSellModalOverlay" class="custom-modal-overlay hidden">
         <div class="custom-modal-content">
             <h3 id="stockSellModalTitle" class="text-xl font-bold mb-4">ขายหุ้น <span id="stockSellModalSymbolDisplay"></span></h3>
-            <button id="closeStockSellModalBtn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-200 text-2xl">&times;</button>
+            <button id="closeStockSellModalBtn" class="absolute top-3 right-3 text-gray-300 hover:text-white text-xl bg-gray-700 rounded-full w-8 h-8 flex items-center justify-center opacity-75 hover:opacity-100 transition-all duration-200">&times;</button>
             <form id="stockSellModalForm" class="space-y-4">
                 <div><label for="stockSellModalDate" class="block text-sm font-medium text-gray-300 mb-1">วันที่:</label><input type="date" id="stockSellModalDate" class="stock-form-input w-full p-3" required></div>
                 <div><label for="stockSellModalUsdPricePerShare" class="block text-sm font-medium text-gray-300 mb-1">ราคาขาย (USD/หุ้น):</label><input type="number" id="stockSellModalUsdPricePerShare" step="0.0001" min="0.0001" placeholder="ราคาขายต่อหุ้นเป็น USD" class="stock-form-input w-full p-3" required></div>
-                <div><label for="stockSellModalQuantity" class="block text-sm font-medium text-gray-300 mb-1">จำนวนหุ้นที่ต้องการขาย:</label><input type="number" id="stockSellModalQuantity" step="1" min="1" placeholder="จำนวนหุ้น" class="stock-form-input w-full p-3" required></div>
+                <div><label for="stockSellModalQuantity" class="block text-sm font-medium text-gray-300 mb-1">จำนวนหุ้นที่ต้องการขาย:</label><input type="number" id="stockSellModalQuantity" step="0.0000001" min="0.0000001" placeholder="จำนวนหุ้น" class="stock-form-input w-full p-3" required></div>
                 <div><label for="stockSellModalUsdRate" class="block text-sm font-medium text-gray-300 mb-1">อัตราแลกเปลี่ยน (THB/USD):</label><input type="number" id="stockSellModalUsdRate" step="0.01" min="0.01" placeholder="Rate THB/USD ณ วันที่ขาย" class="stock-form-input w-full p-3" required></div>
                 <div class="grid grid-cols-2 gap-4">
                     <div><label for="stockSellModalTotalTHBReceived" class="block text-sm font-medium text-gray-300 mb-1">รวมเงินที่ได้รับ (THB):</label><input type="number" id="stockSellModalTotalTHBReceived" step="0.01" min="0" class="stock-form-input w-full p-3" readonly></div>
