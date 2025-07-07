@@ -1,5 +1,5 @@
 {
-    "name": "Check Log Admin",
+    "name": "Check Log",
     "short_name": "Check Log",
     "description": "โปรแกรมติดตามการตรวจสอบอุปกรณ์",
     "start_url": "./index.html",
