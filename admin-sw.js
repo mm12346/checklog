@@ -7,9 +7,9 @@ const urlsToCache = [
     'https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap',
     'https://fonts.gstatic.com/s/sarabun/v15/DtVjJx26TKEr37c9WJpP.woff2', // Example font file, adjust if needed
     'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
-    'https://raw.githubusercontent.com/mm12346/test1/refs/heads/main/512.png', // Website icon
-    'https://raw.githubusercontent.com/mm12346/test1/refs/heads/main/180.png', // Apple touch icon
-    'https://raw.githubusercontent.com/mm12346/test1/refs/heads/main/192.png' // PWA icon
+    'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/512.png', // Website icon
+    'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/180.png', // Apple touch icon
+    'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/192.png' // PWA icon
     // Add other critical assets here if they are static and should be cached
 ];
 
