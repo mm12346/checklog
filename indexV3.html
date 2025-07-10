@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <!-- Updated viewport to support safe areas on notched devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Check Log</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="website icon" type="png" href="https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/512.png">
+    
+    <!-- PWA Manifest & Theme for Admin -->
+    <link rel="manifest" href="admin-manifest.json">
+    <meta name="theme-color" content="#f1f5f9"> <!-- Changed to match body background -->
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/180.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Check Log">
+    
+    <!-- Library for creating Excel files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <style>
+        /* Define safe-area variables with fallbacks */
+        :root {
+            --safe-area-inset-top: env(safe-area-inset-top, 0px);
+            --safe-area-inset-right: env(safe-area-inset-right, 0px);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-area-inset-left: env(safe-area-inset-left, 0px);
+        }
+
+        /* Apply font and background to body */
+        body { 
+            font-family: 'Sarabun', sans-serif; 
+            background-color: #f1f5f9; 
+        }
+
+        /* Hide scrollbar for WebKit browsers */
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for Firefox */
+        html {
+            scrollbar-width: none;
+        }
+        body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Hide scrollbar for elements with overflow-y-auto or overflow-x-auto */
+        .overflow-y-auto::-webkit-scrollbar,
+        .overflow-x-auto::-webkit-scrollbar {
+            display: none;
+        }
+        .overflow-y-auto,
+        .overflow-x-auto {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        /* When the body has this class, it prevents scrolling */
+        body.overflow-hidden {
+            overflow: hidden;
+        }
+        .loader-sm { width: 20px; height: 20px; }
+        .loader-lg { width: 48px; height: 48px; }
+
+        /* --- PWA Notch/Safe-Area Handling --- */
+        #main-menu {
+            padding-top: var(--safe-area-inset-top);
+            padding-bottom: var(--safe-area-inset-bottom);
+        }
+        
+        #daily-check-app-container header,
+        #monthly-summary-app-container header,
+        #daily-detail-page-container header {
+            padding-top: var(--safe-area-inset-top);
+        }
+
+        #daily-sidebar, #monthly-sidebar {
+            padding-top: var(--safe-area-inset-top);
+            padding-bottom: var(--safe-area-inset-bottom);
+        }
+        
+        #daily-user-buttons-container, #monthly-user-buttons-container {
+             height: calc(100vh - 210px - var(--safe-area-inset-top) - var(--safe-area-inset-bottom));
+        }
+
+    </style>
+</head>
+<body class="bg-slate-100">
+
+    <!-- Main Menu Page -->
+    <div id="main-menu" class="flex flex-col items-center justify-center min-h-screen bg-slate-100 p-4">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-indigo-600">Check Log</h1>
+            <p class="text-slate-500 mt-2">โปรแกรมติดตามการตรวจสอบอุปกรณ์ก่อนเริ่มงาน</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl">
+            <!-- Menu Item 1: Daily Check -->
+            <a href="#" id="menu-daily-check" class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center text-center">
+                <div class="bg-indigo-100 text-indigo-600 rounded-full p-4 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                </div>
+                <h2 class="text-xl font-semibold text-slate-800">Daily Check</h2>
+                <p class="text-sm text-slate-500 mt-1">สรุปสถานะการตรวจสอบรายวัน</p>
+            </a>
+            <!-- Menu Item 2: Summary -->
+            <a href="#" id="menu-summary" class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center text-center">
+                <div class="bg-amber-100 text-amber-600 rounded-full p-4 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                </div>
+                <h2 class="text-xl font-semibold text-slate-800">Month Check</h2>
+                <p class="text-sm text-slate-500 mt-1">สรุปสถานะการตรวจสอบรายเดือน</p>
+            </a>
+            <!-- Menu Item 3: Details (Removed as per user request) -->
+            <!-- Menu Item 4: Others (Removed as per user request) -->
+        </div>
+    </div>
+
+    <!-- Main Application Page (Daily Check) -->
+    <div id="daily-check-app-container" class="hidden">
+        <!-- Sidebar -->
+        <aside id="daily-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+            <div class="flex items-center justify-center p-4 border-b border-slate-200">
+                 <svg class="w-8 h-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Zm3.75 11.625a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg>
+                 <h1 class="text-xl font-bold text-slate-800 ml-2">ตรวจสอบรายวัน</h1>
+            </div>
+            <div class="p-4">
+                <h2 class="text-lg font-semibold text-slate-700 mb-4">เลือกสาขา</h2>
+                <div class="mb-4">
+                    <input type="text" id="daily-user-search-input" placeholder="ค้นหาสาขา..." class="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                </div>
+                <div id="daily-user-buttons-container" class="flex flex-col space-y-2 overflow-y-auto">
+                    <!-- User buttons will be inserted here -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay for mobile -->
+        <div id="daily-sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+        <!-- Main Content -->
+        <div class="lg:ml-64 transition-all duration-300 ease-in-out">
+            <header class="sticky top-0 z-20 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="py-4 flex items-center justify-between gap-4">
+                        <!-- Back to Menu Button -->
+                        <button id="daily-back-to-menu-button" title="กลับไปหน้าเมนูหลัก" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m8-8l-8 8 8 8" />
+                            </svg>
+                        </button>
+
+                        <!-- Hamburger button for mobile -->
+                        <button id="daily-sidebar-toggle" class="lg:hidden text-slate-500 hover:text-slate-700">
+                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                            </svg>
+                        </button>
+                        
+                        <div class="flex-grow flex items-center justify-end gap-4">
+                            <input type="date" id="daily-global-check-date" class="w-full max-w-xs px-4 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 transition">
+                            <button id="daily-refresh-button" title="รีเฟรชข้อมูล" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed">
+                                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9 0 0 1 6.74 2.74L21 8"></path>
+                                    <path d="M21 3v5h-5"></path>
+                                    <path d="M21 12a9 9 0 0 1-9 9 9.75 9 0 0 1-6.74-2.74L3 16"></path>
+                                    <path d="M3 21v-5h5"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main>
+                <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+                    <div id="daily-user-info" class="hidden">
+                         <h3 class="text-2xl font-bold text-slate-800 mb-4" id="daily-current-user-header"></h3>
+                         <div id="daily-app-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                            <!-- Cards will be inserted here -->
+                        </div>
+                    </div>
+                     <div id="daily-welcome-message" class="text-center py-12">
+                        <svg class="w-16 h-16 mx-auto text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 017.5 0ZM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
+                        <h2 class="mt-4 text-2xl font-semibold text-slate-700">ยินดีต้อนรับ</h2>
+                        <p class="mt-2 text-slate-500">กรุณาเลือกผู้ใช้งานจากเมนูด้านข้างเพื่อดูข้อมูล</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Monthly Summary Application Page -->
+    <div id="monthly-summary-app-container" class="hidden">
+        <!-- Sidebar -->
+        <aside id="monthly-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+            <div class="flex items-center justify-center p-4 border-b border-slate-200">
+                 <svg class="w-8 h-8 text-amber-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                 <h1 class="text-xl font-bold text-slate-800 ml-2">ตรวจสอบรายเดือน</h1>
+            </div>
+            <div class="p-4">
+                <h2 class="text-lg font-semibold text-slate-700 mb-4">เลือกสาขา</h2>
+                <div class="mb-4">
+                    <input type="text" id="monthly-user-search-input" placeholder="ค้นหาสาขา..." class="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition">
+                </div>
+                <div id="monthly-user-buttons-container" class="flex flex-col space-y-2 overflow-y-auto">
+                    <!-- User buttons will be inserted here -->
+                </div>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay for mobile -->
+        <div id="monthly-sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden"></div>
+
+        <!-- Main Content -->
+        <div class="lg:ml-64 transition-all duration-300 ease-in-out">
+            <header class="sticky top-0 z-20 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="py-4 flex items-center justify-between gap-4">
+                        <!-- Back to Menu Button -->
+                        <button id="monthly-back-to-menu-button" title="กลับไปหน้าเมนูหลัก" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m8-8l-8 8 8 8" />
+                            </svg>
+                        </button>
+
+                        <!-- Hamburger button for mobile -->
+                        <button id="monthly-sidebar-toggle" class="lg:hidden text-slate-500 hover:text-slate-700">
+                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                            </svg>
+                        </button>
+                        
+                        <div class="flex-grow flex items-center justify-end gap-2 sm:gap-4">
+                            <input type="month" id="monthly-global-check-month" class="w-full max-w-xs px-4 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 transition">
+                            <button id="monthly-refresh-button" title="รีเฟรชข้อมูล" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed">
+                                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9 0 0 1 6.74 2.74L21 8"></path>
+                                    <path d="M21 3v5h-5"></path>
+                                    <path d="M21 12a9 9 0 0 1-9 9 9.75 9 0 0 1-6.74-2.74L3 16"></path>
+                                    <path d="M3 21v-5h5"></path>
+                                </svg>
+                            </button>
+                            <!-- ADDED: Export to Excel Button -->
+                            <button id="monthly-export-excel-button" title="Export เป็น Excel" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main>
+                <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+                    <div id="monthly-user-info" class="hidden">
+                         <h3 class="text-2xl font-bold text-slate-800 mb-4" id="monthly-current-user-header"></h3>
+                         <div id="monthly-app-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                            <!-- Cards will be inserted here -->
+                        </div>
+                    </div>
+                     <div id="monthly-welcome-message" class="text-center py-12">
+                        <svg class="w-16 h-16 mx-auto text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 017.5 0ZM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632Z" /></svg>
+                        <h2 class="mt-4 text-2xl font-semibold text-slate-700">ยินดีต้อนรับ</h2>
+                        <p class="mt-2 text-slate-500">กรุณาเลือกผู้ใช้งานจากเมนูด้านข้างเพื่อดูข้อมูล</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Daily Detail Page -->
+    <div id="daily-detail-page-container" class="hidden">
+        <header class="sticky top-0 z-20 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="py-4 flex items-center justify-between gap-4">
+                    <!-- Back to Daily Check Button -->
+                    <button id="detail-page-back-button" title="กลับไปหน้ารายการ" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m8-8l-8 8 8 8" />
+                        </svg>
+                    </button>
+                    <h1 id="detail-page-header" class="text-xl font-bold text-slate-800 text-center flex-grow truncate">รายละเอียดข้อมูล</h1>
+                    <div class="w-6"></div> <!-- Spacer to balance the back button -->
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+                <div id="detail-page-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Cards will be inserted here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <script>
+        // --- Configuration ---
+        const SCRIPT_URLS = [
+            'https://script.google.com/macros/s/AKfycbzaukac9i4eXChJdU51UiqgXWHZ1BAZvxc1uwMl-63fYDfwavE636zRBlhZhrxpqP1x/exec',//API_5 (Daily)
+            'https://script.google.com/macros/s/AKfycbwZX0ywhNK28ZFXHNgEb9cYhl2IMtQpznVP4qykO1ptJorqNMrfDw-SSzYQjHUCQQ/exec',//API_2 (Daily)
+            'https://script.google.com/macros/s/AKfycbwsKgINhyiziRXNHyLVGjox-AoOYn4n1Iwz0vnLrX0tK26YGLGT0UOfzJfBU1fGbAlf/exec',//API_1 (Daily)
+            'https://script.google.com/macros/s/AKfycbweG-pW-j5DQJc2Bf27zE-l6xpdnZS_z19MqClc0-POdxoKtwH_hbA86NjkKpnk6Zgp/exec',//API_3 (Daily)
+            'https://script.google.com/macros/s/AKfycbxgPHFAoISxt0bzwY9JjwhJShKT7IuHy3qCrLjl5xqXKIB8y1pQazaTIm0EKhw7xHW/exec'//API_4 (Daily)
+        ];
+
+        const MONTHLY_SCRIPT_URLS = [
+            'https://script.google.com/macros/s/AKfycbxeqQDZMAPu7xuQkwFAU_rsVY4r_ttS_QVSISA9HFoLZSB97NKXeOdSZoxAkIotZTdf/exec',//API_8(Monthly)
+            'https://script.google.com/macros/s/AKfycbzy25HmhhLEg_-rOKr4K2VHSMkSvtDZ4uyk18ZB9oNFj1h9CK7K90Z35Vwn3qfzYjsGMg/exec',//API_3 (Monthly)
+            'https://script.google.com/macros/s/AKfycbwiAjQUEiRzV7owrChPpTohvDBBdXFidYSIXKmb4BbDNkxkWPWLsQlvOAxydlK5G4aEeg/exec',//API_4 (Monthly)
+            'https://script.google.com/macros/s/AKfycbxtF4WXCYX5DSfT-cUvmrg90wAJara-EwMop3aBRbxZbk4Y__eLDCd5uLvZN0PvlRVL/exec',//API_5 (Monthly)
+            'https://script.google.com/macros/s/AKfycbyEU8sYHITnEwUjxdKeIgybiCQ2dJOra0yCGf9KmN-Lk1ZnQN5M4q4irBViddXEHsPl/exec',//API_6 (Monthly)
+            'https://script.google.com/macros/s/AKfycbxjQuyZh8cdGxWJOiWwilcRBoVR3YJLtGXLxXR4ULod54d5UIHwB6tBYZ57iJxGkkrF/exec'//API_7 (Monthly)
+            
+        ];
+
+        let cardConfigurations = [];
+        const dailyDataCache = {};
+        const monthlyDataCache = {};
+        const dataLabelsCache = {}; 
+
+        // ADDED: Global variables to store the currently selected user
+        let currentSelectedDailyUser = null;
+        let currentSelectedMonthlyUser = null;
+
+        // --- DOM Elements (Daily Check) ---
+        const dailyCheckAppContainer = document.getElementById('daily-check-app-container');
+        const dailyUserButtonsContainer = document.getElementById('daily-user-buttons-container');
+        const dailyUserInfo = document.getElementById('daily-user-info');
+        const dailyWelcomeMessage = document.getElementById('daily-welcome-message');
+        const dailyCurrentUserHeader = document.getElementById('daily-current-user-header');
+        const dailyAppContainer = document.getElementById('daily-app-container');
+        const dailyGlobalCheckDateInput = document.getElementById('daily-global-check-date');
+        const dailySidebar = document.getElementById('daily-sidebar');
+        const dailySidebarToggle = document.getElementById('daily-sidebar-toggle');
+        const dailySidebarOverlay = document.getElementById('daily-sidebar-overlay');
+        const dailyRefreshButton = document.getElementById('daily-refresh-button');
+        const dailyUserSearchInput = document.getElementById('daily-user-search-input');
+        const dailyBackToMenuButton = document.getElementById('daily-back-to-menu-button'); // Corrected typo here
+
+        // --- DOM Elements (Monthly Summary) ---
+        const monthlySummaryAppContainer = document.getElementById('monthly-summary-app-container');
+        const monthlyUserButtonsContainer = document.getElementById('monthly-user-buttons-container');
+        const monthlyUserInfo = document.getElementById('monthly-user-info');
+        const monthlyWelcomeMessage = document.getElementById('monthly-welcome-message');
+        const monthlyCurrentUserHeader = document.getElementById('monthly-current-user-header');
+        const monthlyAppContainer = document.getElementById('monthly-app-container');
+        const monthlyGlobalCheckMonthInput = document.getElementById('monthly-global-check-month');
+        const monthlySidebar = document.getElementById('monthly-sidebar');
+        const monthlySidebarToggle = document.getElementById('monthly-sidebar-toggle');
+        const monthlySidebarOverlay = document.getElementById('monthly-sidebar-overlay');
+        const monthlyRefreshButton = document.getElementById('monthly-refresh-button');
+        const monthlyUserSearchInput = document.getElementById('monthly-user-search-input');
+        const monthlyBackToMenuButton = document.getElementById('monthly-back-to-menu-button');
+        const monthlyExportExcelButton = document.getElementById('monthly-export-excel-button'); // ADDED
+
+        // --- DOM Elements (Main Menu) ---
+        const mainMenu = document.getElementById('main-menu');
+        const menuDailyCheck = document.getElementById('menu-daily-check');
+        // const menuDetails = document.getElementById('menu-details'); // Removed
+        const menuSummary = document.getElementById('menu-summary');
+        // const menuOther = document.getElementById('menu-other'); // Removed
+
+        // --- DOM Elements (Daily Detail Page) ---
+        const dailyDetailPageContainer = document.getElementById('daily-detail-page-container');
+        const detailPageHeader = document.getElementById('detail-page-header');
+        const detailPageContent = document.getElementById('detail-page-content');
+        const detailPageBackButton = document.getElementById('detail-page-back-button');
+
+        // --- View Switching Logic ---
+        function showDailyApp() {
+            mainMenu.classList.add('hidden');
+            monthlySummaryAppContainer.classList.add('hidden');
+            dailyDetailPageContainer.classList.add('hidden');
+            dailyCheckAppContainer.classList.remove('hidden');
+        }
+
+        function showMonthlyApp() {
+            mainMenu.classList.add('hidden');
+            dailyCheckAppContainer.classList.add('hidden');
+            dailyDetailPageContainer.classList.add('hidden');
+            monthlySummaryAppContainer.classList.remove('hidden');
+        }
+
+        function showMainMenu() {
+            mainMenu.classList.remove('hidden');
+            dailyCheckAppContainer.classList.add('hidden');
+            monthlySummaryAppContainer.classList.add('hidden');
+            dailyDetailPageContainer.classList.add('hidden');
+            localStorage.removeItem('lastSelectedUserDaily');
+            localStorage.removeItem('lastSelectedUserMonthly');
+            // Ensure all buttons lose their active state when returning to main menu
+            document.querySelectorAll('button.bg-indigo-600, button.bg-amber-600').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'font-semibold', 'shadow', 'bg-amber-600');
+            });
+            // Reset global selected user variables
+            currentSelectedDailyUser = null;
+            currentSelectedMonthlyUser = null;
+        }
+        
+        function showDailyDetailPage() {
+            mainMenu.classList.add('hidden');
+            dailyCheckAppContainer.classList.add('hidden');
+            monthlySummaryAppContainer.classList.add('hidden');
+            dailyDetailPageContainer.classList.remove('hidden');
+        }
+
+        // --- Sidebar Logic (Daily) ---
+        function openDailySidebar() {
+            dailySidebar.classList.remove('-translate-x-full');
+            dailySidebarOverlay.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeDailySidebar() {
+            dailySidebar.classList.add('-translate-x-full');
+            dailySidebarOverlay.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // --- Sidebar Logic (Monthly) ---
+        function openMonthlySidebar() {
+            monthlySidebar.classList.remove('-translate-x-full');
+            monthlySidebarOverlay.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeMonthlySidebar() {
+            monthlySidebar.classList.add('-translate-x-full');
+            monthlySidebarOverlay.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // --- Daily Detail Page Logic ---
+        function openDailyDetailPage(config, dateValue) {
+            showDailyDetailPage();
+            detailPageHeader.textContent = `รายละเอียด: ${config.title} (${dateValue})`;
+            detailPageContent.innerHTML = `<div class="flex justify-center items-center p-10 col-span-full"><div class="loader-lg mx-auto animate-spin rounded-full border-4 border-slate-200 border-t-indigo-500"></div></div>`;
+            fetchDailyDetailData(config, dateValue);
+        }
+
+        async function fetchDailyDetailData(config, dateValue) {
+            if (config.sheetId === 'N/A' || !config.sheetId || !config.sheetName) {
+                detailPageContent.innerHTML = `<p class="text-slate-500 text-center col-span-full">ไม่สามารถแสดงรายละเอียดได้: การตั้งค่าไม่ถูกต้อง</p>`;
+                return;
+            }
+
+            try {
+                const filteredRows = await apiCall('getSheetData', { sheetId: config.sheetId, sheetName: config.sheetName, date: dateValue }, 'daily');
+                renderDailyDetailCards(filteredRows, config);
+            } catch (error) {
+                detailPageContent.innerHTML = `<p class="text-red-500 text-center col-span-full">เกิดข้อผิดพลาดในการโหลดข้อมูล: ${error.message}</p>`;
+            }
+        }
+
+        async function fetchDataLabelsForCard(cardTitle) {
+            const cacheKey = `dataLabels-${cardTitle}`;
+            if (dataLabelsCache[cacheKey]) {
+                return dataLabelsCache[cacheKey];
+            }
+
+            try {
+                const result = await apiCall('getDataLabelsForCard', {
+                    spreadsheetId: '17slzkEJpbc3YEcm0vQg_22QqTFtLyzp03-4CCIrmbpA',
+                    sheetName: 'ชื่อข้อมูล',
+                    cardTitle: cardTitle
+                }, 'monthly'); 
+
+                if (result && result.success && Array.isArray(result.labels)) {
+                    dataLabelsCache[cacheKey] = result.labels;
+                    return result.labels;
+                } else {
+                    console.warn(`No specific labels found for card: ${cardTitle} or API call was unsuccessful. Result:`, result);
+                    return [];
+                }
+            } catch (error) {
+                console.error(`Error fetching data labels for card ${cardTitle}:`, error);
+                return [];
+            }
+        }
+
+        async function renderDailyDetailCards(dataRows, config) {
+            if (!dataRows || dataRows.length === 0) {
+                detailPageContent.innerHTML = `<div class="text-center py-12 col-span-full"><svg class="w-16 h-16 mx-auto text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg><h2 class="mt-4 text-2xl font-semibold text-slate-700">ไม่พบข้อมูล</h2><p class="mt-2 text-slate-500">ไม่พบข้อมูลสำหรับวันที่ที่เลือก</p></div>`;
+                return;
+            }
+
+            detailPageContent.innerHTML = '';
+
+            const customLabels = await fetchDataLabelsForCard(config.title);
+
+            dataRows.forEach((row, index) => {
+                const user = row[7] !== undefined && row[7] !== null ? row[7] : 'ไม่ระบุ';
+                const number = row[9] !== undefined && row[9] !== null ? row[9] : 'ไม่ระบุ';
+                const bgColorClass = 'bg-white'; 
+
+                let additionalDataHtml = '';
+                for (let i = 10; i < row.length; i++) {
+                    const dataLabel = customLabels[i - 10] || `ข้อมูล ${i - 9}`; 
+                    let dataValue = row[i] !== undefined && row[i] !== null ? row[i] : '';
+                    
+                    // MODIFIED: Date formatting logic to use short date format (DD/MM/YYYY)
+                    if (typeof dataValue === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(dataValue)) {
+                        try {
+                            const dateObj = new Date(dataValue);
+                            if (!isNaN(dateObj.getTime())) { // Check if date is valid
+                                // Format to "DD/MM/YYYY" (Thai Buddhist year)
+                                dataValue = dateObj.toLocaleDateString('th-TH', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric' // This will give the Buddhist year in th-TH locale
+                                });
+                            }
+                        } catch (e) {
+                            console.error("Error parsing date string:", dataValue, e);
+                            // Fallback to original dataValue if parsing fails
+                        }
+                    }
+                    // END MODIFIED
+
+                    let valueColorClass = 'text-slate-800';
+                    if (typeof dataValue === 'string') {
+                        if (dataValue.toLowerCase() === 'ปกติ') {
+                            valueColorClass = 'text-green-600';
+                        } else if (dataValue.toLowerCase() === 'ไม่ปกติ') {
+                            valueColorClass = 'text-red-600';
+                        }
+                    }
+
+                    if (dataValue) {
+                        additionalDataHtml += `
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-slate-600 font-medium">${dataLabel}:</span>
+                                <span class="font-normal ${valueColorClass}">${dataValue}</span>
+                            </div>
+                        `;
+                    }
+                }
+
+                const cardHtml = `
+                    <div class="${bgColorClass} rounded-lg shadow-md p-4 space-y-2 border border-slate-200 transition-all duration-200 hover:shadow-lg hover:border-indigo-300">
+                        <div class="text-center">
+                            <p class="text-md text-slate-700 font-semibold mb-1">หมายเลข: <span class="font-medium text-indigo-600">${number}</span></p>
+                            <p class="text-lg font-bold text-slate-800">ผู้ลงข้อมูล: <span class="text-indigo-600">${user}</span></p>
+                        </div>
+                        ${additionalDataHtml ? `<div class="mt-3 pt-3 border-t border-slate-200 space-y-1">${additionalDataHtml}</div>` : ''}
+                    </div>
+                `;
+                detailPageContent.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+
+        // --- Utility ---
+        async function apiCall(action, payload = {}, scriptType = 'daily') {
+            const isGet = action.startsWith('load') || action.startsWith('get') || action.startsWith('getDataLabelsForCard');
+            const options = { method: isGet ? 'GET' : 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' } };
+            
+            const urls = scriptType === 'daily' ? [...SCRIPT_URLS] : [...MONTHLY_SCRIPT_URLS]; // Create a mutable copy
+
+            // Shuffle the URLs to try them in random order
+            for (let i = urls.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [urls[i], urls[j]] = [urls[j], urls[i]]; // ES6 swap
+            }
+            
+            for (const baseUrl of urls) {
+                const url = new URL(baseUrl);
+                console.log(`Attempting API call to (${scriptType}): ${url.toString()} with action: ${action}`);
+
+                if (isGet) {
+                    Object.entries({ action, ...payload }).forEach(([key, value]) => url.searchParams.append(key, value));
+                } else {
+                    options.body = JSON.stringify({ action, ...payload });
+                }
+
+                try {
+                    const res = await fetch(url, options);
+                    if (!res.ok) {
+                        console.warn(`API call to ${url.toString()} failed with status: ${res.status} ${res.statusText}. Trying next URL.`);
+                        continue;
+                    }
+                    const result = await res.json();
+                    if (result.error || result.success === false) {
+                        console.warn(`API call to ${url.toString()} returned an error: ${result.error || 'Unknown API error'}. Trying next URL.`);
+                        continue;
+                    }
+                    console.log(`API call to ${url.toString()} successful.`);
+                    return result;
+                } catch (error) {
+                    console.warn(`Fetch error for ${url.toString()}: ${error.message}. Trying next URL.`);
+                    continue;
+                }
+            }
+            throw new Error(`Failed to fetch data from all available ${scriptType} API endpoints for action: ${action}.`);
+        }
+
+        // --- User Loading (Shared for Daily and Monthly) ---
+        async function loadAllUsers(targetUserButtonsContainer, selectedUserLocalStorageKey, displayFunction) {
+            targetUserButtonsContainer.innerHTML = `<div class="loader-sm animate-spin rounded-full border-2 border-slate-300 border-t-indigo-500 mx-auto"></div>`;
+            
+            // Disable search input while loading
+            const searchInput = targetUserButtonsContainer === dailyUserButtonsContainer ? dailyUserSearchInput : monthlyUserSearchInput;
+            searchInput.disabled = true;
+
+            try {
+                const result = await apiCall('getAllUsers', {}, 'daily'); 
+                const users = result.users || [];
+                targetUserButtonsContainer.innerHTML = '';
+                users.forEach(user => {
+                    const button = document.createElement('button');
+                    button.textContent = user;
+                    button.className = 'w-full text-left px-4 py-2 bg-white border border-transparent rounded-lg hover:bg-indigo-50 hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition block';
+                    button.onclick = () => {
+                        document.querySelectorAll(`#${targetUserButtonsContainer.id} button`).forEach(btn => btn.classList.remove('bg-indigo-600', 'text-white', 'font-semibold', 'shadow', 'bg-amber-600'));
+                        if (targetUserButtonsContainer.id === 'daily-user-buttons-container') {
+                            button.classList.add('bg-indigo-600', 'text-white', 'font-semibold', 'shadow');
+                            currentSelectedDailyUser = user; // Set global variable
+                        } else if (targetUserButtonsContainer.id === 'monthly-user-buttons-container') {
+                            button.classList.add('bg-amber-600', 'text-white', 'font-semibold', 'shadow');
+                            currentSelectedMonthlyUser = user; // Set global variable
+                        }
+                        
+                        localStorage.setItem(selectedUserLocalStorageKey, user);
+
+                        displayFunction(user);
+                        if (window.innerWidth < 1024) {
+                            if (targetUserButtonsContainer.id === 'daily-user-buttons-container') {
+                                closeDailySidebar();
+                            } else if (targetUserButtonsContainer.id === 'monthly-user-buttons-container') {
+                                closeMonthlySidebar();
+                            }
+                        }
+                    };
+                    targetUserButtonsContainer.appendChild(button);
+                });
+            } catch (error) {
+                targetUserButtonsContainer.innerHTML = `<p class="text-red-500">เกิดข้อผิดพลาดในการโหลดรายชื่อผู้ใช้: ${error.message}</p>`;
+            } finally {
+                // Enable search input after loading (or error)
+                searchInput.disabled = false;
+            }
+        }
+        
+        // --- Display User Cards (Daily) ---
+        async function displayDailyUserCards(username) {
+            dailyUserInfo.classList.remove('hidden');
+            dailyWelcomeMessage.classList.add('hidden');
+            dailyCurrentUserHeader.textContent = `ข้อมูลของ: ${username}`;
+            dailyAppContainer.innerHTML = `<div class="loader-lg col-span-full mx-auto animate-spin rounded-full border-4 border-slate-200 border-t-indigo-500"></div>`;
+            try {
+                const result = await apiCall('loadSettings', { username }, 'daily');
+                cardConfigurations = Array.isArray(result.config) ? result.config : [];
+                renderDailyApp();
+            } catch (error) {
+                dailyAppContainer.innerHTML = `<p class="text-red-500 text-center col-span-full">เกิดข้อผิดพลาดในการโหลดการตั้งค่า: ${error.message}</p>`;
+                cardConfigurations = [];
+            }
+        }
+
+        async function checkDailySheetData(config, dateValue, resultsEl) {
+            if (config.sheetId === 'N/A') {
+                return renderDisabledMessage(resultsEl, 'ไม่มีใช้งานในสาขา', 'การ์ดนี้ถูกปิดการใช้งาน');
+            }
+            if (!config.sheetId) {
+                return renderInfoMessage(resultsEl, 'ยังไม่ได้ตั้งค่า Sheet ID', 'กรุณากำหนดค่าในหน้าตั้งค่า');
+            }
+            if (!config.sheetName) {
+                return renderInfoMessage(resultsEl, 'ยังไม่ได้ตั้งค่า Sheet Name', 'กรุณากำหนดค่าในหน้าตั้งค่า');
+            }
+            if (!dateValue) {
+                resultsEl.innerHTML = '<p class="text-slate-500">กรุณาเลือกวันที่</p>';
+                return;
+            }
+
+            resultsEl.innerHTML = `<div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-indigo-500"></div>`;
+            const cacheKey = `${config.sheetId}-${dateValue}`;
+            if (dailyDataCache[cacheKey]) {
+                // MODIFIED: Pass the full config object
+                return processDailyData(dailyDataCache[cacheKey], resultsEl, config);
+            }
+            try {
+                const filteredRows = await apiCall('getSheetData', { sheetId: config.sheetId, sheetName: config.sheetName, date: dateValue }, 'daily');
+                dailyDataCache[cacheKey] = filteredRows;
+                // MODIFIED: Pass the full config object
+                processDailyData(filteredRows, resultsEl, config);
+            } catch (error) {
+                renderError(resultsEl, `เกิดข้อผิดพลาด: ${error.message}`);
+            }
+        }
+
+        // MODIFIED: Function signature changed to accept the full config object
+        function processDailyData(dataRows, resultsEl, config) {
+             const dateString = new Date(dailyGlobalCheckDateInput.value).toLocaleDateString('th-TH', { dateStyle: 'long' });
+             // MODIFIED: Pass the full config object to the rendering function
+             renderDailyResults(resultsEl, dataRows, dateString, config);
+        }
+
+        // --- Refresh Logic (Daily) ---
+        function refreshDailyCurrentView() {
+            // Use the global variable instead of querying the DOM
+            if (currentSelectedDailyUser) { 
+                Object.keys(dailyDataCache).forEach(key => delete dailyDataCache[key]);
+                console.log('Daily cache cleared for refresh.');
+                const refreshIcon = dailyRefreshButton.querySelector('svg');
+                refreshIcon.classList.add('animate-spin');
+                dailyRefreshButton.disabled = true;
+                displayDailyUserCards(currentSelectedDailyUser).finally(() => {
+                    refreshIcon.classList.remove('animate-spin');
+                    dailyRefreshButton.disabled = false;
+                });
+            } else {
+                showCustomMessage('แจ้งเตือน', 'กรุณาเลือกผู้ใช้งานก่อนรีเฟรช');
+            }
+        }
+
+        // --- UI Rendering (Daily) ---
+        function renderDailyApp() {
+            dailyAppContainer.innerHTML = '';
+            if (cardConfigurations.length === 0) {
+                dailyAppContainer.innerHTML = '<p class="text-slate-500 text-center col-span-full">ผู้ใช้นี้ยังไม่มีการตั้งค่าการ์ด</p>';
+            } else {
+                cardConfigurations.forEach((config, index) => createDailyCard(config, index));
+            }
+        }
+
+        function createDailyCard(config, index) {
+            const resultsDivId = `daily-results-${index}`;
+            const cardHtml = `<div id="daily-card-${index}" class="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-2xl shadow-xl p-6 md:p-8 cursor-pointer" 
+                                data-config-index="${index}" data-date="${dailyGlobalCheckDateInput.value}">
+                                <div class="text-center mb-4">
+                                    <h1 class="text-xl sm:text-2xl font-bold text-slate-800">${config.title}</h1>
+                                </div>
+                                <div id="${resultsDivId}" class="min-h-[150px] flex items-center justify-center transition-all"></div>
+                              </div>`;
+            dailyAppContainer.insertAdjacentHTML('beforeend', cardHtml);
+            
+            const cardElement = document.getElementById(`daily-card-${index}`);
+            cardElement.addEventListener('click', () => {
+                const selectedConfig = cardConfigurations[parseInt(cardElement.dataset.configIndex)];
+                const selectedDate = cardElement.dataset.date;
+                openDailyDetailPage(selectedConfig, selectedDate);
+            });
+
+            checkDailySheetData(config, dailyGlobalCheckDateInput.value, document.getElementById(resultsDivId));
+        }
+
+        // MODIFIED: This function now implements the requested logic for daily cards.
+        function renderDailyResults(resultsEl, entries, date, config) {
+            resultsEl.innerHTML = '';
+            const { targetCount, title } = config; // Get title and targetCount from config
+            const COL_USER_IDX = 7, COL_NUMBER_IDX = 9;
+            const uniqueNumbers = new Set(entries.map(entry => entry[COL_NUMBER_IDX]).filter(Boolean));
+            const uniqueUsers = new Set(entries.map(entry => entry[COL_USER_IDX]).filter(Boolean));
+            
+            let statusBlock, detailsBlock;
+
+            // Special case for "แก๊ส LPG"
+            if (title === 'แก๊ส LPG') {
+                statusBlock = `<div class="bg-blue-100/50 border border-blue-200/80 text-blue-800 p-4 rounded-xl flex items-center space-x-4">
+                    <div class="flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-blue-500">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                        </svg>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="font-bold text-lg">สถานะพิเศษ</p>
+                        <p class="text-sm break-words">ควรตรวจสอบทุกครั้งก่อนการจัดเก็บเข้าพื้นที่จัดเก็บ</p>
+                    </div>
+                </div>`;
+                detailsBlock = ''; // No details for this special case
+            } else if (entries.length === 0) {
+                // Case for no data found (for other cards) as per user request
+                const needed = targetCount; // All are needed
+                statusBlock = `<div class="bg-amber-100/50 border border-amber-200/80 text-amber-800 p-4 rounded-xl flex items-center space-x-4">
+                    <div class="flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-amber-500">
+                            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="font-bold text-lg">ยังไม่ครบ (0/${targetCount})</p>
+                        <p class="text-sm break-words">ขาดอีก ${needed} หมายเลขสำหรับวันที่ ${date}</p>
+                    </div>
+                </div>`;
+                detailsBlock = ''; // No details block if no entries
+            } else {
+                // Existing logic for when there are entries
+                if (uniqueNumbers.size >= targetCount) {
+                    statusBlock = `<div class="bg-teal-100/50 border border-teal-200/80 text-teal-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-teal-500"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ครบแล้ว</p><p class="text-sm break-words">ตรวจครบ ${uniqueNumbers.size} หมายเลขสำหรับวันที่ ${date}</p></div></div>`;
+                } else {
+                    const needed = targetCount - uniqueNumbers.size;
+                    statusBlock = `<div class="bg-amber-100/50 border border-amber-200/80 text-amber-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-amber-500"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ยังไม่ครบ (${uniqueNumbers.size}/${targetCount})</p><p class="text-sm break-words">ขาดอีก ${needed} หมายเลขสำหรับวันที่ ${date}</p></div></div>`;
+                }
+                detailsBlock = `<div class="space-y-4 pt-4 text-sm mt-4 border-t border-slate-200"><div class="flex items-start space-x-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.095a1.23 1.23 0 00.41-1.412A9.995 9.995 0 0010 12c-2.31 0-4.438.784-6.131 2.095z" /></svg><div><p class="font-semibold text-slate-600">ผู้ลงข้อมูล:</p><p class="text-slate-800 break-words">${uniqueUsers.size > 0 ? [...uniqueUsers].join(', ') : 'ไม่พบ'}</p></div></div><div class="flex items-start space-x-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5z" clip-rule="evenodd" /></svg><div><p class="font-semibold text-slate-600">หมายเลขที่ตรวจแล้ว (${uniqueNumbers.size} หมายเลข):</p><p class="text-slate-800 break-words">${uniqueNumbers.size > 0 ? [...uniqueNumbers].join(', ') : 'ไม่พบ'}</p></div></div></div>`;
+            }
+            resultsEl.innerHTML = `<div class="w-full">${statusBlock}${detailsBlock}</div>`;
+        }
+        
+        // --- Display User Cards (Monthly) ---
+        async function displayMonthlyUserCards(username) {
+            monthlyUserInfo.classList.remove('hidden');
+            monthlyWelcomeMessage.classList.add('hidden');
+            monthlyCurrentUserHeader.textContent = `ข้อมูลของ: ${username}`;
+            monthlyAppContainer.innerHTML = `<div class="loader-lg col-span-full mx-auto animate-spin rounded-full border-4 border-slate-200 border-t-amber-500"></div>`;
+            try {
+                const result = await apiCall('loadSettings', { username }, 'daily'); 
+                cardConfigurations = Array.isArray(result.config) ? result.config : [];
+                renderMonthlyApp();
+            } catch (error) {
+                monthlyAppContainer.innerHTML = `<p class="text-red-500 text-center col-span-full">เกิดข้อผิดพลาดในการโหลดการตั้งค่า: ${error.message}</p>`;
+                cardConfigurations = [];
+            }
+        }
+
+        async function checkMonthlySheetData(config, monthYearValue, resultsEl) {
+            if (config.sheetId === 'N/A') {
+                return renderDisabledMessage(resultsEl, 'ไม่มีใช้งานในสาขา', 'การ์ดนี้ถูกปิดการใช้งาน');
+            }
+            if (!config.sheetId) {
+                return renderInfoMessage(resultsEl, 'ยังไม่ได้ตั้งค่า Sheet ID', 'กรุณากำหนดค่าในหน้าตั้งค่า');
+            }
+            if (!config.sheetName) {
+                return renderInfoMessage(resultsEl, 'ยังไม่ได้ตั้งค่า Sheet Name', 'กรุณากำหนดค่าในหน้าตั้งค่า');
+            }
+            if (!monthYearValue) {
+                resultsEl.innerHTML = '<p class="text-slate-500">กรุณาเลือกเดือน</p>';
+                return;
+            }
+
+            resultsEl.innerHTML = `<div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-amber-500"></div>`;
+            const [year, month] = monthYearValue.split('-').map(Number);
+            const cacheKey = `${config.sheetId}-${year}-${month}`;
+
+            if (monthlyDataCache[cacheKey]) {
+                return processMonthlyData(monthlyDataCache[cacheKey], resultsEl, config.targetCount, year, month, config);
+            }
+            try {
+                const allMonthlyData = await apiCall('getMonthlySheetData', { sheetId: config.sheetId, sheetName: config.sheetName, year, month }, 'monthly');
+                monthlyDataCache[cacheKey] = allMonthlyData.data;
+                processMonthlyData(allMonthlyData.data, resultsEl, config.targetCount, year, month, config);
+            } catch (error) {
+                renderError(resultsEl, `เกิดข้อผิดพลาด: ${error.message}`);
+            }
+        }
+
+        function processMonthlyData(allMonthlyData, resultsEl, targetCount, year, month, config) {
+            const daysInMonth = new Date(year, month, 0).getDate();
+            const dailyCompletionStatus = {};
+            const COL_DAY_IDX = 1, COL_NUMBER_IDX = 9;
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                dailyCompletionStatus[i] = false;
+            }
+
+            const dailyNumbers = {};
+            allMonthlyData.forEach(row => {
+                try {
+                    const day = parseInt(row[COL_DAY_IDX], 10);
+                    const number = row[COL_NUMBER_IDX];
+                    if (!isNaN(day) && day >= 1 && day <= daysInMonth && number) {
+                        if (!dailyNumbers[day]) {
+                            dailyNumbers[day] = new Set();
+                        }
+                        dailyNumbers[day].add(number);
+                    }
+                } catch (e) {
+                    console.error("Error parsing row for monthly summary (client-side):", row, e);
+                }
+            });
+
+            let allDaysComplete = true;
+            for (let i = 1; i <= daysInMonth; i++) {
+                if (dailyNumbers[i] && dailyNumbers[i].size >= targetCount) {
+                    dailyCompletionStatus[i] = true;
+                } else {
+                    allDaysComplete = false;
+                }
+            }
+            
+            renderMonthlyResults(resultsEl, allDaysComplete, year, month, dailyCompletionStatus, targetCount, config);
+        }
+
+        // --- Refresh Logic (Monthly) ---
+        function refreshMonthlyCurrentView() {
+            // Use the global variable instead of querying the DOM
+            if (currentSelectedMonthlyUser) {
+                Object.keys(monthlyDataCache).forEach(key => delete monthlyDataCache[key]);
+                console.log('Monthly cache cleared for refresh.');
+                const refreshIcon = monthlyRefreshButton.querySelector('svg');
+                refreshIcon.classList.add('animate-spin');
+                monthlyRefreshButton.disabled = true;
+                displayMonthlyUserCards(currentSelectedMonthlyUser).finally(() => {
+                    refreshIcon.classList.remove('animate-spin');
+                    monthlyRefreshButton.disabled = false;
+                });
+            } else {
+                showCustomMessage('แจ้งเตือน', 'กรุณาเลือกผู้ใช้งานก่อนรีเฟรช');
+            }
+        }
+
+        // --- UI Rendering (Monthly) ---
+        function renderMonthlyApp() {
+            monthlyAppContainer.innerHTML = '';
+            if (cardConfigurations.length === 0) {
+                monthlyAppContainer.innerHTML = '<p class="text-slate-500 text-center col-span-full">ผู้ใช้นี้ยังไม่มีการตั้งค่าการ์ด</p>';
+            } else {
+                cardConfigurations.forEach((config, index) => createMonthlyCard(config, index));
+            }
+        }
+
+        function createMonthlyCard(config, index) {
+            const resultsDivId = `monthly-results-${index}`;
+            const cardHtml = `<div id="monthly-card-${index}" class="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-2xl shadow-xl p-6 md:p-8"><div class="text-center mb-4"><h1 class="text-xl sm:text-2xl font-bold text-slate-800">${config.title}</h1></div><div id="${resultsDivId}" class="min-h-[150px] flex items-center justify-center transition-all"></div></div>`;
+            monthlyAppContainer.insertAdjacentHTML('beforeend', cardHtml);
+            checkMonthlySheetData(config, monthlyGlobalCheckMonthInput.value, document.getElementById(resultsDivId));
+        }
+
+        function renderMonthlyResults(resultsEl, allDaysComplete, year, month, dailyCompletionStatus, targetCount, config) {
+            resultsEl.innerHTML = '';
+            const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const monthName = monthNames[month - 1];
+            const buddhistYear = year + 543;
+
+            let statusBlock;
+
+            if (config.title === 'แก๊ส LPG') {
+                statusBlock = `<div class="bg-blue-100/50 border border-blue-200/80 text-blue-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-blue-500"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">สถานะพิเศษ</p><p class="text-sm break-words">กรุณาตรวจสอบทุกครั้งที่มีการนำถังแก๊สมาจัดเก็บในพื้นที่</p></div></div>`;
+            } else if (allDaysComplete) {
+                statusBlock = `<div class="bg-teal-100/50 border border-teal-200/80 text-teal-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-teal-500"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ครบแล้วทั้งเดือน</p><p class="text-sm break-words">ข้อมูลครบทุกวันสำหรับเดือน ${monthName} ${buddhistYear}</p></div></div>`;
+            } else {
+                statusBlock = `<div class="bg-amber-100/50 border border-amber-200/80 text-amber-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-amber-500"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ยังไม่ครบทั้งเดือน</p><p class="text-sm break-words">มีบางวันในเดือน ${monthName} ${buddhistYear} ที่ข้อมูลยังไม่ครบ (${targetCount} หมายเลข/วัน)</p></div></div>`;
+            }
+
+            // Updated dailySummaryHtml to match the provided image's styling and layout
+            const dailySummaryHtml = Object.entries(dailyCompletionStatus).map(([day, isComplete]) => `
+                <div class="flex flex-col items-center justify-center p-2 rounded-lg text-sm font-medium
+                    ${isComplete ? 'bg-teal-100 text-teal-800' : 'bg-rose-100 text-rose-800'}">
+                    <span>${day}</span>
+                    ${isComplete ? 
+                        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-teal-600"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.052-.143z" clip-rule="evenodd" /></svg>' : 
+                        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-rose-600"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94l-1.72-1.72z" clip-rule="evenodd" /></svg>'
+                    }
+                </div>
+            `).join('');
+
+            resultsEl.innerHTML = `
+                <div class="w-full">
+                    ${statusBlock}
+                    <div class="space-y-2 pt-4 text-sm mt-4 border-t border-slate-200">
+                        <p class="font-semibold text-slate-600 mb-2">สถานะรายวัน:</p>
+                        <div class="grid grid-cols-7 gap-2 p-2 border border-slate-200 rounded-lg bg-slate-50">
+                            ${dailySummaryHtml}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderError(resultsEl, msg) {
+            resultsEl.innerHTML = `<div class="bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded-xl flex flex-col items-center justify-center text-center"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 mb-2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg><p class="font-bold">เกิดข้อผิดพลาด</p><p class="text-sm">${msg}</p></div>`;
+        }
+
+        function renderDisabledMessage(resultsEl, title, msg) {
+            resultsEl.innerHTML = `<div class="bg-slate-50 border border-slate-200 text-slate-800 p-4 rounded-xl flex flex-col items-center justify-center text-center"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 mb-2 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg><p class="font-bold">${title}</p><p class="text-sm text-slate-600">${msg}</p></div>`;
+        }
+        
+        function renderInfoMessage(resultsEl, title, msg) {
+            resultsEl.innerHTML = `<div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-xl flex flex-col items-center justify-center text-center"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 mb-2 text-amber-400"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg><p class="font-bold">${title}</p><p class="text-sm text-amber-700">${msg}</p></div>`;
+        }
+
+        // --- Custom Message Box (Replaces alert) ---
+        function showCustomMessage(title, message) {
+            const modalHtml = `
+                <div id="custom-message-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
+                    <div class="bg-white rounded-lg shadow-xl w-full max-w-sm flex flex-col">
+                        <div class="flex justify-between items-center p-4 border-b border-slate-200">
+                            <h2 class="text-xl font-bold text-slate-800">${title}</h2>
+                            <button id="custom-message-close" class="text-slate-500 hover:text-slate-700 p-2 rounded-full hover:bg-slate-100 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="p-4 text-slate-700">
+                            <p>${message}</p>
+                        </div>
+                        <div class="p-4 border-t border-slate-200 flex justify-end">
+                            <button id="custom-message-ok" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                                ตกลง
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            document.body.classList.add('overflow-hidden');
+
+            const modal = document.getElementById('custom-message-modal');
+            const closeButton = document.getElementById('custom-message-close');
+            const okButton = document.getElementById('custom-message-ok');
+
+            const closeModal = () => {
+                modal.remove();
+                if (!document.querySelector('#daily-sidebar-overlay:not(.hidden)')) {
+                   document.body.classList.remove('overflow-hidden');
+                }
+            };
+
+            closeButton.addEventListener('click', closeModal);
+            okButton.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        }
+        
+        // --- ADDED: Excel Export Function ---
+        function exportMonthlySummaryToExcel() {
+            const selectedButton = document.querySelector('#monthly-user-buttons-container button.bg-amber-600');
+            if (!selectedButton) {
+                showCustomMessage('แจ้งเตือน', 'กรุณาเลือกสาขาก่อน Export');
+                return;
+            }
+
+            const branchName = selectedButton.textContent;
+            const monthValue = monthlyGlobalCheckMonthInput.value;
+            const [year, month] = monthValue.split('-');
+            const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const monthName = monthNames[parseInt(month) - 1];
+            const buddhistYear = parseInt(year) + 543;
+
+            const dataToExport = [];
+            const monthlyCards = document.querySelectorAll('#monthly-app-container > div[id^="monthly-card-"]');
+
+            if (monthlyCards.length === 0) {
+                showCustomMessage('แจ้งเตือน', 'ไม่พบข้อมูลสรุปรายเดือนที่จะ Export');
+                return;
+            }
+
+            monthlyCards.forEach(card => {
+                const cardTitleElement = card.querySelector('h1');
+                // FIX: Corrected the selector to be valid. Brackets in class names are not standard and cause errors.
+                // A simpler, more robust selector is used instead.
+                const statusElement = card.querySelector('p.font-bold');
+
+                if (cardTitleElement && statusElement) {
+                    const cardName = cardTitleElement.textContent.trim();
+                    let statusText = statusElement.textContent.trim();
+
+                    // Simplify status text for Excel
+                    if (statusText.includes('ครบแล้ว')) {
+                        statusText = 'ครบ';
+                    } else if (statusText.includes('ยังไม่ครบ')) {
+                        statusText = 'ไม่ครบ';
+                    } else if (statusText.includes('สถานะพิเศษ')) {
+                        statusText = 'ตรวจสอบตามการใช้งาน';
+                    } else if (statusText.includes('ไม่มีใช้งานในสาขา')) { 
+                        statusText = 'ไม่มีใช้งานในสาขา';
+                    }
+                    else {
+                        statusText = 'ไม่มีข้อมูล';
+                    }
+
+                    dataToExport.push({
+                        'ชื่อสาขา': branchName,
+                        'Check Sheets': cardName, // CHANGED: Changed column name here
+                        'สถานะรายเดือน': statusText
+                    });
+                }
+            });
+            
+            if (dataToExport.length === 0) {
+                 showCustomMessage('แจ้งเตือน', 'ไม่สามารถรวบรวมข้อมูลเพื่อ Export ได้');
+                 return;
+            }
+
+            // Create worksheet and workbook using SheetJS
+            const ws = XLSX.utils.json_to_sheet(dataToExport);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'สรุปรายเดือน');
+
+            // Set column widths for better readability
+            const colWidths = [
+                { wch: Math.max(...dataToExport.map(item => item['ชื่อสาขา'].length), 'ชื่อสาขา'.length) + 2 },
+                { wch: Math.max(...dataToExport.map(item => item['Check Sheets'].length), 'Check Sheets'.length) + 2 }, // CHANGED: Updated width calculation
+                { wch: Math.max(...dataToExport.map(item => item['สถานะรายเดือน'].length), 'สถานะรายเดือน'.length) + 2 }
+            ];
+            ws['!cols'] = colWidths;
+
+            // Trigger file download
+            XLSX.writeFile(wb, `สรุปรายเดือน_${branchName}_${monthName}${buddhistYear}.xlsx`);
+        }
+
+        // --- Initial Load & Event Listeners ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('./admin-sw.js')
+                        .then(registration => console.log('Admin ServiceWorker registration successful with scope: ', registration.scope))
+                        .catch(err => console.log('Admin ServiceWorker registration failed: ', err));
+                });
+            }
+            
+            // Menu Listeners
+            menuDailyCheck.addEventListener('click', async (e) => {
+                e.preventDefault();
+                showDailyApp();
+                dailyGlobalCheckDateInput.value = new Date().toISOString().split('T')[0];
+                await loadAllUsers(dailyUserButtonsContainer, 'lastSelectedUserDaily', displayDailyUserCards);
+                const lastSelectedUserDaily = localStorage.getItem('lastSelectedUserDaily');
+                if (lastSelectedUserDaily) {
+                    const userButton = [...document.querySelectorAll('#daily-user-buttons-container button')].find(btn => btn.textContent === lastSelectedUserDaily);
+                    if (userButton) {
+                        userButton.click();
+                        currentSelectedDailyUser = lastSelectedUserDaily; // Ensure global is set on initial load
+                    }
+                }
+            });
+
+            // menuDetails.addEventListener('click', (e) => { // Removed
+            //     e.preventDefault();
+            //     showCustomMessage('แจ้งเตือน', 'เมนู "รายละเอียดการตรวจสอบ" ยังไม่พร้อมใช้งาน');
+            // });
+
+            menuSummary.addEventListener('click', async (e) => {
+                e.preventDefault();
+                showMonthlyApp();
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = (today.getMonth() + 1).toString().padStart(2, '0');
+                monthlyGlobalCheckMonthInput.value = `${year}-${month}`;
+                await loadAllUsers(monthlyUserButtonsContainer, 'lastSelectedUserMonthly', displayMonthlyUserCards);
+                const lastSelectedUserMonthly = localStorage.getItem('lastSelectedUserMonthly');
+                if (lastSelectedUserMonthly) {
+                    const userButton = [...document.querySelectorAll('#monthly-user-buttons-container button')].find(btn => btn.textContent === lastSelectedUserMonthly);
+                    if (userButton) {
+                        userButton.click();
+                        currentSelectedMonthlyUser = lastSelectedUserMonthly; // Ensure global is set on initial load
+                    }
+                }
+            });
+
+            // menuOther.addEventListener('click', (e) => { // Removed
+            //     e.preventDefault();
+            //     showCustomMessage('แจ้งเตือน', 'เมนู "เมนูอื่นๆ" ยังไม่พร้อมใช้งาน');
+            // });
+
+            // Daily App Listeners
+            dailyBackToMenuButton.addEventListener('click', showMainMenu);
+            dailySidebarToggle.addEventListener('click', (e) => { e.stopPropagation(); if (dailySidebar.classList.contains('-translate-x-full')) openDailySidebar(); else closeDailySidebar(); });
+            dailySidebarOverlay.addEventListener('click', closeDailySidebar);
+            
+            dailyGlobalCheckDateInput.addEventListener('change', () => {
+                // Use the global variable instead of querying the DOM
+                if (currentSelectedDailyUser) {
+                    Object.keys(dailyDataCache).forEach(key => delete dailyDataCache[key]);
+                    displayDailyUserCards(currentSelectedDailyUser);
+                } else {
+                    showCustomMessage('แจ้งเตือน', 'กรุณาเลือกสาขาก่อนเปลี่ยนวันที่'); // Show message if no user selected
+                }
+            });
+            dailyRefreshButton.addEventListener('click', refreshDailyCurrentView);
+            dailyUserSearchInput.addEventListener('input', () => {
+                const searchTerm = dailyUserSearchInput.value.toLowerCase();
+                document.querySelectorAll('#daily-user-buttons-container button').forEach(button => {
+                    button.style.display = button.textContent.toLowerCase().includes(searchTerm) ? 'block' : 'none';
+                });
+            });
+
+            // Monthly App Listeners
+            monthlyBackToMenuButton.addEventListener('click', showMainMenu);
+            monthlySidebarToggle.addEventListener('click', (e) => { e.stopPropagation(); if (monthlySidebar.classList.contains('-translate-x-full')) openMonthlySidebar(); else closeMonthlySidebar(); });
+            monthlySidebarOverlay.addEventListener('click', closeMonthlySidebar);
+            monthlyExportExcelButton.addEventListener('click', exportMonthlySummaryToExcel); // ADDED
+
+            monthlyGlobalCheckMonthInput.addEventListener('change', () => {
+                // Use the global variable instead of querying the DOM
+                if (currentSelectedMonthlyUser) {
+                    Object.keys(monthlyDataCache).forEach(key => delete monthlyDataCache[key]);
+                    displayMonthlyUserCards(currentSelectedMonthlyUser);
+                } else {
+                    showCustomMessage('แจ้งเตือน', 'กรุณาเลือกสาขาก่อนเปลี่ยนเดือน'); // Show message if no user selected
+                }
+            });
+            monthlyRefreshButton.addEventListener('click', refreshMonthlyCurrentView);
+            monthlyUserSearchInput.addEventListener('input', () => {
+                const searchTerm = monthlyUserSearchInput.value.toLowerCase();
+                 document.querySelectorAll('#monthly-user-buttons-container button').forEach(button => {
+                    button.style.display = button.textContent.toLowerCase().includes(searchTerm) ? 'block' : 'none';
+                });
+            });
+
+            // Daily Detail Page Listeners
+            detailPageBackButton.addEventListener('click', showDailyApp);
+        });
+    </script>
+</body>
+</html>
