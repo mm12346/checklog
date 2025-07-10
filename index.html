@@ -120,9 +120,6 @@
             </a>
             <!-- Menu Item 3: Details (Removed as per user request) -->
             <!-- Menu Item 4: Others (Removed as per user request) -->
-        </div><br>
-        <div class="text-center mb-12">
-         <p class="text-sm text-slate-400 mt-1">V 3.0</p>
         </div>
     </div>
 
@@ -348,7 +345,7 @@
         const dailySidebarOverlay = document.getElementById('daily-sidebar-overlay');
         const dailyRefreshButton = document.getElementById('daily-refresh-button');
         const dailyUserSearchInput = document.getElementById('daily-user-search-input');
-        const dailyBackToMenuButton = document.getElementById('daily-back-to-menu-button'); // Corrected typo here
+        const dailyBackToMenuButton = document = document.getElementById('daily-back-to-menu-button'); // Corrected typo here
 
         // --- DOM Elements (Monthly Summary) ---
         const monthlySummaryAppContainer = document.getElementById('monthly-summary-app-container');
@@ -567,15 +564,9 @@
             const isGet = action.startsWith('load') || action.startsWith('get') || action.startsWith('getDataLabelsForCard');
             const options = { method: isGet ? 'GET' : 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' } };
             
-            const urls = scriptType === 'daily' ? [...SCRIPT_URLS] : [...MONTHLY_SCRIPT_URLS]; // Create a mutable copy
-
-            // Shuffle the URLs to try them in random order
-            for (let i = urls.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [urls[i], urls[j]] = [urls[j], urls[i]]; // ES6 swap
-            }
+            const urlsToTry = scriptType === 'daily' ? SCRIPT_URLS : MONTHLY_SCRIPT_URLS;
             
-            for (const baseUrl of urls) {
+            for (const baseUrl of urlsToTry) {
                 const url = new URL(baseUrl);
                 console.log(`Attempting API call to (${scriptType}): ${url.toString()} with action: ${action}`);
 
@@ -721,7 +712,7 @@
                     dailyRefreshButton.disabled = false;
                 });
             } else {
-                showCustomMessage('แจ้งเตือน', 'กรุณาเลือกสาขาก่อนรีเฟรช');
+                showCustomMessage('แจ้งเตือน', 'กรุณาเลือกผู้ใช้งานก่อนรีเฟรช');
             }
         }
 
