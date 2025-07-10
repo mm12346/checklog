@@ -1,82 +1,104 @@
 // Service Worker for Check Log Admin PWA
-const CACHE_NAME = 'checklog-admin-v16';
+const CACHE_NAME = 'checklog-admin-cache-v1';
 const urlsToCache = [
-    './',
-    './index.html',
-    'https://cdn.tailwindcss.com',
-    'https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap',
-    'https://fonts.gstatic.com/s/sarabun/v15/DtVjJx26TKEr37c9WJpP.woff2', // Example font file, adjust if needed
-    'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
-    'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/512.png', // Website icon
-    'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/180.png', // Apple touch icon
-    'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/192.png' // PWA icon
-    // Add other critical assets here if they are static and should be cached
+  './', // Caches the root path, which typically serves index.html
+  './index.html',
+  'https://cdn.tailwindcss.com',
+  'https://fonts.googleapis.com',
+  'https://fonts.gstatic.com',
+  'https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap',
+  'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/512.png', // Website icon
+  'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/180.png', // Apple touch icon
+  'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/192.png', // Icon for manifest
+  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js' // Excel library
+  // Add other static assets like CSS, JS, images if they are local files
+  // For external API calls, we'll use a network-first strategy
 ];
 
-// Install event: caches the static assets
+// Install event: Caches static assets
 self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then((cache) => {
-                console.log('Opened cache');
-                return cache.addAll(urlsToCache);
-            })
-            .catch((error) => {
-                console.error('Failed to cache during install:', error);
-            })
-    );
+  console.log('Service Worker: Installing...');
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('Service Worker: Caching static assets');
+        return cache.addAll(urlsToCache);
+      })
+      .catch((error) => {
+        console.error('Service Worker: Caching failed', error);
+      })
+  );
 });
 
-// Activate event: cleans up old caches
+// Activate event: Cleans up old caches
 self.addEventListener('activate', (event) => {
-    event.waitUntil(
-        caches.keys().then((cacheNames) => {
-            return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log('Deleting old cache:', cacheName);
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
+  console.log('Service Worker: Activating...');
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Service Worker: Deleting old cache', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
+
+// Fetch event: Intercepts network requests
+self.addEventListener('fetch', (event) => {
+  // Check if the request is for an API call (Google Apps Script URLs)
+  const isDailyApi = event.request.url.includes('script.google.com/macros/s/AKfycb');
+  const isMonthlyApi = event.request.url.includes('script.google.com/macros/s/AKfycb'); // Assuming similar pattern for monthly
+
+  if (isDailyApi || isMonthlyApi) {
+    // For API calls, use a network-first strategy
+    // This means try to fetch from the network first, if it fails, try the cache
+    event.respondWith(
+      fetch(event.request)
+        .then(async (response) => {
+          // If network request is successful, clone the response and cache it
+          const responseToCache = response.clone();
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(event.request, responseToCache);
+          return response;
+        })
+        .catch(async () => {
+          // If network fails, try to get from cache
+          const cachedResponse = await caches.match(event.request);
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          // If not in cache, return an error response or a fallback
+          return new Response('Network error or API not cached.', {
+            status: 503,
+            statusText: 'Service Unavailable',
+            headers: new Headers({
+              'Content-Type': 'text/plain'
+            })
+          });
         })
     );
-});
-
-// Fetch event: serves cached content or fetches from network
-self.addEventListener('fetch', (event) => {
-    // Only handle GET requests for navigation and static assets
-    if (event.request.method === 'GET') {
-        event.respondWith(
-            caches.match(event.request).then((response) => {
-                // Return cached response if found
-                if (response) {
-                    return response;
-                }
-                // If not in cache, fetch from network
-                return fetch(event.request).then((networkResponse) => {
-                    // Check if we received a valid response
-                    if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-                        return networkResponse;
-                    }
-
-                    // Cache the new response for future use
-                    const responseToCache = networkResponse.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, responseToCache);
-                    });
-                    return networkResponse;
-                }).catch((error) => {
-                    console.error('Fetch failed:', error);
-                    // Optionally, serve an offline page or fallback content
-                    // For example, return a generic offline page if the request is for a document
-                    if (event.request.mode === 'navigate') {
-                        return caches.match('./index.html'); // Fallback to main page for navigation requests
-                    }
-                    // For other requests (e.g., images, scripts), you might return nothing or a placeholder
-                    return new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
-                });
-            })
-        );
-    }
+  } else {
+    // For other static assets, use a cache-first strategy
+    // This means try to get from cache first, if not found, fetch from network
+    event.respondWith(
+      caches.match(event.request)
+        .then((response) => {
+          return response || fetch(event.request).then(async (fetchResponse) => {
+            // Cache new requests if they are successful
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(event.request, fetchResponse.clone());
+            return fetchResponse;
+          });
+        })
+        .catch((error) => {
+          console.error('Service Worker: Fetch failed for static asset', error);
+          // You can return a fallback page here if offline
+          // return caches.match('/offline.html');
+        })
+    );
+  }
 });
