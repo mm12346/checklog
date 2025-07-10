@@ -122,7 +122,7 @@
             <!-- Menu Item 4: Others (Removed as per user request) -->
         </div><br>
         <div class="text-center mb-12">
-         <p class="text-sm text-slate-400 mt-1"> V 3.0</p>
+         <p class="text-sm text-slate-400 mt-1"> V 1.0</p>
         </div>
     </div>
 
@@ -244,7 +244,7 @@
                         <div class="flex-grow flex items-center justify-end gap-2 sm:gap-4">
                             <input type="month" id="monthly-global-check-month" class="w-full max-w-xs px-4 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 transition">
                             <button id="monthly-refresh-button" title="รีเฟรชข้อมูล" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed">
-                                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M3 12a9 9 0 0 1 9-9 9.75 9 0 0 1 6.74 2.74L21 8"></path>
                                     <path d="M21 3v5h-5"></path>
                                     <path d="M21 12a9 9 0 0 1-9 9 9.75 9 0 0 1-6.74-2.74L3 16"></path>
@@ -399,15 +399,10 @@
             dailyCheckAppContainer.classList.add('hidden');
             monthlySummaryAppContainer.classList.add('hidden');
             dailyDetailPageContainer.classList.add('hidden');
-            localStorage.removeItem('lastSelectedUserDaily');
-            localStorage.removeItem('lastSelectedUserMonthly');
             // Ensure all buttons lose their active state when returning to main menu
             document.querySelectorAll('button.bg-indigo-600, button.bg-amber-600').forEach(btn => {
                 btn.classList.remove('bg-indigo-600', 'text-white', 'font-semibold', 'shadow', 'bg-amber-600');
             });
-            // Reset global selected user variables
-            currentSelectedDailyUser = null;
-            currentSelectedMonthlyUser = null;
         }
         
         function showDailyDetailPage() {
@@ -766,37 +761,40 @@
             
             let statusBlock, detailsBlock;
 
-            // Special case for "แก๊ส LPG"
-            if (title === 'แก๊ส LPG') {
-                statusBlock = `<div class="bg-blue-100/50 border border-blue-200/80 text-blue-800 p-4 rounded-xl flex items-center space-x-4">
-                    <div class="flex-shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-blue-500">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                        </svg>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="font-bold text-lg">สถานะพิเศษ</p>
-                        <p class="text-sm break-words">ควรตรวจสอบทุกครั้งก่อนการจัดเก็บเข้าพื้นที่จัดเก็บ</p>
-                    </div>
-                </div>`;
-                detailsBlock = ''; // No details for this special case
-            } else if (entries.length === 0) {
-                // Case for no data found (for other cards) as per user request
-                const needed = targetCount; // All are needed
-                statusBlock = `<div class="bg-amber-100/50 border border-amber-200/80 text-amber-800 p-4 rounded-xl flex items-center space-x-4">
-                    <div class="flex-shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-amber-500">
-                            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="font-bold text-lg">ยังไม่ครบ (0/${targetCount})</p>
-                        <p class="text-sm break-words">ขาดอีก ${needed} หมายเลขสำหรับวันที่ ${date}</p>
-                    </div>
-                </div>`;
-                detailsBlock = ''; // No details block if no entries
+            if (entries.length === 0) {
+                // If no data is found for any card
+                if (title === 'แก๊ส LPG') {
+                    // Special status for LPG when no data is found
+                    statusBlock = `<div class="bg-blue-100/50 border border-blue-200/80 text-blue-800 p-4 rounded-xl flex items-center space-x-4">
+                        <div class="flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-blue-500">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                            </svg>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="font-bold text-lg">สถานะพิเศษ</p>
+                            <p class="text-sm break-words">ควรตรวจสอบทุกครั้งก่อนการจัดเก็บเข้าพื้นที่จัดเก็บ</p>
+                        </div>
+                    </div>`;
+                    detailsBlock = ''; // No details for this special case
+                } else {
+                    // Default "not complete" message for other cards when no data
+                    const needed = targetCount;
+                    statusBlock = `<div class="bg-amber-100/50 border border-amber-200/80 text-amber-800 p-4 rounded-xl flex items-center space-x-4">
+                        <div class="flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-amber-500">
+                                <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="font-bold text-lg">ยังไม่ครบ (0/${targetCount})</p>
+                            <p class="text-sm break-words">ขาดอีก ${needed} หมายเลขสำหรับวันที่ ${date}</p>
+                        </div>
+                    </div>`;
+                    detailsBlock = '';
+                }
             } else {
-                // Existing logic for when there are entries
+                // Data is found
                 if (uniqueNumbers.size >= targetCount) {
                     statusBlock = `<div class="bg-teal-100/50 border border-teal-200/80 text-teal-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-teal-500"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ครบแล้ว</p><p class="text-sm break-words">ตรวจครบ ${uniqueNumbers.size} หมายเลขสำหรับวันที่ ${date}</p></div></div>`;
                 } else {
