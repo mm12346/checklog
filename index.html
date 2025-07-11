@@ -117,11 +117,9 @@
                 <h2 class="text-xl font-semibold text-slate-800">Month Check</h2>
                 <p class="text-sm text-slate-500 mt-1">สรุปสถานะการตรวจสอบรายเดือน</p>
             </a>
-            <!-- Menu Item 3: Details (Removed as per user request) -->
-            <!-- Menu Item 4: Others (Removed as per user request) -->
         </div><br>
         <div class="text-center mb-12">
-         <p class="text-sm text-slate-400 mt-1"> V 2.1</p>
+         <p class="text-sm text-slate-400 mt-1"> V 2.2</p>
         </div>
     </div>
 
@@ -297,7 +295,7 @@
         </header>
         <main>
             <div class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-                <div id="detail-page-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div id="detail-page-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Cards will be inserted here -->
                 </div>
             </div>
@@ -373,9 +371,7 @@
         // --- DOM Elements (Main Menu) ---
         const mainMenu = document.getElementById('main-menu');
         const menuDailyCheck = document.getElementById('menu-daily-check');
-        // const menuDetails = document.getElementById('menu-details'); // Removed
         const menuSummary = document.getElementById('menu-summary');
-        // const menuOther = document.getElementById('menu-other'); // Removed
 
         // --- DOM Elements (Daily Detail Page) ---
         const dailyDetailPageContainer = document.getElementById('daily-detail-page-container');
@@ -403,7 +399,6 @@
             dailyCheckAppContainer.classList.add('hidden');
             monthlySummaryAppContainer.classList.add('hidden');
             dailyDetailPageContainer.classList.add('hidden');
-            // Ensure all buttons lose their active state when returning to main menu
             document.querySelectorAll('button.bg-indigo-600, button.bg-amber-600').forEach(btn => {
                 btn.classList.remove('bg-indigo-600', 'text-white', 'font-semibold', 'shadow', 'bg-amber-600');
             });
@@ -500,61 +495,73 @@
 
             const customLabels = await fetchDataLabelsForCard(config.title);
 
-            dataRows.forEach((row, index) => {
+            dataRows.forEach((row) => {
                 const user = row[7] !== undefined && row[7] !== null ? row[7] : 'ไม่ระบุ';
                 const number = row[9] !== undefined && row[9] !== null ? row[9] : 'ไม่ระบุ';
-                const bgColorClass = 'bg-white'; 
 
                 let additionalDataHtml = '';
                 for (let i = 10; i < row.length; i++) {
                     const dataLabel = customLabels[i - 10] || `ข้อมูล ${i - 9}`; 
                     let dataValue = row[i] !== undefined && row[i] !== null ? row[i] : '';
                     
-                    // MODIFIED: Date formatting logic to use short date format (DD/MM/YYYY)
                     if (typeof dataValue === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(dataValue)) {
                         try {
                             const dateObj = new Date(dataValue);
-                            if (!isNaN(dateObj.getTime())) { // Check if date is valid
-                                // Format to "DD/MM/YYYY" (Thai Buddhist year)
+                            if (!isNaN(dateObj.getTime())) {
                                 dataValue = dateObj.toLocaleDateString('th-TH', {
                                     day: '2-digit',
                                     month: '2-digit',
-                                    year: 'numeric' // This will give the Buddhist year in th-TH locale
+                                    year: 'numeric'
                                 });
                             }
                         } catch (e) {
                             console.error("Error parsing date string:", dataValue, e);
-                            // Fallback to original dataValue if parsing fails
                         }
                     }
-                    // END MODIFIED
 
-                    let valueColorClass = 'text-slate-800';
+                    let valueColorClass = 'text-slate-700';
                     if (typeof dataValue === 'string') {
                         if (dataValue.toLowerCase() === 'ปกติ') {
-                            valueColorClass = 'text-green-600';
+                            valueColorClass = 'text-green-800';
                         } else if (dataValue.toLowerCase() === 'ไม่ปกติ') {
-                            valueColorClass = 'text-red-600';
+                            valueColorClass = 'text-red-800';
                         }
                     }
 
                     if (dataValue) {
                         additionalDataHtml += `
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-slate-600 font-medium">${dataLabel}:</span>
-                                <span class="font-normal ${valueColorClass}">${dataValue}</span>
+                            <div class="bg-slate-50 p-3 rounded-lg">
+                                <p class="text-sm text-slate-500 font-medium">${dataLabel}</p>
+                                <p class="text-base font-semibold ${valueColorClass} mt-1">${dataValue}</p>
                             </div>
                         `;
                     }
                 }
 
                 const cardHtml = `
-                    <div class="${bgColorClass} rounded-lg shadow-md p-4 space-y-2 border border-slate-200 transition-all duration-200 hover:shadow-lg hover:border-indigo-300">
-                        <div class="text-center">
-                            <p class="text-md text-slate-700 font-semibold mb-1">หมายเลข: <span class="font-medium text-indigo-600">${number}</span></p>
-                            <p class="text-lg font-bold text-slate-800">ผู้ลงข้อมูล: <span class="text-indigo-600">${user}</span></p>
+                    <div class="bg-white rounded-2xl shadow-lg p-5 flex flex-col space-y-4 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                        <div class="flex justify-between items-center pb-3 border-b border-slate-200">
+                             <h3 class="text-lg font-bold text-slate-800">หมายเลข:</h3>
+                             <span class="px-4 py-1.5 text-lg font-bold bg-indigo-100 text-indigo-700 rounded-full">${number}</span>
                         </div>
-                        ${additionalDataHtml ? `<div class="mt-3 pt-3 border-t border-slate-200 space-y-1">${additionalDataHtml}</div>` : ''}
+                        
+                        <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <div>
+                                <p class="text-sm text-slate-500">ผู้ลงข้อมูล</p>
+                                <p class="text-base font-semibold text-slate-700">${user}</p>
+                            </div>
+                        </div>
+
+                        ${additionalDataHtml ? `
+                        <div class="pt-4 space-y-3">
+                            <h4 class="text-base font-semibold text-slate-600">รายละเอียดเพิ่มเติม:</h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                ${additionalDataHtml}
+                            </div>
+                        </div>` : ''}
                     </div>
                 `;
                 detailPageContent.insertAdjacentHTML('beforeend', cardHtml);
@@ -566,12 +573,11 @@
             const isGet = action.startsWith('load') || action.startsWith('get') || action.startsWith('getDataLabelsForCard');
             const options = { method: isGet ? 'GET' : 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' } };
             
-            const urls = scriptType === 'daily' ? [...SCRIPT_URLS] : [...MONTHLY_SCRIPT_URLS]; // Create a mutable copy
+            const urls = scriptType === 'daily' ? [...SCRIPT_URLS] : [...MONTHLY_SCRIPT_URLS]; 
 
-            // Shuffle the URLs to try them in random order
             for (let i = urls.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [urls[i], urls[j]] = [urls[j], urls[i]]; // ES6 swap
+                [urls[i], urls[j]] = [urls[j], urls[i]]; 
             }
             
             for (const baseUrl of urls) {
@@ -609,7 +615,6 @@
         async function loadAllUsers(targetUserButtonsContainer, selectedUserLocalStorageKey, displayFunction) {
             targetUserButtonsContainer.innerHTML = `<div class="loader-sm animate-spin rounded-full border-2 border-slate-300 border-t-indigo-500 mx-auto"></div>`;
             
-            // Disable search input while loading
             const searchInput = targetUserButtonsContainer === dailyUserButtonsContainer ? dailyUserSearchInput : monthlyUserSearchInput;
             searchInput.disabled = true;
 
@@ -625,10 +630,10 @@
                         document.querySelectorAll(`#${targetUserButtonsContainer.id} button`).forEach(btn => btn.classList.remove('bg-indigo-600', 'text-white', 'font-semibold', 'shadow', 'bg-amber-600'));
                         if (targetUserButtonsContainer.id === 'daily-user-buttons-container') {
                             button.classList.add('bg-indigo-600', 'text-white', 'font-semibold', 'shadow');
-                            currentSelectedDailyUser = user; // Set global variable
+                            currentSelectedDailyUser = user; 
                         } else if (targetUserButtonsContainer.id === 'monthly-user-buttons-container') {
                             button.classList.add('bg-amber-600', 'text-white', 'font-semibold', 'shadow');
-                            currentSelectedMonthlyUser = user; // Set global variable
+                            currentSelectedMonthlyUser = user; 
                         }
                         
                         localStorage.setItem(selectedUserLocalStorageKey, user);
@@ -647,7 +652,6 @@
             } catch (error) {
                 targetUserButtonsContainer.innerHTML = `<p class="text-red-500">เกิดข้อผิดพลาดในการโหลดรายชื่อผู้ใช้: ${error.message}</p>`;
             } finally {
-                // Enable search input after loading (or error)
                 searchInput.disabled = false;
             }
         }
@@ -686,29 +690,24 @@
             resultsEl.innerHTML = `<div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-indigo-500"></div>`;
             const cacheKey = `${config.sheetId}-${dateValue}`;
             if (dailyDataCache[cacheKey]) {
-                // MODIFIED: Pass the full config object
                 return processDailyData(dailyDataCache[cacheKey], resultsEl, config);
             }
             try {
                 const filteredRows = await apiCall('getSheetData', { sheetId: config.sheetId, sheetName: config.sheetName, date: dateValue }, 'daily');
                 dailyDataCache[cacheKey] = filteredRows;
-                // MODIFIED: Pass the full config object
                 processDailyData(filteredRows, resultsEl, config);
             } catch (error) {
                 renderError(resultsEl, `เกิดข้อผิดพลาด: ${error.message}`);
             }
         }
 
-        // MODIFIED: Function signature changed to accept the full config object
         function processDailyData(dataRows, resultsEl, config) {
              const dateString = new Date(dailyGlobalCheckDateInput.value).toLocaleDateString('th-TH', { dateStyle: 'long' });
-             // MODIFIED: Pass the full config object to the rendering function
              renderDailyResults(resultsEl, dataRows, dateString, config);
         }
 
         // --- Refresh Logic (Daily) ---
         function refreshDailyCurrentView() {
-            // Use the global variable instead of querying the DOM
             if (currentSelectedDailyUser) { 
                 Object.keys(dailyDataCache).forEach(key => delete dailyDataCache[key]);
                 console.log('Daily cache cleared for refresh.');
@@ -755,10 +754,10 @@
             checkDailySheetData(config, dailyGlobalCheckDateInput.value, document.getElementById(resultsDivId));
         }
 
-        // MODIFIED: This function now implements the requested logic for daily cards.
+        // UPDATED: Logic for "แก๊ส LPG" card is changed based on user request.
         function renderDailyResults(resultsEl, entries, date, config) {
             resultsEl.innerHTML = '';
-            const { targetCount, title } = config; // Get title and targetCount from config
+            const { targetCount, title } = config;
             const COL_USER_IDX = 7, COL_NUMBER_IDX = 9;
             const uniqueNumbers = new Set(entries.map(entry => entry[COL_NUMBER_IDX]).filter(Boolean));
             const uniqueUsers = new Set(entries.map(entry => entry[COL_USER_IDX]).filter(Boolean));
@@ -766,12 +765,12 @@
             let statusBlock, detailsBlock;
 
             if (title === 'แก๊ส LPG') {
-                // Special handling for "แก๊ส LPG" card
-                if (uniqueNumbers.size >= targetCount) {
-                    // If data is found and meets target count, show "ครบแล้ว"
+                if (entries.length > 0) {
+                    // If data is found, show "Complete" status
                     statusBlock = `<div class="bg-teal-100/50 border border-teal-200/80 text-teal-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-teal-500"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ครบแล้ว</p><p class="text-sm break-words">ตรวจครบ ${uniqueNumbers.size} หมายเลขสำหรับวันที่ ${date}</p></div></div>`;
+                    detailsBlock = `<div class="space-y-4 pt-4 text-sm mt-4 border-t border-slate-200"><div class="flex items-start space-x-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.095a1.23 1.23 0 00.41-1.412A9.995 9.995 0 0010 12c-2.31 0-4.438.784-6.131 2.095z" /></svg><div><p class="font-semibold text-slate-600">ผู้ลงข้อมูล:</p><p class="text-slate-800 break-words">${uniqueUsers.size > 0 ? [...uniqueUsers].join(', ') : 'ไม่พบ'}</p></div></div><div class="flex items-start space-x-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5z" clip-rule="evenodd" /></svg><div><p class="font-semibold text-slate-600">หมายเลขที่ตรวจแล้ว (${uniqueNumbers.size} หมายเลข):</p><p class="text-slate-800 break-words">${uniqueNumbers.size > 0 ? [...uniqueNumbers].join(', ') : 'ไม่พบ'}</p></div></div></div>`;
                 } else {
-                    // If no data or not enough data, show "สถานะพิเศษ"
+                    // If no data, show "Special Status"
                     statusBlock = `<div class="bg-blue-100/50 border border-blue-200/80 text-blue-800 p-4 rounded-xl flex items-center space-x-4">
                         <div class="flex-shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-blue-500">
@@ -780,13 +779,12 @@
                         </div>
                         <div class="min-w-0">
                             <p class="font-bold text-lg">สถานะพิเศษ</p>
-                            <p class="text-sm break-words">ควรตรวจสอบทุกครั้งก่อนการจัดเก็บเข้าพื้นที่จัดเก็บ</p>
+                            <p class="text-sm break-words">ตรวจสอบทุกครั้งก่อนจัดเก็บ</p>
                         </div>
                     </div>`;
+                    detailsBlock = ''; // No details if no data
                 }
-                detailsBlock = ''; // No details for this special case
             } else if (entries.length === 0) {
-                // Case for no data found (for other cards)
                 const needed = targetCount;
                 statusBlock = `<div class="bg-amber-100/50 border border-amber-200/80 text-amber-800 p-4 rounded-xl flex items-center space-x-4">
                     <div class="flex-shrink-0">
@@ -799,9 +797,8 @@
                         <p class="text-sm break-words">ขาดอีก ${needed} หมายเลขสำหรับวันที่ ${date}</p>
                     </div>
                 </div>`;
-                detailsBlock = ''; // No details block if no entries
+                detailsBlock = ''; 
             } else {
-                // Existing logic for when there are entries and it's not "แก๊ส LPG"
                 if (uniqueNumbers.size >= targetCount) {
                     statusBlock = `<div class="bg-teal-100/50 border border-teal-200/80 text-teal-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-teal-500"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ครบแล้ว</p><p class="text-sm break-words">ตรวจครบ ${uniqueNumbers.size} หมายเลขสำหรับวันที่ ${date}</p></div></div>`;
                 } else {
@@ -899,7 +896,6 @@
 
         // --- Refresh Logic (Monthly) ---
         function refreshMonthlyCurrentView() {
-            // Use the global variable instead of querying the DOM
             if (currentSelectedMonthlyUser) {
                 Object.keys(monthlyDataCache).forEach(key => delete monthlyDataCache[key]);
                 console.log('Monthly cache cleared for refresh.');
@@ -948,7 +944,6 @@
                 statusBlock = `<div class="bg-amber-100/50 border border-amber-200/80 text-amber-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-amber-500"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ยังไม่ครบทั้งเดือน</p><p class="text-sm break-words">มีบางวันในเดือน ${monthName} ${buddhistYear} ที่ข้อมูลยังไม่ครบ (${targetCount} หมายเลข/วัน)</p></div></div>`;
             }
 
-            // Updated dailySummaryHtml to match the provided image's styling and layout
             const dailySummaryHtml = Object.entries(dailyCompletionStatus).map(([day, isComplete]) => `
                 <div class="flex flex-col items-center justify-center p-2 rounded-lg text-sm font-medium
                     ${isComplete ? 'bg-teal-100 text-teal-800' : 'bg-rose-100 text-rose-800'}">
@@ -1057,15 +1052,12 @@
 
             monthlyCards.forEach(card => {
                 const cardTitleElement = card.querySelector('h1');
-                // FIX: Corrected the selector to be valid. Brackets in class names are not standard and cause errors.
-                // A simpler, more robust selector is used instead.
                 const statusElement = card.querySelector('p.font-bold');
 
                 if (cardTitleElement && statusElement) {
                     const cardName = cardTitleElement.textContent.trim();
                     let statusText = statusElement.textContent.trim();
 
-                    // Simplify status text for Excel
                     if (statusText.includes('ครบแล้ว')) {
                         statusText = 'ครบ';
                     } else if (statusText.includes('ยังไม่ครบ')) {
@@ -1081,7 +1073,7 @@
 
                     dataToExport.push({
                         'ชื่อสาขา': branchName,
-                        'Check Sheets': cardName, // CHANGED: Changed column name here
+                        'Check Sheets': cardName, 
                         'สถานะรายเดือน': statusText
                     });
                 }
@@ -1092,20 +1084,17 @@
                  return;
             }
 
-            // Create worksheet and workbook using SheetJS
             const ws = XLSX.utils.json_to_sheet(dataToExport);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'สรุปรายเดือน');
 
-            // Set column widths for better readability
             const colWidths = [
                 { wch: Math.max(...dataToExport.map(item => item['ชื่อสาขา'].length), 'ชื่อสาขา'.length) + 2 },
-                { wch: Math.max(...dataToExport.map(item => item['Check Sheets'].length), 'Check Sheets'.length) + 2 }, // CHANGED: Updated width calculation
+                { wch: Math.max(...dataToExport.map(item => item['Check Sheets'].length), 'Check Sheets'.length) + 2 }, 
                 { wch: Math.max(...dataToExport.map(item => item['สถานะรายเดือน'].length), 'สถานะรายเดือน'.length) + 2 }
             ];
             ws['!cols'] = colWidths;
 
-            // Trigger file download
             XLSX.writeFile(wb, `สรุปรายเดือน_${branchName}_${monthName}${buddhistYear}.xlsx`);
         }
 
@@ -1123,7 +1112,6 @@
             menuDailyCheck.addEventListener('click', async (e) => {
                 e.preventDefault();
                 showDailyApp();
-                // Set daily date input to current date automatically
                 dailyGlobalCheckDateInput.value = new Date().toISOString().split('T')[0]; 
                 await loadAllUsers(dailyUserButtonsContainer, 'lastSelectedUserDaily', displayDailyUserCards);
                 const lastSelectedUserDaily = localStorage.getItem('lastSelectedUserDaily');
@@ -1131,15 +1119,10 @@
                     const userButton = [...document.querySelectorAll('#daily-user-buttons-container button')].find(btn => btn.textContent === lastSelectedUserDaily);
                     if (userButton) {
                         userButton.click();
-                        currentSelectedDailyUser = lastSelectedUserDaily; // Ensure global is set on initial load
+                        currentSelectedDailyUser = lastSelectedUserDaily; 
                     }
                 }
             });
-
-            // menuDetails.addEventListener('click', (e) => { // Removed
-            //     e.preventDefault();
-            //     showCustomMessage('แจ้งเตือน', 'เมนู "รายละเอียดการตรวจสอบ" ยังไม่พร้อมใช้งาน');
-            // });
 
             menuSummary.addEventListener('click', async (e) => {
                 e.preventDefault();
@@ -1154,15 +1137,10 @@
                     const userButton = [...document.querySelectorAll('#monthly-user-buttons-container button')].find(btn => btn.textContent === lastSelectedUserMonthly);
                     if (userButton) {
                         userButton.click();
-                        currentSelectedMonthlyUser = lastSelectedUserMonthly; // Ensure global is set on initial load
+                        currentSelectedMonthlyUser = lastSelectedUserMonthly; 
                     }
                 }
             });
-
-            // menuOther.addEventListener('click', (e) => { // Removed
-            //     e.preventDefault();
-            //     showCustomMessage('แจ้งเตือน', 'เมนู "เมนูอื่นๆ" ยังไม่พร้อมใช้งาน');
-            // });
 
             // Daily App Listeners
             dailyBackToMenuButton.addEventListener('click', showMainMenu);
@@ -1170,12 +1148,11 @@
             dailySidebarOverlay.addEventListener('click', closeDailySidebar);
             
             dailyGlobalCheckDateInput.addEventListener('change', () => {
-                // Use the global variable instead of querying the DOM
                 if (currentSelectedDailyUser) {
                     Object.keys(dailyDataCache).forEach(key => delete dailyDataCache[key]);
                     displayDailyUserCards(currentSelectedDailyUser);
                 } else {
-                    showCustomMessage('แจ้งเตือน', 'กรุณาเลือกสาขาก่อนเปลี่ยนวันที่'); // Show message if no user selected
+                    showCustomMessage('แจ้งเตือน', 'กรุณาเลือกสาขาก่อนเปลี่ยนวันที่'); 
                 }
             });
             dailyRefreshButton.addEventListener('click', refreshDailyCurrentView);
@@ -1190,15 +1167,14 @@
             monthlyBackToMenuButton.addEventListener('click', showMainMenu);
             monthlySidebarToggle.addEventListener('click', (e) => { e.stopPropagation(); if (monthlySidebar.classList.contains('-translate-x-full')) openMonthlySidebar(); else closeMonthlySidebar(); });
             monthlySidebarOverlay.addEventListener('click', closeMonthlySidebar);
-            monthlyExportExcelButton.addEventListener('click', exportMonthlySummaryToExcel); // ADDED
+            monthlyExportExcelButton.addEventListener('click', exportMonthlySummaryToExcel); 
 
             monthlyGlobalCheckMonthInput.addEventListener('change', () => {
-                // Use the global variable instead of querying the DOM
                 if (currentSelectedMonthlyUser) {
                     Object.keys(monthlyDataCache).forEach(key => delete monthlyDataCache[key]);
                     displayMonthlyUserCards(currentSelectedMonthlyUser);
                 } else {
-                    showCustomMessage('แจ้งเตือน', 'กรุณาเลือกสาขาก่อนเปลี่ยนเดือน'); // Show message if no user selected
+                    showCustomMessage('แจ้งเตือน', 'กรุณาเลือกสาขาก่อนเปลี่ยนเดือน'); 
                 }
             });
             monthlyRefreshButton.addEventListener('click', refreshMonthlyCurrentView);
