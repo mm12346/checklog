@@ -14,7 +14,6 @@
     <!-- PWA Manifest & Theme for Admin -->
     <link rel="manifest" href="admin-manifest.json">
     <meta name="theme-color" content="#f1f5f9"> <!-- Changed to match body background -->
-    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/180.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Check Log">
@@ -122,7 +121,7 @@
             <!-- Menu Item 4: Others (Removed as per user request) -->
         </div><br>
         <div class="text-center mb-12">
-         <p class="text-sm text-slate-400 mt-1"> V 1.0</p>
+         <p class="text-sm text-slate-400 mt-1"> V 2.0</p>
         </div>
     </div>
 
@@ -348,7 +347,7 @@
         const dailySidebarOverlay = document.getElementById('daily-sidebar-overlay');
         const dailyRefreshButton = document.getElementById('daily-refresh-button');
         const dailyUserSearchInput = document.getElementById('daily-user-search-input');
-        const dailyBackToMenuButton = document.getElementById('daily-back-to-menu-button'); // Corrected typo here
+        const dailyBackToMenuButton = document.getElementById('daily-back-to-menu-button');
 
         // --- DOM Elements (Monthly Summary) ---
         const monthlySummaryAppContainer = document.getElementById('monthly-summary-app-container');
@@ -761,10 +760,13 @@
             
             let statusBlock, detailsBlock;
 
-            if (entries.length === 0) {
-                // If no data is found for any card
-                if (title === 'แก๊ส LPG') {
-                    // Special status for LPG when no data is found
+            if (title === 'แก๊ส LPG') {
+                // Special handling for "แก๊ส LPG" card
+                if (uniqueNumbers.size >= targetCount) {
+                    // If data is found and meets target count, show "ครบแล้ว"
+                    statusBlock = `<div class="bg-teal-100/50 border border-teal-200/80 text-teal-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-teal-500"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ครบแล้ว</p><p class="text-sm break-words">ตรวจครบ ${uniqueNumbers.size} หมายเลขสำหรับวันที่ ${date}</p></div></div>`;
+                } else {
+                    // If no data or not enough data, show "สถานะพิเศษ"
                     statusBlock = `<div class="bg-blue-100/50 border border-blue-200/80 text-blue-800 p-4 rounded-xl flex items-center space-x-4">
                         <div class="flex-shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-blue-500">
@@ -776,25 +778,25 @@
                             <p class="text-sm break-words">ควรตรวจสอบทุกครั้งก่อนการจัดเก็บเข้าพื้นที่จัดเก็บ</p>
                         </div>
                     </div>`;
-                    detailsBlock = ''; // No details for this special case
-                } else {
-                    // Default "not complete" message for other cards when no data
-                    const needed = targetCount;
-                    statusBlock = `<div class="bg-amber-100/50 border border-amber-200/80 text-amber-800 p-4 rounded-xl flex items-center space-x-4">
-                        <div class="flex-shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-amber-500">
-                                <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <div class="min-w-0">
-                            <p class="font-bold text-lg">ยังไม่ครบ (0/${targetCount})</p>
-                            <p class="text-sm break-words">ขาดอีก ${needed} หมายเลขสำหรับวันที่ ${date}</p>
-                        </div>
-                    </div>`;
-                    detailsBlock = '';
                 }
+                detailsBlock = ''; // No details for this special case
+            } else if (entries.length === 0) {
+                // Case for no data found (for other cards)
+                const needed = targetCount;
+                statusBlock = `<div class="bg-amber-100/50 border border-amber-200/80 text-amber-800 p-4 rounded-xl flex items-center space-x-4">
+                    <div class="flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-amber-500">
+                            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="font-bold text-lg">ยังไม่ครบ (0/${targetCount})</p>
+                        <p class="text-sm break-words">ขาดอีก ${needed} หมายเลขสำหรับวันที่ ${date}</p>
+                    </div>
+                </div>`;
+                detailsBlock = ''; // No details block if no entries
             } else {
-                // Data is found
+                // Existing logic for when there are entries and it's not "แก๊ส LPG"
                 if (uniqueNumbers.size >= targetCount) {
                     statusBlock = `<div class="bg-teal-100/50 border border-teal-200/80 text-teal-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-teal-500"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ครบแล้ว</p><p class="text-sm break-words">ตรวจครบ ${uniqueNumbers.size} หมายเลขสำหรับวันที่ ${date}</p></div></div>`;
                 } else {
@@ -1116,7 +1118,8 @@
             menuDailyCheck.addEventListener('click', async (e) => {
                 e.preventDefault();
                 showDailyApp();
-                dailyGlobalCheckDateInput.value = new Date().toISOString().split('T')[0];
+                // Set daily date input to current date automatically
+                dailyGlobalCheckDateInput.value = new Date().toISOString().split('T')[0]; 
                 await loadAllUsers(dailyUserButtonsContainer, 'lastSelectedUserDaily', displayDailyUserCards);
                 const lastSelectedUserDaily = localStorage.getItem('lastSelectedUserDaily');
                 if (lastSelectedUserDaily) {
