@@ -1,5 +1,5 @@
 // Service Worker for Check Log Admin PWA
-const CACHE_NAME = 'checklog-admin-v2.4';
+const CACHE_NAME = 'checklog-admin-v2.40';
 const urlsToCache = [
     './',
     './index.html',
