@@ -5,7 +5,7 @@
     <!-- Updated viewport to support safe areas on notched devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Check Log</title>
-    
+    <!-- REMOVED: <script src="https://cdn.tailwindcss.com"></script> -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
@@ -611,8 +611,8 @@
         <p class="mt-4 text-slate-700 font-semibold">กำลังเตรียมข้อมูลสำหรับแสดงตัวอย่าง...</p>
     </div>
 
-    <!-- NEW: Comment Modal -->
-    <div id="comment-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+    <!-- NEW: Comment Modal (MODIFIED) -->
+    <div id="comment-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col">
             <div class="flex justify-between items-center p-5 border-b border-slate-200">
                 <h3 id="comment-modal-title" class="text-xl font-bold text-slate-800">เพิ่ม/แก้ไขหมายเหตุ</h3>
@@ -1827,16 +1827,7 @@
                 }
             } else if (entries.length === 0) {
                 const needed = targetCount;
-                statusBlock = `<div class="bg-amber-100/50 border border-amber-200/80 text-amber-800 p-4 rounded-xl flex items-center space-x-4">
-                    <div class="flex-shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-amber-500">
-                            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="font-bold text-lg">ยังไม่ครบ (0/${targetCount})</p>
-                        <p class="text-sm break-words">ขาดอีก ${needed} หมายเลขสำหรับวันที่ ${date}</p>
-                    </div>
-                </div>`;
+                statusBlock = `<div class="bg-amber-100/50 border border-amber-200/80 text-amber-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-amber-500"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ยังไม่ครบ (0/${targetCount})</p><p class="text-sm break-words">ขาดอีก ${needed} หมายเลขสำหรับวันที่ ${date}</p></div></div>`;
                 detailsBlock = ''; 
             } else {
                 if (uniqueNumbers.size >= targetCount) {
@@ -2138,7 +2129,7 @@
             }
 
             const modalHtml = `
-                <div id="custom-message-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[3000] p-4">
+                <div id="custom-message-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[3000] p-4">
                     <div class="bg-white rounded-lg shadow-xl w-full max-w-sm flex flex-col animate-in fade-in-0 zoom-in-95 duration-300">
                         <div class="flex justify-between items-center p-4 border-b border-slate-200">
                             <h2 class="text-xl font-bold text-slate-800">${title}</h2>
