@@ -443,7 +443,7 @@
             </a>
         </div><br>
         <div class="text-center mb-12">
-         <p class="text-sm text-slate-400 mt-1"> V 3.0.3</p>
+         <p class="text-sm text-slate-400 mt-1"> V 3.0.3.1</p>
         </div>
     </div>
 
@@ -731,6 +731,7 @@
 
     <script>
         // --- Configuration ---
+        const USER_LIST_VERSION = '1.0'; // เปลี่ยนค่านี้เมื่อต้องการอัปเดตรายชื่อสาขาใหม่ (ควรอัปเดตพร้อมกับ sw.js)
         const SCRIPT_URLS = [
              'https://script.google.com/macros/s/AKfycbwsKgINhyiziRXNHyLVGjox-AoOYn4n1Iwz0vnLrX0tK26YGLGT0UOfzJfBU1fGbAlf/exec',//API_1 (Daily)
             'https://script.google.com/macros/s/AKfycbwZX0ywhNK28ZFXHNgEb9cYhl2IMtQpznVP4qykO1ptJorqNMrfDw-SSzYQjHUCQQ/exec',//API_2 (Daily)
@@ -926,8 +927,7 @@
                             <img src="${video.thumbnailImage}" alt="${video.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/320x180/e2e8f0/475569?text=Video';">
                             <div class="absolute inset-0 bg-black/20 flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white/80 drop-shadow-lg" viewBox="0 0 20 20" fill="currentColor">
-                                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8.118v3.764a1 1 0 001.555.832l3.197-1.882a1 1 0 000-1.664l-3.197-1.882z" clip-rule="evenodd" />
-                                </svg>
+                                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8.118v3.764a1 1 0 001.555.832l3.197-1.882a1 1 0 000-1.664l-3.197-1.882z" clip-rule="evenodd" /></svg>
                             </div>
                         </div>
                         <h3 class="text-lg font-semibold text-slate-800">${video.title}</h3>
@@ -1705,8 +1705,28 @@
             searchInput.disabled = true;
 
             try {
-                const result = await apiCall('getAllUsers', {}, 'daily'); 
-                const users = result.users || [];
+                // START CACHE LOGIC
+                let users = [];
+                const cachedUsers = localStorage.getItem('cached_user_list');
+                const cachedVersion = localStorage.getItem('cached_user_list_version');
+
+                // ตรวจสอบว่ามี Cache และเวอร์ชันตรงกับปัจจุบันหรือไม่
+                if (cachedUsers && cachedVersion === USER_LIST_VERSION) {
+                    console.log('Loading users from localStorage cache');
+                    users = JSON.parse(cachedUsers);
+                } else {
+                    // หากไม่มี Cache หรือเวอร์ชันไม่ตรง ให้โหลดจาก API ใหม่
+                    console.log('Fetching users from API (Version mismatch or no cache)');
+                    const result = await apiCall('getAllUsers', {}, 'daily'); 
+                    users = result.users || [];
+                    if (users.length > 0) {
+                        // บันทึกข้อมูลลง Cache พร้อมเวอร์ชันปัจจุบัน
+                        localStorage.setItem('cached_user_list', JSON.stringify(users));
+                        localStorage.setItem('cached_user_list_version', USER_LIST_VERSION);
+                    }
+                }
+                // END CACHE LOGIC
+
                 targetUserButtonsContainer.innerHTML = '';
 
                 const isMonthly = targetUserButtonsContainer.id === 'monthly-user-buttons-container';
