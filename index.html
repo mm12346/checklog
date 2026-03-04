@@ -443,7 +443,7 @@
             </a>
         </div><br>
         <div class="text-center mb-12">
-         <p class="text-sm text-slate-400 mt-1"> V 3.0.3.1</p>
+         <p class="text-sm text-slate-400 mt-1"> V 3.0.3.2</p>
         </div>
     </div>
 
@@ -1532,13 +1532,14 @@
                         mobileFinalHtml += `</div>`; // Close grid
 
                         if (note) {
+                             // แปลง note เป็น String เพื่อป้องกัน error ตอนเรียกใช้งาน replace
                              mobileFinalHtml += `
                                 <div class="mobile-note-section">
                                     <div class="flex items-center gap-2 text-amber-800">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0"><path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z" /><path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z" /></svg>
                                         <span class="font-semibold">หมายเหตุ</span>
                                     </div>
-                                    <p class="text-sm text-slate-800 mt-2 pl-1">${note.replace(/\n/g, '<br>')}</p>
+                                    <p class="text-sm text-slate-800 mt-2 pl-1">${String(note).replace(/\n/g, '<br>')}</p>
                                 </div>`;
                         }
                         mobileFinalHtml += `</div>`; // Close card
@@ -1730,7 +1731,7 @@
                 targetUserButtonsContainer.innerHTML = '';
 
                 const isMonthly = targetUserButtonsContainer.id === 'monthly-user-buttons-container';
-                const hoverBgClass = isMonthly ? 'hover:bg-amber-50' : 'hover:bg-indigo-50';
+                const hoverBgClass = isMonthly ? 'hover:bg-amber-50' : 'hover:bg-amber-50'; // แก้ให้เหมือนกัน หรือแล้วแต่ชอบ
                 const hoverTextClass = isMonthly ? 'hover:text-amber-700' : 'hover:text-indigo-700';
                 const focusRingClass = isMonthly ? 'focus:ring-amber-500' : 'focus:ring-indigo-500';
                 const selectedBgClass = isMonthly ? 'bg-amber-600' : 'bg-indigo-600';
@@ -1741,7 +1742,7 @@
                 users.forEach(user => {
                     const button = document.createElement('button');
                     button.textContent = user;
-                    button.className = `w-full text-left px-4 py-2 bg-white border border-transparent rounded-lg ${hoverBgClass} ${hoverTextClass} focus:outline-none focus:ring-2 ${focusRingClass} transition block`;
+                    button.className = `w-full text-left px-4 py-2 bg-white border border-transparent rounded-lg ${isMonthly?'hover:bg-amber-50':'hover:bg-indigo-50'} ${hoverTextClass} focus:outline-none focus:ring-2 ${focusRingClass} transition block`;
                     
                     button.onclick = () => {
                         // Reset all buttons in the container
