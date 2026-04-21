@@ -281,7 +281,7 @@
         <div class="relative z-10 text-center mt-16 mb-4">
             <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 text-xs font-semibold text-slate-500 backdrop-blur-md border border-slate-200/60 shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-indigo-400"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.83-5.83M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
-                V 4.0 (เพิ่มตู้ดับเพลิง, ถังดับเพลิง, ไฟฉุกเฉิน, )
+                V 4.1 (เพิ่มตู้ดับเพลิง, ถังดับเพลิง, ไฟฉุกเฉิน, )
             </span>
         </div>
     </div>
@@ -1043,10 +1043,21 @@
                 }
             }
 
+            let usersHtml = '<span class="text-slate-400 italic mt-1 block">ไม่พบข้อมูล</span>';
+            if (uniqueUsers.size > 0) {
+                usersHtml = `<div class="flex flex-wrap gap-1.5 mt-2">${[...uniqueUsers].map(u => `<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200 shadow-sm">${u}</span>`).join('')}</div>`;
+            }
+
+            let numbersHtml = '<span class="text-slate-400 italic mt-1 block">ไม่มีข้อมูล</span>';
+            if (uniqueNumbers.size > 0) {
+                const sortedNumbers = [...uniqueNumbers].sort((a, b) => a.localeCompare(b, undefined, {numeric: true, sensitivity: 'base'}));
+                numbersHtml = `<div class="flex flex-wrap gap-1.5 mt-2 max-h-32 overflow-y-auto pr-1">${sortedNumbers.map(n => `<span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 shadow-sm">${n}</span>`).join('')}</div>`;
+            }
+
             if (title === 'แก๊ส LPG') {
                 if (entries.length > 0) {
                     statusBlock = `<div class="bg-teal-100/50 border border-teal-200/80 text-teal-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-teal-500"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ครบแล้ว</p><p class="text-sm break-words">ตรวจครบ ${uniqueNumbers.size} หมายเลขสำหรับวันที่ ${date}</p></div></div>`;
-                    detailsBlock = `<div class="space-y-4 pt-4 text-sm mt-4 border-t border-slate-200"><div class="flex items-start space-x-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.095a1.23 1.23 0 00.41-1.412A9.995 9.995 0 0010 12c-2.31 0-4.438.784-6.131 2.095z" /></svg><div><p class="font-semibold text-slate-600">ผู้ลงข้อมูล:</p><p class="text-slate-800 break-words">${uniqueUsers.size > 0 ? [...uniqueUsers].join(', ') : 'ไม่พบ'}</p></div></div><div class="flex items-start space-x-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5z" clip-rule="evenodd" /></svg><div><p class="font-semibold text-slate-600">หมายเลขที่ตรวจแล้ว (${uniqueNumbers.size} หมายเลข):</p><p class="text-slate-800 break-words">${uniqueNumbers.size > 0 ? [...uniqueNumbers].join(', ') : 'ไม่พบ'}</p></div></div></div>`;
+                    detailsBlock = `<div class="space-y-4 pt-4 text-sm mt-4 border-t border-slate-200"><div class="flex items-start space-x-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.095a1.23 1.23 0 00.41-1.412A9.995 9.995 0 0010 12c-2.31 0-4.438.784-6.131 2.095z" /></svg><div class="w-full"><p class="font-semibold text-slate-600">ผู้ลงข้อมูล:</p>${usersHtml}</div></div><div class="flex items-start space-x-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5z" clip-rule="evenodd" /></svg><div class="w-full"><p class="font-semibold text-slate-600">หมายเลขที่ตรวจแล้ว (${uniqueNumbers.size} หมายเลข):</p>${numbersHtml}</div></div></div>`;
                 } else {
                     statusBlock = `<div class="bg-blue-100/50 border border-blue-200/80 text-blue-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-blue-500"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">สถานะพิเศษ</p><p class="text-sm break-words">ตรวจสอบทุกครั้งก่อนจัดเก็บ</p></div></div>`;
                     detailsBlock = ''; 
@@ -1061,12 +1072,63 @@
                 } else {
                     statusBlock = `<div class="bg-amber-100/50 border border-amber-200/80 text-amber-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-amber-500"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ยังไม่ครบ (${actualCount}/${targetCount})</p><p class="text-sm break-words">ขาดอีก ${targetCount - actualCount} หมายเลขสำหรับวันที่ ${date}</p></div></div>`;
                 }
-                detailsBlock = `<div class="space-y-4 pt-4 text-sm mt-4 border-t border-slate-200"><div class="flex items-start space-x-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.095a1.23 1.23 0 00.41-1.412A9.995 9.995 0 0010 12c-2.31 0-4.438.784-6.131 2.095z" /></svg><div><p class="font-semibold text-slate-600">ผู้ลงข้อมูล:</p><p class="text-slate-800 break-words">${uniqueUsers.size > 0 ? [...uniqueUsers].join(', ') : 'ไม่พบ'}</p></div></div><div class="flex items-start space-x-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5z" clip-rule="evenodd" /></svg><div><p class="font-semibold text-slate-600">หมายเลขที่ตรวจแล้ว (${actualCount} หมายเลข):</p><p class="text-slate-800 break-words">${actualCount > 0 ? [...uniqueNumbers].sort().join(', ') : 'ไม่พบ'}</p></div></div></div>`;
+                detailsBlock = `<div class="space-y-4 pt-4 text-sm mt-4 border-t border-slate-200"><div class="flex items-start space-x-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.095a1.23 1.23 0 00.41-1.412A9.995 9.995 0 0010 12c-2.31 0-4.438.784-6.131 2.095z" /></svg><div class="w-full"><p class="font-semibold text-slate-600">ผู้ลงข้อมูล:</p>${usersHtml}</div></div><div class="flex items-start space-x-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5z" clip-rule="evenodd" /></svg><div class="w-full"><p class="font-semibold text-slate-600">หมายเลขที่ตรวจแล้ว (${actualCount} หมายเลข):</p>${numbersHtml}</div></div></div>`;
             }
             resultsEl.innerHTML = `<div class="w-full">${statusBlock}${detailsBlock}${extraDataHtml}</div>`;
         }
 
-        // --- Monthly View Logic ---
+        function refreshDailyCurrentView() {
+            if (currentSelectedDailyUser) { 
+                Object.keys(dailyDataCache).forEach(key => delete dailyDataCache[key]);
+                const btn = document.getElementById('daily-refresh-button');
+                const refreshIcon = btn.querySelector('svg');
+                refreshIcon.classList.add('animate-spin');
+                btn.disabled = true;
+                displayDailyUserCards(currentSelectedDailyUser).finally(() => { refreshIcon.classList.remove('animate-spin'); btn.disabled = false; });
+            } else { showCustomMessage('แจ้งเตือน', 'กรุณาเลือกผู้ใช้งานก่อนรีเฟรช'); }
+        }
+
+        function renderDailyApp() {
+            const appContainer = document.getElementById('daily-app-container');
+            appContainer.innerHTML = '';
+            if (cardConfigurations.length === 0) appContainer.innerHTML = '<p class="text-slate-500 text-center col-span-full">ผู้ใช้นี้ยังไม่มีการตั้งค่าการ์ด</p>';
+            else cardConfigurations.forEach((config, index) => createDailyCard(config, index, appContainer));
+        }
+
+        function createDailyCard(config, index, container) {
+            const resultsDivId = `daily-results-${index}`;
+            const dateValue = document.getElementById('daily-global-check-date').value;
+            const cardHtml = `<div id="daily-card-${index}" class="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-2xl shadow-xl p-6 md:p-8 cursor-pointer relative group" 
+                                data-config-index="${index}" data-date="${dateValue}">
+                                <button data-action="refresh-card" class="absolute top-3 right-3 z-10 p-2 text-slate-400 hover:text-indigo-600 bg-slate-50 hover:bg-indigo-50 rounded-full transition md:opacity-0 md:group-hover:opacity-100" title="รีเฟรชการ์ดนี้">
+                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
+                                </button>
+                                <div class="text-center mb-4 px-6"><h1 class="text-xl sm:text-2xl font-bold text-slate-800">${config.title}</h1></div>
+                                <div id="${resultsDivId}" class="min-h-[150px] flex items-center justify-center transition-all"></div>
+                              </div>`;
+            container.insertAdjacentHTML('beforeend', cardHtml);
+            
+            const cardElement = document.getElementById(`daily-card-${index}`);
+            cardElement.addEventListener('click', (e) => {
+                const actionTarget = e.target.closest('[data-action]');
+                if (actionTarget && actionTarget.dataset.action === 'refresh-card') {
+                    e.stopPropagation();
+                    const icon = actionTarget.querySelector('svg');
+                    icon.classList.add('animate-spin');
+                    delete dailyDataCache[`${config.sheetId}-${dateValue}`];
+                    checkDailySheetData(config, dateValue, document.getElementById(resultsDivId)).finally(() => {
+                        icon.classList.remove('animate-spin');
+                    });
+                    return;
+                }
+
+                const selectedConfig = cardConfigurations[parseInt(cardElement.dataset.configIndex)];
+                const selectedDate = cardElement.dataset.date;
+                openDailyDetailPage(selectedConfig, selectedDate);
+            });
+            checkDailySheetData(config, dateValue, document.getElementById(resultsDivId));
+        }
+
         async function displayMonthlyUserCards(username) {
             document.getElementById('monthly-user-info').classList.remove('hidden');
             document.getElementById('monthly-welcome-message').classList.add('hidden');
@@ -1449,7 +1511,36 @@
                 statusBlock = `<div class="bg-amber-100/50 border border-amber-200/80 text-amber-800 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-amber-500"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ยังไม่ครบ (${actualCount}/${targetCount})</p><p class="text-sm break-words">ขาดอีก ${targetCount - actualCount} อุปกรณ์ สำหรับเดือน ${monthName}</p></div></div>`;
             }
 
-            const detailsBlock = `<div class="space-y-3 pt-4 text-sm mt-4 border-t border-slate-200"><div class="flex items-start space-x-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.095a1.23 1.23 0 00.41-1.412A9.995 9.995 0 0010 12c-2.31 0-4.438.784-6.131 2.095z" /></svg><div><p class="font-semibold text-slate-600">ผู้ลงข้อมูล:</p><p class="text-slate-800 break-words">${users.size > 0 ? [...users].join(', ') : 'ไม่พบ'}</p></div></div><div class="flex items-start space-x-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5z" clip-rule="evenodd" /></svg><div><p class="font-semibold text-slate-600">หมายเลขที่ตรวจแล้ว:</p><p class="text-slate-800 break-words">${checkedNumbers.size > 0 ? [...checkedNumbers].sort().join(', ') : 'ไม่พบ'}</p></div></div></div>`;
+            let usersHtml = '<span class="text-slate-400 italic mt-1 block">ไม่พบข้อมูล</span>';
+            if (users.size > 0) {
+                usersHtml = `<div class="flex flex-wrap gap-1.5 mt-2">${[...users].map(u => `<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200 shadow-sm">${u}</span>`).join('')}</div>`;
+            }
+
+            let numbersHtml = '<span class="text-slate-400 italic mt-1 block">ไม่มีข้อมูล</span>';
+            if (checkedNumbers.size > 0) {
+                const sortedNumbers = [...checkedNumbers].sort((a, b) => a.localeCompare(b, undefined, {numeric: true, sensitivity: 'base'}));
+                numbersHtml = `<div class="flex flex-wrap gap-1.5 mt-2">${sortedNumbers.map(n => `<span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200 shadow-sm">${n}</span>`).join('')}</div>`;
+            }
+
+            const detailsBlock = `
+                <div class="space-y-4 pt-4 text-sm mt-4 border-t border-slate-200">
+                    <div class="flex items-start space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.095a1.23 1.23 0 00.41-1.412A9.995 9.995 0 0010 12c-2.31 0-4.438.784-6.131 2.095z" /></svg>
+                        <div class="w-full">
+                            <p class="font-semibold text-slate-600">ผู้ลงข้อมูล:</p>
+                            ${usersHtml}
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5z" clip-rule="evenodd" /></svg>
+                        <div class="w-full">
+                            <p class="font-semibold text-slate-600">หมายเลขที่ตรวจแล้ว (${actualCount}):</p>
+                            <div class="max-h-32 overflow-y-auto pr-1">
+                                ${numbersHtml}
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
 
             resultsEl.innerHTML = `<div class="w-full">${statusBlock}${detailsBlock}</div>`;
         }
