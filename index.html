@@ -145,7 +145,7 @@
             background-color: #525659; padding: 20px; overflow-y: auto; width: 100%; flex-grow: 1;
         }
         #print-preview-content .printable-table-container {
-            background-color: white; width: 297mm; min-height: 200mm;
+            background-color: white;
             margin: 20px auto; box-shadow: 0 0 15px rgba(0,0,0,0.5);
             page-break-before: auto !important; display: block !important;
         }
@@ -207,7 +207,7 @@
             .printable-table-container { display: block !important; page-break-before: always; box-shadow: none !important; border: none !important; margin: 0; padding: 0; width: 100%; }
             .printable-table-container:first-child { page-break-before: auto; }
             .mobile-detail-container { display: none !important; }
-            @page { size: A4 portrait; margin: 0.5cm; }
+            @page { margin: 0.5cm; }
             body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
     </style>
@@ -281,7 +281,7 @@
         <div class="relative z-10 text-center mt-16 mb-4">
             <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 text-xs font-semibold text-slate-500 backdrop-blur-md border border-slate-200/60 shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-indigo-400"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.83-5.83M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
-                V 4.1 (เพิ่มตู้ดับเพลิง, ถังดับเพลิง, ไฟฉุกเฉิน, )
+                V 4.2 (เพิ่มตู้ดับเพลิง, ถังดับเพลิง, ไฟฉุกเฉิน, )
             </span>
         </div>
     </div>
@@ -627,6 +627,29 @@
             return idx;
         }
 
+        // --- Helper Function: Update Print Orientation ---
+        function updatePrintOrientation() {
+            let styleEl = document.getElementById('dynamic-print-orientation');
+            if (!styleEl) {
+                styleEl = document.createElement('style');
+                styleEl.id = 'dynamic-print-orientation';
+                document.head.appendChild(styleEl);
+            }
+            if (lastViewBeforeMonthlyDetail === 'monthly-summary-app-container') {
+                // แนวนอน สำหรับ Month Check ปกติ
+                styleEl.textContent = `
+                    @media print { @page { size: A4 landscape; margin: 0.5cm; } }
+                    #print-preview-content .printable-table-container { width: 297mm; min-height: 210mm; }
+                `;
+            } else {
+                // แนวตั้ง สำหรับ อุปกรณ์ดับเพลิง/ไฟฉุกเฉิน
+                styleEl.textContent = `
+                    @media print { @page { size: A4 portrait; margin: 0.5cm; } }
+                    #print-preview-content .printable-table-container { width: 210mm; min-height: 297mm; }
+                `;
+            }
+        }
+
         // --- View Switching Logic ---
         function showView(viewToShow) {
             const views = [
@@ -927,6 +950,7 @@
                 
                 // กรองการ์ดกลุ่ม Special ออกจาก Daily Check
                 cardConfigurations = allConfigs.filter(config => {
+                    if (config.sheetId === 'N/A') return false; // ซ่อนการ์ดที่ sheetId เป็น N/A ทันที
                     const normalizedTitle = config.title.toLowerCase().replace(/\s+/g, '');
                     const isSpecial = specialKeywords.some(kw => {
                         const normalizedKw = kw.toLowerCase().replace(/\s+/g, '');
@@ -1142,6 +1166,7 @@
                 
                 // กรองการ์ดกลุ่ม Special ออกจาก Month Check ปกติด้วย
                 cardConfigurations = allConfigs.filter(config => {
+                    if (config.sheetId === 'N/A') return false; // ซ่อนการ์ดที่ sheetId เป็น N/A ทันที
                     const normalizedTitle = config.title.toLowerCase().replace(/\s+/g, '');
                     const isSpecial = specialKeywords.some(kw => {
                         const normalizedKw = kw.toLowerCase().replace(/\s+/g, '');
@@ -1355,6 +1380,7 @@
                 const allConfigs = Array.isArray(result.config) ? result.config : [];
                 const keywords = ['ตู้น้ำดับเพลิง', 'ไฟฉุกเฉิน', 'ถังดับเพลิงco2', 'ถังดับเพลิง', 'co2', 'เคมีแห้ง'];
                 specialCardConfigurations = allConfigs.filter(config => {
+                    if (config.sheetId === 'N/A') return false; // ซ่อนการ์ดที่ sheetId เป็น N/A ทันที
                     const normalizedTitle = config.title.toLowerCase().replace(/\s+/g, '');
                     return keywords.some(kw => {
                         const normalizedKw = kw.toLowerCase().replace(/\s+/g, '');
@@ -1548,6 +1574,7 @@
         // --- Monthly Detail Page Logic ---
         function openMonthlyDetailPage(config, monthYearValue, source = 'monthly') {
             lastViewBeforeMonthlyDetail = source === 'special' ? 'special-monthly-summary-app-container' : 'monthly-summary-app-container';
+            updatePrintOrientation();
             showMonthlyDetailPage(); 
             const [year, month] = monthYearValue.split('-');
             const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
@@ -1569,6 +1596,7 @@
             const buddhistYear = parseInt(year) + 543;
             document.getElementById('monthly-detail-page-header').textContent = `${config.title} - ${monthName} ${buddhistYear}`;
             lastViewBeforeMonthlyDetail = source === 'special' ? 'special-monthly-summary-app-container' : 'monthly-summary-app-container';
+            updatePrintOrientation();
 
             await fetchMonthlyDetailData(config, monthYearValue);
             loader.classList.add('hidden');
@@ -1602,6 +1630,7 @@
         // --- NEW: Yearly Detail Page Logic (For Special Monthly) ---
         function openYearlyDetailPage(config, yearValue, source = 'special') {
             lastViewBeforeMonthlyDetail = source === 'special' ? 'special-monthly-summary-app-container' : 'monthly-summary-app-container';
+            updatePrintOrientation();
             showMonthlyDetailPage(); 
             const buddhistYear = parseInt(yearValue) + 543;
             const activeUser = source === 'special' ? currentSelectedSpecialMonthlyUser : currentSelectedMonthlyUser;
@@ -1619,6 +1648,7 @@
             const activeUser = source === 'special' ? currentSelectedSpecialMonthlyUser : currentSelectedMonthlyUser;
             document.getElementById('monthly-detail-page-header').textContent = `${config.title} สาขา ${activeUser || '-'} - ประจำปี ${buddhistYear}`;
             lastViewBeforeMonthlyDetail = source === 'special' ? 'special-monthly-summary-app-container' : 'monthly-summary-app-container';
+            updatePrintOrientation();
 
             await fetchYearlyDetailData(config, yearValue);
             loader.classList.add('hidden');
@@ -2112,15 +2142,14 @@
                 let locationVal = '-';
                 let typeVal = '-';
 
-                // เก็บแค่ครั้งเดียวต่อเดือน (ถ้ามีการตรวจซ้ำ ให้ยึดอันที่เจออันแรก)
+                // ค้นหาข้อมูลล่าสุดของแต่ละเดือน
                 rowsForThisGroup.forEach(row => {
+                    // อัปเดตข้อมูลสถานที่และขนาดเสมอ เพื่อให้แสดงข้อมูลที่มีการเปลี่ยนแปลงล่าสุด
                     if (isEmergencyLight || isFireHydrant) {
-                        // ไฟฉุกเฉิน และ ตู้น้ำดับเพลิง สถานที่ติดตั้งคือ คอลัมน์ J (index 9)
-                        if (row[9] && locationVal === '-') locationVal = String(row[9]).trim();
+                        if (row[9] && String(row[9]).trim() !== '') locationVal = String(row[9]).trim();
                     } else {
-                        // ดึงข้อมูลสถานที่ติดตั้ง (คอลัมน์ L / index 11) และ ขนาด (คอลัมน์ J / index 9)
-                        if (row[11] && locationVal === '-') locationVal = String(row[11]).trim();
-                        if (row[9] && typeVal === '-') typeVal = String(row[9]).trim();
+                        if (row[11] && String(row[11]).trim() !== '') locationVal = String(row[11]).trim();
+                        if (row[9] && String(row[9]).trim() !== '') typeVal = String(row[9]).trim();
                     }
 
                     let m = parseInt(row[2], 10); // month col
@@ -2138,7 +2167,18 @@
                     }
 
                     if (!isNaN(m) && m >= 1 && m <= 12) {
-                        if (!dataByMonth[m]) dataByMonth[m] = row;
+                        if (!dataByMonth[m]) {
+                            dataByMonth[m] = row;
+                        } else {
+                            // เช็ค Timestamp (row[0]) เพื่อเปรียบเทียบหาข้อมูลที่ใหม่ที่สุด
+                            const existingDate = new Date(dataByMonth[m][0]);
+                            const currentDate = new Date(row[0]);
+                            
+                            // ถ้าแปลงเวลาไม่ได้ (ไม่มี Timestamp) หรือข้อมูลปัจจุบันใหม่กว่า/เท่ากับ ให้ใช้ข้อมูลล่าสุด
+                            if (isNaN(existingDate.getTime()) || isNaN(currentDate.getTime()) || currentDate >= existingDate) {
+                                dataByMonth[m] = row;
+                            }
+                        }
                     }
                 });
 
@@ -2559,50 +2599,53 @@
              showCustomMessage('แจ้งเตือน', 'ฟังก์ชันนี้กำลังอยู่ระหว่างการพัฒนา');
         }
 
+        // --- Search Logic ---
         function setupSearch(inputId, containerId) {
             const searchInput = document.getElementById(inputId);
             const container = document.getElementById(containerId);
-            if(searchInput && container) {
-                searchInput.addEventListener('input', (e) => {
-                    const term = e.target.value.toLowerCase();
-                    const buttons = container.querySelectorAll('button');
-                    buttons.forEach(btn => {
-                        if(btn.textContent.toLowerCase().includes(term)) {
-                            btn.style.display = 'block';
-                        } else {
-                            btn.style.display = 'none';
-                        }
-                    });
+            if (!searchInput || !container) return;
+
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const buttons = container.querySelectorAll('button');
+                buttons.forEach(btn => {
+                    const text = btn.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        btn.style.display = 'block';
+                    } else {
+                        btn.style.display = 'none';
+                    }
                 });
-            }
+            });
         }
 
+        // --- Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
-            const today = new Date();
-            const localDate = new Date(today.getTime() - (today.getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-            document.getElementById('daily-global-check-date').value = localDate;
-            
-            const currentMonth = localDate.substring(0, 7);
-            document.getElementById('monthly-global-check-month').value = currentMonth;
-            document.getElementById('special-monthly-global-check-month').value = currentMonth;
+            populateVideoList();
 
+            // Setup Navigation
             document.getElementById('menu-daily-check').addEventListener('click', (e) => { e.preventDefault(); showDailyApp(); });
             document.getElementById('menu-summary').addEventListener('click', (e) => { e.preventDefault(); showMonthlyApp(); });
             document.getElementById('menu-special-monthly').addEventListener('click', (e) => { e.preventDefault(); showSpecialMonthlyApp(); });
-            document.getElementById('menu-user-manual').addEventListener('click', (e) => { 
-                e.preventDefault(); 
-                showUserManual(); 
-                populateVideoList(); 
-            });
-
+            document.getElementById('menu-user-manual').addEventListener('click', (e) => { e.preventDefault(); showUserManual(); });
+            
             document.getElementById('daily-back-to-menu-button').addEventListener('click', showMainMenu);
             document.getElementById('monthly-back-to-menu-button').addEventListener('click', showMainMenu);
             document.getElementById('special-monthly-back-to-menu-button').addEventListener('click', showMainMenu);
             document.getElementById('manual-back-to-menu-button').addEventListener('click', showMainMenu);
-            
-            document.getElementById('detail-page-back-button').addEventListener('click', showDailyApp);
-            document.getElementById('monthly-detail-page-back-button').addEventListener('click', () => showView(lastViewBeforeMonthlyDetail));
 
+            document.getElementById('detail-page-back-button').addEventListener('click', showDailyApp);
+            
+            document.getElementById('monthly-detail-page-back-button').addEventListener('click', () => {
+                if (lastViewBeforeMonthlyDetail === 'special-monthly-summary-app-container') showSpecialMonthlyApp();
+                else showMonthlyApp();
+            });
+
+            document.getElementById('monthly-detail-print-button').addEventListener('click', () => {
+                showPrintPreview(window.innerWidth <= 767);
+            });
+            
+            // Sidebar Toggles
             document.getElementById('daily-sidebar-toggle').addEventListener('click', openDailySidebar);
             document.getElementById('daily-sidebar-overlay').addEventListener('click', closeDailySidebar);
             document.getElementById('monthly-sidebar-toggle').addEventListener('click', openMonthlySidebar);
@@ -2610,28 +2653,32 @@
             document.getElementById('special-monthly-sidebar-toggle').addEventListener('click', openSpecialMonthlySidebar);
             document.getElementById('special-monthly-sidebar-overlay').addEventListener('click', closeSpecialMonthlySidebar);
 
-            document.getElementById('daily-refresh-button').addEventListener('click', refreshDailyCurrentView);
-            document.getElementById('monthly-refresh-button').addEventListener('click', refreshMonthlyCurrentView);
-            document.getElementById('special-monthly-refresh-button').addEventListener('click', refreshSpecialMonthlyCurrentView);
-
-            document.getElementById('daily-global-check-date').addEventListener('change', refreshDailyCurrentView);
-            document.getElementById('monthly-global-check-month').addEventListener('change', refreshMonthlyCurrentView);
-            document.getElementById('special-monthly-global-check-month').addEventListener('change', refreshSpecialMonthlyCurrentView);
-
-            document.getElementById('monthly-detail-print-button').addEventListener('click', () => showPrintPreview(false));
-
+            // Modals
+            document.getElementById('close-video-modal').addEventListener('click', closeVideoPlayer);
             document.getElementById('comment-modal-close').addEventListener('click', closeCommentModal);
             document.getElementById('comment-modal-cancel').addEventListener('click', closeCommentModal);
             document.getElementById('comment-modal-save').addEventListener('click', () => {
-                const text = document.getElementById('comment-modal-textarea').value;
-                if(currentEditingConfig) updateCardComment(currentEditingConfig, text);
+                const newComment = document.getElementById('comment-modal-textarea').value.trim();
+                updateCardComment(currentEditingConfig, newComment);
             });
 
-            document.getElementById('close-video-modal').addEventListener('click', closeVideoPlayer);
-            document.getElementById('video-player-modal').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('video-player-modal')) closeVideoPlayer();
-            });
+            // Date & Refresh Handlers
+            const todayStr = new Date().toISOString().split('T')[0];
+            const currentMonthStr = todayStr.substring(0, 7);
+            
+            document.getElementById('daily-global-check-date').value = todayStr;
+            document.getElementById('daily-global-check-date').addEventListener('change', refreshDailyCurrentView);
+            document.getElementById('daily-refresh-button').addEventListener('click', refreshDailyCurrentView);
 
+            document.getElementById('monthly-global-check-month').value = currentMonthStr;
+            document.getElementById('monthly-global-check-month').addEventListener('change', refreshMonthlyCurrentView);
+            document.getElementById('monthly-refresh-button').addEventListener('click', refreshMonthlyCurrentView);
+
+            document.getElementById('special-monthly-global-check-month').value = currentMonthStr;
+            document.getElementById('special-monthly-global-check-month').addEventListener('change', refreshSpecialMonthlyCurrentView);
+            document.getElementById('special-monthly-refresh-button').addEventListener('click', refreshSpecialMonthlyCurrentView);
+
+            // Load Users & Setup Search
             loadAllUsers(document.getElementById('daily-user-buttons-container'), 'lastSelectedDailyUser', displayDailyUserCards);
             loadAllUsers(document.getElementById('monthly-user-buttons-container'), 'lastSelectedMonthlyUser', displayMonthlyUserCards);
             loadAllUsers(document.getElementById('special-monthly-user-buttons-container'), 'lastSelectedSpecialMonthlyUser', displaySpecialMonthlyUserCards);
