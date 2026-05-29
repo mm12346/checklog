@@ -1,16 +1,18 @@
 // Service Worker for Check Log Admin PWA
-const CACHE_NAME = 'checklog-admin-v4.31';
+const CACHE_NAME = 'checklog-admin-v4.31'; // อัปเดตเวอร์ชันเพื่อบังคับล้างแคชเก่า
+
 const urlsToCache = [
     './',
     './index.html',
+    './admin-manifest.json', // เพิ่มไฟล์ Manifest
     'https://cdn.tailwindcss.com',
-    'https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap',
-    'https://fonts.gstatic.com/s/sarabun/v15/DtVjJx26TKEr37c9WJpP.woff2', // Example font file, adjust if needed
+    'https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700;800&display=swap', // อัปเดตลิงก์ฟอนต์ให้ตรงกับ HTML
     'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
-    'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/512.png', // Website icon
-    'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/180.png', // Apple touch icon
-    'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/192.png' // PWA icon
-    // Add other critical assets here if they are static and should be cached
+    'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/512.png',
+    'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/180.png',
+    'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/192.png',
+    'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/vdio/1.jpg', // เพิ่มรูปหน้าปกวิดีโอคู่มือ
+    'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/vdio/2.jpg'  // เพิ่มรูปหน้าปกวิดีโอคู่มือ
 ];
 
 // Install event: caches the static assets
@@ -45,6 +47,11 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event: serves cached content or fetches from network
 self.addEventListener('fetch', (event) => {
+    // 🚨 ป้องกันการแคชข้อมูลจาก Google Apps Script API (ดึงข้อมูล Real-time เสมอ)
+    if (event.request.url.includes('script.google.com')) {
+        return; // ปล่อยให้เบราว์เซอร์จัดการดึงข้อมูลจากอินเทอร์เน็ตโดยตรง
+    }
+
     // Only handle GET requests for navigation and static assets
     if (event.request.method === 'GET') {
         event.respondWith(
