@@ -83,7 +83,7 @@
 
         #main-menu,
         #user-manual-container header,
-        #dashboard-container header { 
+        #dashboard-app-container header { 
             padding-top: var(--safe-area-inset-top);
         }
         
@@ -173,36 +173,40 @@
 
         /* Dashboard Specific Styles */
         .dashboard-table-container {
-            max-height: calc(100vh - 200px - var(--safe-area-inset-top));
-            overflow: auto;
-            position: relative;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f8fafc;
+        }
+        .dashboard-table-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .dashboard-table-container::-webkit-scrollbar-track {
+            background: #f8fafc;
+            border-radius: 4px;
+        }
+        .dashboard-table-container::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
         }
         .dashboard-table th {
             position: sticky;
             top: 0;
             background-color: #f1f5f9;
             z-index: 10;
-            box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
         }
-        .dashboard-table th:first-child,
-        .dashboard-table td:first-child {
+        .dashboard-table td:first-child, .dashboard-table th:first-child {
             position: sticky;
             left: 0;
-            background-color: #ffffff;
             z-index: 20;
-            box-shadow: 2px 0 2px -1px rgba(0, 0, 0, 0.1);
+        }
+        .dashboard-table td:first-child {
+            background-color: #ffffff;
+            box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1);
         }
         .dashboard-table th:first-child {
-            z-index: 30; /* Corner cell */
-            background-color: #f1f5f9;
+            z-index: 30;
         }
-        
-        .dash-cell { transition: all 0.2s; cursor: pointer; }
-        .dash-cell:hover { background-color: #f8fafc; transform: scale(1.05); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); z-index: 5; position: relative; }
-        .dash-status-complete { color: #16a34a; background-color: #dcfce7; }
-        .dash-status-incomplete { color: #ea580c; background-color: #ffedd5; }
-        .dash-status-na { color: #94a3b8; background-color: #f1f5f9; cursor: not-allowed; }
-        .dash-status-loading { color: #64748b; }
 
         @media (max-width: 767px) {
             .printable-table-container { display: none; }
@@ -299,21 +303,21 @@
                 <h2 class="text-2xl font-bold text-slate-800 relative z-10 leading-tight">Month Check<br><span class="text-sm font-semibold text-rose-500 mt-2 block bg-white/60 py-1 px-3 rounded-full border border-rose-100">อุปกรณ์ดับเพลิง/ไฟฉุกเฉิน</span></h2>
             </a>
 
-            <!-- Menu Item 4: Dashboard -->
-            <a href="#" id="menu-dashboard" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-cyan-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden lg:col-start-2">
-                <div class="absolute inset-0 bg-gradient-to-br from-cyan-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div class="relative w-20 h-20 bg-gradient-to-br from-cyan-100 to-white text-cyan-600 rounded-2xl shadow-inner border border-cyan-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+            <!-- NEW: Menu Item 4: Dashboard -->
+            <a href="#" id="menu-dashboard" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-fuchsia-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden lg:col-start-1 lg:col-end-3 sm:col-span-2 md:col-span-1">
+                <div class="absolute inset-0 bg-gradient-to-br from-fuchsia-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative w-20 h-20 bg-gradient-to-br from-fuchsia-100 to-white text-fuchsia-600 rounded-2xl shadow-inner border border-fuchsia-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
                     </svg>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-800 relative z-10">Dashboard</h2>
-                <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">ภาพรวมสรุปผลทุกสาขา</p>
+                <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">ภาพรวมข้อมูลทุกสาขา (ผู้ดูแลระบบ)</p>
             </a>
 
             <!-- Menu Item 5: User Manual -->
-            <a href="#" id="menu-user-manual" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-emerald-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden lg:col-start-3">
+            <a href="#" id="menu-user-manual" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-emerald-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden sm:col-span-2 lg:col-span-1 md:col-span-1">
                 <div class="absolute inset-0 bg-gradient-to-br from-emerald-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative w-20 h-20 bg-gradient-to-br from-emerald-100 to-white text-emerald-600 rounded-2xl shadow-inner border border-emerald-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 drop-shadow-sm" viewBox="0 0 24 24" fill="currentColor">
@@ -328,123 +332,139 @@
         <div class="relative z-10 text-center mt-16 mb-4">
             <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 text-xs font-semibold text-slate-500 backdrop-blur-md border border-slate-200/60 shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-indigo-400"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.83-5.83M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
-                V 4.8 (อัปเดต Dashboard: แก้ปัญหาข้อมูลข้ามสาขา)
+                V 4.3 (เพิ่มตู้ดับเพลิง, ถังดับเพลิง, ไฟฉุกเฉิน, แดชบอร์ด)
             </span>
         </div>
     </div>
 
-    <!-- Password Modal for Dashboard -->
-    <div id="password-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm flex flex-col animate-in fade-in-0 zoom-in-95 duration-300">
-            <div class="p-6 text-center border-b border-slate-200">
-                <div class="w-16 h-16 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
-                </div>
-                <h2 class="text-xl font-bold text-slate-800">ยืนยันตัวตน</h2>
-                <p class="text-sm text-slate-500 mt-1">กรุณากรอกรหัสผ่านเพื่อเข้าสู่ Dashboard</p>
-            </div>
-            <div class="p-6">
-                <input type="password" id="dashboard-password-input" class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition text-center text-lg tracking-widest font-bold" placeholder="รหัสผ่าน">
-                <p id="password-error" class="text-red-500 text-sm mt-2 hidden text-center">รหัสผ่านไม่ถูกต้อง</p>
-            </div>
-            <div class="flex justify-end gap-3 p-4 bg-slate-50 border-t border-slate-200 rounded-b-2xl">
-                <button id="password-cancel-btn" class="px-5 py-2.5 bg-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-300 transition">ยกเลิก</button>
-                <button id="password-submit-btn" class="px-5 py-2.5 bg-cyan-600 text-white font-semibold rounded-xl hover:bg-cyan-700 transition">เข้าสู่ระบบ</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Dashboard Application Page -->
-    <div id="dashboard-container" class="hidden min-h-screen bg-slate-50">
+    <!-- NEW: Dashboard Application Page -->
+    <div id="dashboard-app-container" class="hidden min-h-screen bg-slate-50">
         <header class="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
-            <div class="max-w-[95%] mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="py-4 flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div class="flex items-center w-full md:w-auto justify-between md:justify-start gap-4">
-                        <button id="dashboard-back-button" title="กลับไปหน้าเมนูหลัก" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition">
+            <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <button id="dashboard-back-to-menu-button" title="กลับไปหน้าเมนูหลัก" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m8-8l-8 8 8 8" /></svg>
                         </button>
-                        <h1 class="text-xl md:text-2xl font-bold text-slate-800 flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
-                            </svg>
-                            แดชบอร์ดสรุปผล
-                        </h1>
+                        <div class="flex items-center gap-2">
+                            <div class="p-1.5 bg-fuchsia-100 text-fuchsia-600 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
+                                </svg>
+                            </div>
+                            <h1 class="text-xl font-bold text-slate-800">แดชบอร์ดภาพรวม</h1>
+                        </div>
                     </div>
                     
-                    <div class="flex flex-wrap items-center justify-center md:justify-end gap-3 w-full md:w-auto">
-                        <div class="relative w-full sm:w-64">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-slate-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/></svg>
-                            </div>
-                            <input type="text" id="dashboard-search-branch" class="bg-white border border-slate-300 text-slate-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full pl-10 p-2.5 shadow-sm" placeholder="ค้นหาสาขา...">
+                    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                        <div class="relative w-full sm:w-48">
+                            <input type="text" id="dashboard-search-input" placeholder="ค้นหาสาขา..." class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-3 top-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                         </div>
                         
-                        <input type="month" id="dashboard-month-picker" class="px-4 py-2 bg-white border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-cyan-500 transition cursor-pointer">
-                        
-                        <button id="dashboard-refresh-btn" class="flex items-center gap-2 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition font-semibold shadow-sm">
-                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
-                            <span>โหลดข้อมูล</span>
+                        <!-- NEW: แทนที่ input type="month" แบบเดิมด้วย Dropdown เพื่อแก้ปัญหาจอดำและเลื่อนปีได้อิสระ -->
+                        <div class="flex items-center gap-2 flex-grow sm:w-auto">
+                            <select id="dashboard-month-select" class="w-full sm:w-auto px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 transition text-sm cursor-pointer outline-none font-medium text-slate-700 shadow-sm">
+                                <option value="01">มกราคม</option>
+                                <option value="02">กุมภาพันธ์</option>
+                                <option value="03">มีนาคม</option>
+                                <option value="04">เมษายน</option>
+                                <option value="05">พฤษภาคม</option>
+                                <option value="06">มิถุนายน</option>
+                                <option value="07">กรกฎาคม</option>
+                                <option value="08">สิงหาคม</option>
+                                <option value="09">กันยายน</option>
+                                <option value="10">ตุลาคม</option>
+                                <option value="11">พฤศจิกายน</option>
+                                <option value="12">ธันวาคม</option>
+                            </select>
+                            <select id="dashboard-year-select" class="w-full sm:w-auto px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 transition text-sm cursor-pointer outline-none font-medium text-slate-700 shadow-sm">
+                                <!-- ตัวเลือกปีจะถูกสร้างโดย Javascript -->
+                            </select>
+                            <input type="hidden" id="dashboard-month-picker">
+                        </div>
+
+                        <button id="dashboard-refresh-button" title="โหลดข้อมูลใหม่" class="p-2 bg-fuchsia-600 text-white hover:bg-fuchsia-700 rounded-xl shadow-sm transition flex items-center justify-center">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
                         </button>
                     </div>
                 </div>
             </div>
         </header>
 
-        <main class="max-w-[95%] mx-auto p-4 sm:p-6 lg:p-8">
-            <!-- Table Content -->
-            <div id="dashboard-content" class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden flex flex-col">
-                <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap gap-4 items-center justify-between">
-                    <div class="flex items-center gap-6 text-sm font-medium">
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded border border-green-200 bg-green-100"></span> ตรวจครบ</div>
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded border border-orange-200 bg-orange-100"></span> ยังไม่ครบ</div>
-                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded border border-slate-200 bg-slate-100"></span> ไม่มีใช้งาน / ยังไม่เริ่ม</div>
+        <main class="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto">
+            <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden flex flex-col">
+                <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                    <p class="text-sm font-medium text-slate-600" id="dashboard-status-text">กำลังรอโหลดข้อมูล...</p>
+                    <div class="flex gap-4 text-xs font-semibold">
+                        <span class="flex items-center gap-1"><div class="w-3 h-3 bg-teal-100 rounded border border-teal-300"></div> ครบ</span>
+                        <span class="flex items-center gap-1"><div class="w-3 h-3 bg-amber-100 rounded border border-amber-300"></div> ยังไม่ครบ</span>
+                        <span class="flex items-center gap-1"><div class="w-3 h-3 bg-slate-100 rounded border border-slate-300"></div> ไม่มีข้อมูล</span>
                     </div>
-                    <div class="text-sm text-slate-500 italic">* คลิกที่ช่องสถานะเพื่อดูรายละเอียดรายวัน</div>
                 </div>
-                <div class="dashboard-table-container">
+                <div class="dashboard-table-container overflow-auto max-h-[70vh]">
                     <table class="dashboard-table w-full text-sm text-left whitespace-nowrap">
-                        <thead class="text-xs text-slate-700 uppercase bg-slate-100" id="dashboard-table-head">
-                            <!-- Headers injected here -->
+                        <thead class="text-xs text-slate-700 uppercase bg-slate-100 border-b-2 border-slate-300" id="dashboard-table-head">
+                            <!-- จะถูกสร้างโดย JavaScript -->
                         </thead>
-                        <tbody id="dashboard-table-body">
-                            <!-- Rows injected here -->
+                        <tbody id="dashboard-table-body" class="divide-y divide-slate-200 text-slate-700">
+                            <!-- จะถูกสร้างโดย JavaScript -->
                         </tbody>
                     </table>
-                </div>
-                <div id="dashboard-empty-state" class="hidden p-10 text-center">
-                    <p class="text-slate-500 text-lg">ไม่พบข้อมูลสาขาที่ค้นหา</p>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Daily Drilldown Modal for Dashboard -->
-    <div id="dashboard-drilldown-modal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl flex flex-col max-h-[90vh] overflow-hidden animate-in fade-in-0 zoom-in-95 duration-300">
-            <div class="flex justify-between items-center p-5 border-b border-slate-200 bg-slate-50">
-                <div>
-                    <h3 id="drilldown-title" class="text-xl font-bold text-slate-800">รายละเอียด</h3>
-                    <p id="drilldown-subtitle" class="text-sm text-slate-500 mt-1"></p>
+    <!-- NEW: Password Modal -->
+    <div id="password-modal" class="hidden fixed inset-0 bg-black/60 z-[2000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm flex flex-col transform transition-transform">
+            <div class="flex justify-between items-center p-5 border-b border-slate-100">
+                <div class="flex items-center gap-2 text-fuchsia-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+                    <h3 class="text-lg font-bold">ยืนยันตัวตน</h3>
                 </div>
-                <button id="close-drilldown-btn" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-800 rounded-full transition">
-                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                <button id="password-modal-close" class="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition">
+                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
-            <div class="p-5 overflow-y-auto bg-slate-100/50">
-                <div id="drilldown-status-block" class="mb-6"></div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                    <p class="font-semibold text-slate-600 mb-3 border-b border-slate-100 pb-2">สถานะรายวัน</p>
-                    <div id="drilldown-grid" class="grid grid-cols-5 sm:grid-cols-7 gap-2">
-                        <!-- Grid injected here -->
-                    </div>
-                </div>
+            <div class="p-6">
+                <p class="text-sm text-slate-500 mb-4 text-center">กรุณาใส่รหัสผ่านเพื่อเข้าสู่ระบบแดชบอร์ด</p>
+                <input type="password" id="dashboard-password-input" placeholder="รหัสผ่าน..." class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:outline-none transition text-center tracking-widest font-mono text-lg">
+                <p id="password-error-msg" class="text-red-500 text-xs text-center mt-2 hidden">รหัสผ่านไม่ถูกต้อง</p>
+            </div>
+            <div class="p-5 bg-slate-50 border-t border-slate-100 rounded-b-2xl">
+                <button id="password-submit-btn" class="w-full py-3 bg-fuchsia-600 text-white rounded-xl hover:bg-fuchsia-700 transition font-bold shadow-md hover:shadow-lg">เข้าสู่ระบบ</button>
             </div>
         </div>
     </div>
 
+    <!-- NEW: Dashboard Day Detail Modal -->
+    <div id="dashboard-detail-modal" class="hidden fixed inset-0 bg-black/60 z-[2000] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col">
+            <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50 rounded-t-2xl">
+                <div>
+                    <h3 id="dash-modal-title" class="text-lg font-bold text-slate-800">รายละเอียด</h3>
+                    <p id="dash-modal-subtitle" class="text-sm text-slate-500"></p>
+                </div>
+                <button id="dash-modal-close" class="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-full transition">
+                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div class="p-6 max-h-[60vh] overflow-y-auto">
+                <div class="mb-4">
+                    <p class="text-sm font-semibold text-slate-600 mb-2">วันที่พบการตรวจสอบข้อมูลในระบบ:</p>
+                    <div id="dash-modal-days-container" class="flex flex-wrap gap-2">
+                        <!-- ถูกสร้างโดย JS -->
+                    </div>
+                </div>
+                <p class="text-xs text-slate-400 mt-4">* หมายเหตุ: แสดงเฉพาะวันที่พบร่องรอยการบันทึกข้อมูลในระบบ</p>
+            </div>
+        </div>
+    </div>
 
-    <!-- Main Application Page (Daily Check) -->
+    <!-- Daily Check App Container -->
     <div id="daily-check-app-container" class="hidden">
         <!-- Sidebar -->
         <aside id="daily-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
@@ -715,6 +735,7 @@
         </div>
     </div>
 
+
     <script>
         // --- Configuration ---
         const USER_LIST_VERSION = '1.0'; 
@@ -746,10 +767,6 @@
         const monthlyDataCache = {};
         const monthlyDetailDataCache = {}; 
         const dataLabelsCache = {}; 
-        
-        // --- Dashboard specific variables ---
-        const dashboardCache = { configs: {}, allUsers: [], uniqueEquipments: new Set() };
-        let activeDashboardCalls = 0;
 
         let currentSelectedDailyUser = null;
         let currentSelectedMonthlyUser = null;
@@ -772,6 +789,7 @@
         // --- Helper Function: Extract Number with Fallback ---
         function extractNumber(row, numberColIdx) {
             if (numberColIdx === 10) {
+                // หากให้ K เป็นหมายเลข แต่ผู้ใช้ยังไม่ได้ย้าย จะดึงค่าจาก J มาชดเชย
                 return String(row[10] || '').trim() || String(row[9] || '').trim();
             }
             return String(row[9] || '').trim();
@@ -779,7 +797,8 @@
 
         // --- Helper Function: Get Data Start Index ---
         function getDataStartIndex(title, numberColIdx) {
-            let idx = (numberColIdx === 10) ? 11 : 10; 
+            let idx = (numberColIdx === 10) ? 11 : 10; // ปกติถ้าเลขอยู่ K(10) ข้อมูลจะเริ่ม L(11)
+            // ถ้าเป็นการ์ด Co2 ให้เริ่มที่คอลัมน์ M (Index 12)
             if (title && title.toLowerCase().replace(/\s+/g, '').includes('co2')) {
                 idx = 12; 
             }
@@ -795,29 +814,18 @@
                 document.head.appendChild(styleEl);
             }
             if (lastViewBeforeMonthlyDetail === 'monthly-summary-app-container') {
+                // แนวนอน สำหรับ Month Check ปกติ
                 styleEl.textContent = `
                     @media print { @page { size: A4 landscape; margin: 0.5cm; } }
                     #print-preview-content .printable-table-container { width: 297mm; min-height: 210mm; }
                 `;
             } else {
+                // แนวตั้ง สำหรับ อุปกรณ์ดับเพลิง/ไฟฉุกเฉิน
                 styleEl.textContent = `
                     @media print { @page { size: A4 portrait; margin: 0.5cm; } }
                     #print-preview-content .printable-table-container { width: 210mm; min-height: 297mm; }
                 `;
             }
-        }
-
-        // --- UI Helper Functions ---
-        function renderDisabledMessage(resultsEl, title, message) {
-            resultsEl.innerHTML = `<div class="text-center py-6"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto text-slate-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg><p class="font-bold text-slate-500">${title}</p><p class="text-sm text-slate-400">${message}</p></div>`;
-        }
-
-        function renderInfoMessage(resultsEl, title, message) {
-            resultsEl.innerHTML = `<div class="text-center py-6"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto text-amber-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg><p class="font-bold text-amber-500">${title}</p><p class="text-sm text-amber-400">${message}</p></div>`;
-        }
-
-        function renderError(resultsEl, message) {
-            resultsEl.innerHTML = `<div class="text-center py-6"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto text-red-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><p class="font-bold text-red-500">เกิดข้อผิดพลาด</p><p class="text-sm text-red-400">${message}</p></div>`;
         }
 
         // --- View Switching Logic ---
@@ -827,10 +835,10 @@
                 document.getElementById('daily-check-app-container'), 
                 document.getElementById('monthly-summary-app-container'), 
                 document.getElementById('special-monthly-summary-app-container'), 
-                document.getElementById('dashboard-container'),
                 document.getElementById('daily-detail-page-container'), 
                 document.getElementById('monthly-detail-page-container'), 
-                document.getElementById('user-manual-container')
+                document.getElementById('user-manual-container'),
+                document.getElementById('dashboard-app-container') // เพิ่ม Dashboard
             ];
             views.forEach(view => {
                 if (view && view.id === viewToShow) {
@@ -840,8 +848,8 @@
                 }
             });
             if (viewToShow === 'main-menu') {
-                document.querySelectorAll('button.bg-indigo-600, button.bg-amber-600, button.bg-rose-600, button.bg-cyan-600').forEach(btn => {
-                    btn.classList.remove('bg-indigo-600', 'bg-amber-600', 'bg-rose-600', 'bg-cyan-600', 'text-white', 'font-semibold', 'shadow');
+                document.querySelectorAll('button.bg-indigo-600, button.bg-amber-600, button.bg-rose-600').forEach(btn => {
+                    btn.classList.remove('bg-indigo-600', 'bg-amber-600', 'bg-rose-600', 'text-white', 'font-semibold', 'shadow');
                 });
             }
         }
@@ -849,11 +857,14 @@
         function showDailyApp() { showView('daily-check-app-container'); }
         function showMonthlyApp() { showView('monthly-summary-app-container'); }
         function showSpecialMonthlyApp() { showView('special-monthly-summary-app-container'); }
-        function showDashboardApp() { showView('dashboard-container'); }
         function showMainMenu() { showView('main-menu'); }
         function showDailyDetailPage() { showView('daily-detail-page-container'); }
         function showMonthlyDetailPage() { showView('monthly-detail-page-container'); }
         function showUserManual() { showView('user-manual-container'); }
+        function showDashboardApp() { 
+            showView('dashboard-app-container'); 
+            initDashboard(); // เรียกเริ่มโหลดข้อมูล Dashboard ทันที
+        }
 
         // --- Sidebar Logic ---
         function openDailySidebar() { document.getElementById('daily-sidebar').classList.remove('-translate-x-full'); document.getElementById('daily-sidebar-overlay').classList.remove('hidden'); document.body.classList.add('overflow-hidden'); }
@@ -1041,13 +1052,9 @@
 
         // --- User Loading ---
         async function loadAllUsers(targetUserButtonsContainer, selectedUserLocalStorageKey, displayFunction) {
-            const isSilentLoad = !targetUserButtonsContainer;
-            
-            if (!isSilentLoad) {
-                targetUserButtonsContainer.innerHTML = `<div class="loader-sm animate-spin rounded-full border-2 border-slate-300 border-t-indigo-500 mx-auto"></div>`;
-                const searchInput = targetUserButtonsContainer.closest('aside').querySelector('input[type="text"]');
-                if(searchInput) searchInput.disabled = true;
-            }
+            targetUserButtonsContainer.innerHTML = `<div class="loader-sm animate-spin rounded-full border-2 border-slate-300 border-t-indigo-500 mx-auto"></div>`;
+            const searchInput = targetUserButtonsContainer.closest('aside')?.querySelector('input[type="text"]');
+            if(searchInput) searchInput.disabled = true;
 
             try {
                 let users = [];
@@ -1064,471 +1071,55 @@
                         localStorage.setItem('cached_user_list_version', USER_LIST_VERSION);
                     }
                 }
+
+                targetUserButtonsContainer.innerHTML = '';
+                const isMonthly = targetUserButtonsContainer.id === 'monthly-user-buttons-container';
+                const isSpecialMonthly = targetUserButtonsContainer.id === 'special-monthly-user-buttons-container';
                 
-                dashboardCache.allUsers = users; 
+                const hoverBgClass = isMonthly ? 'hover:bg-amber-50' : (isSpecialMonthly ? 'hover:bg-rose-50' : 'hover:bg-indigo-50');
+                const hoverTextClass = isMonthly ? 'hover:text-amber-700' : (isSpecialMonthly ? 'hover:text-rose-700' : 'hover:text-indigo-700');
+                const focusRingClass = isMonthly ? 'focus:ring-amber-500' : (isSpecialMonthly ? 'focus:ring-rose-500' : 'focus:ring-indigo-500');
+                const selectedDailyBgClass = 'bg-indigo-600';
+                const selectedMonthlyBgClass = 'bg-amber-600';
+                const selectedSpecialMonthlyBgClass = 'bg-rose-600';
 
-                if (!isSilentLoad) {
-                    targetUserButtonsContainer.innerHTML = '';
-                    const isMonthly = targetUserButtonsContainer.id === 'monthly-user-buttons-container';
-                    const isSpecialMonthly = targetUserButtonsContainer.id === 'special-monthly-user-buttons-container';
-                    
-                    const hoverBgClass = isMonthly ? 'hover:bg-amber-50' : (isSpecialMonthly ? 'hover:bg-rose-50' : 'hover:bg-indigo-50');
-                    const hoverTextClass = isMonthly ? 'hover:text-amber-700' : (isSpecialMonthly ? 'hover:text-rose-700' : 'hover:text-indigo-700');
-                    const focusRingClass = isMonthly ? 'focus:ring-amber-500' : (isSpecialMonthly ? 'focus:ring-rose-500' : 'focus:ring-indigo-500');
-                    const selectedDailyBgClass = 'bg-indigo-600';
-                    const selectedMonthlyBgClass = 'bg-amber-600';
-                    const selectedSpecialMonthlyBgClass = 'bg-rose-600';
-
-                    users.forEach(user => {
-                        const button = document.createElement('button');
-                        button.textContent = user;
-                        button.className = `w-full text-left px-4 py-2 bg-white border border-transparent rounded-lg ${hoverBgClass} ${hoverTextClass} focus:outline-none focus:ring-2 ${focusRingClass} transition block`;
-                        
-                        button.onclick = () => {
-                            document.querySelectorAll(`#${targetUserButtonsContainer.id} button`).forEach(btn => {
-                                btn.classList.remove(selectedDailyBgClass, selectedMonthlyBgClass, selectedSpecialMonthlyBgClass, 'text-white', 'font-semibold', 'shadow');
-                                btn.classList.add('bg-white'); 
-                            });
-
-                            button.classList.remove('bg-white');
-                            button.classList.add(isMonthly ? selectedMonthlyBgClass : (isSpecialMonthly ? selectedSpecialMonthlyBgClass : selectedDailyBgClass), 'text-white', 'font-semibold', 'shadow');
-
-                            if (isMonthly) currentSelectedMonthlyUser = user; 
-                            else if (isSpecialMonthly) currentSelectedSpecialMonthlyUser = user;
-                            else currentSelectedDailyUser = user; 
-                            
-                            localStorage.setItem(selectedUserLocalStorageKey, user);
-                            displayFunction(user);
-                            
-                            if (window.innerWidth < 1024) {
-                                if (isMonthly) closeMonthlySidebar();
-                                else if (isSpecialMonthly) closeSpecialMonthlySidebar();
-                                else closeDailySidebar();
-                            }
-                        };
-                        targetUserButtonsContainer.appendChild(button);
-                    });
-                }
-                return users;
-            } catch (error) {
-                if (!isSilentLoad) targetUserButtonsContainer.innerHTML = `<p class="text-red-500">เกิดข้อผิดพลาดในการโหลดรายชื่อผู้ใช้: ${error.message}</p>`;
-                return [];
-            } finally {
-                if (!isSilentLoad) {
-                    const searchInput = targetUserButtonsContainer.closest('aside').querySelector('input[type="text"]');
-                    if(searchInput) searchInput.disabled = false;
-                }
-            }
-        }
-
-        // --- Dashboard Logic ---
-        async function openDashboardWithPassword() {
-            document.getElementById('password-modal').classList.remove('hidden');
-            document.body.classList.add('overflow-hidden');
-            const passInput = document.getElementById('dashboard-password-input');
-            passInput.value = '';
-            document.getElementById('password-error').classList.add('hidden');
-            passInput.focus();
-        }
-
-        function closeDashboardPasswordModal() {
-            document.getElementById('password-modal').classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
-        }
-
-        function verifyDashboardPassword() {
-            const passInput = document.getElementById('dashboard-password-input');
-            const password = passInput.value;
-            if (password === 'GBH') {
-                closeDashboardPasswordModal();
-                showDashboardApp();
-                initDashboard();
-            } else {
-                document.getElementById('password-error').classList.remove('hidden');
-            }
-        }
-
-        async function initDashboard(forceRefresh = false) {
-            const container = document.getElementById('dashboard-content');
-            const emptyState = document.getElementById('dashboard-empty-state');
-            const loader = document.getElementById('dashboard-loader');
-            
-            if (container) container.classList.remove('hidden');
-            if (emptyState) emptyState.classList.add('hidden');
-            if (loader) loader.classList.add('hidden'); 
-            
-            const monthInput = document.getElementById('dashboard-month-picker');
-            if (!monthInput.value) {
-                const todayStr = new Date().toISOString().split('T')[0];
-                monthInput.value = todayStr.substring(0, 7);
-            }
-            const monthYearValue = monthInput.value;
-            const [year, month] = monthYearValue.split('-').map(Number);
-            const daysInMonth = new Date(year, month, 0).getDate();
-            const today = new Date();
-            const isCurrentMonth = (year === today.getFullYear() && month === (today.getMonth() + 1));
-            
-            let daysPassed = daysInMonth;
-            if (isCurrentMonth) daysPassed = today.getDate();
-            else if (year > today.getFullYear() || (year === today.getFullYear() && month > (today.getMonth() + 1))) daysPassed = 0;
-
-            try {
-                // 1. Get all users
-                if (dashboardCache.allUsers.length === 0 || forceRefresh) {
-                    await loadAllUsers(null, null, null);
-                }
-                const users = dashboardCache.allUsers;
-                if(users.length === 0) throw new Error("ไม่สามารถโหลดรายชื่อสาขาได้");
-
-                // 2. Pre-define sorted equipments (Horizontal headers)
-                const sortedEquipments = [
-                    'เครนโครงสร้าง', 'เครื่องตัดไฟเบอร์', 'รถจัดส่ง', 'รถโฟล์คลิฟท์ไฟฟ้า', 'รถสแตกเกอร์จัดส่ง', 
-                    'รถเฮี้ยบ จัดส่ง', 'สลิงผ้า รถจัดส่งติดเครน', 'สลิงผ้าแผนกเหล็ก', 'โฟล์คลิฟท์ประเภทเครื่องยนต์', 
-                    'Stacker ไฟฟ้า', 'ถังดับเพลิง', 'ถังดับเพลิงco2', 'ตู้น้ำดับเพลิง', 'ไฟฉุกเฉิน'
-                ];
-                const specialKeywords = ['ตู้น้ำดับเพลิง', 'ไฟฉุกเฉิน', 'ถังดับเพลิงco2', 'ถังดับเพลิง', 'co2', 'เคมีแห้ง'];
-
-                // 3. Build Table Headers
-                const thead = document.getElementById('dashboard-table-head');
-                thead.innerHTML = `
-                    <tr id="dash-progress-row"><th colspan="${sortedEquipments.length + 1}" class="p-0 border-none bg-slate-200 h-1.5"><div id="dash-matrix-progress" class="bg-cyan-500 h-1.5 transition-all duration-300" style="width: 0%"></div></th></tr>
-                    <tr>
-                    <th scope="col" class="px-6 py-4 font-bold tracking-wider text-slate-800 bg-slate-200 min-w-[150px] sticky top-0 left-0 z-30 shadow-[2px_2px_2px_-1px_rgba(0,0,0,0.1)]">รายชื่อสาขา</th>
-                    ${sortedEquipments.map(eq => `<th scope="col" class="px-4 py-3 font-semibold text-center border-l border-slate-200 min-w-[100px] whitespace-normal align-middle sticky top-0 z-10 bg-slate-100 shadow-[0_2px_2px_-1px_rgba(0,0,0,0.1)]">${eq}</th>`).join('')}
-                </tr>`;
-
-                // 4. Build Initial Rows (Loading State)
-                const tbody = document.getElementById('dashboard-table-body');
-                tbody.innerHTML = '';
                 users.forEach(user => {
-                    let rowHtml = `<tr class="bg-white border-b border-slate-200 hover:bg-slate-50 transition-colors" data-branch="${user}">
-                        <td class="px-6 py-4 font-semibold text-slate-800 bg-white sticky left-0 z-20 whitespace-nowrap shadow-[2px_0_2px_-1px_rgba(0,0,0,0.1)]">${user}</td>`;
+                    const button = document.createElement('button');
+                    button.textContent = user;
+                    button.className = `w-full text-left px-4 py-2 bg-white border border-transparent rounded-lg ${hoverBgClass} ${hoverTextClass} focus:outline-none focus:ring-2 ${focusRingClass} transition block`;
                     
-                    sortedEquipments.forEach(eq => {
-                        rowHtml += `<td class="px-4 py-3 text-center border-l border-slate-200 dash-status-loading" id="cell-${user.replace(/\s+/g, '')}-${eq.replace(/\s+/g, '')}">
-                            <div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-cyan-500"></div>
-                        </td>`;
-                    });
-                    rowHtml += `</tr>`;
-                    tbody.insertAdjacentHTML('beforeend', rowHtml);
-                });
-
-                // 5. Fetch Data in Chunks of 10
-                let totalTasks = users.length * sortedEquipments.length;
-                let completedTasks = 0;
-                const chunkSize = 10;
-
-                const processUser = async (user) => {
-                    if (!dashboardCache.configs[user] || forceRefresh) {
-                        try {
-                            const result = await apiCall('loadSettings', { username: user }, 'daily');
-                            dashboardCache.configs[user] = Array.isArray(result.config) ? result.config : [];
-                        } catch(e) {
-                            dashboardCache.configs[user] = []; 
-                        }
-                    }
-                    const userConfigs = dashboardCache.configs[user];
-                    
-                    await Promise.all(sortedEquipments.map(async (eq) => {
-                        const cfg = userConfigs.find(c => c.title === eq);
-                        if (!cfg || !cfg.sheetId || cfg.sheetId.trim() === '' || cfg.sheetId.toUpperCase() === 'N/A') {
-                            const cellId = `cell-${user.replace(/\s+/g, '')}-${eq.replace(/\s+/g, '')}`;
-                            const cell = document.getElementById(cellId);
-                            if (cell) {
-                                cell.className = 'px-2 py-2 text-center border-l border-slate-200 dash-status-na bg-slate-50 align-middle';
-                                cell.innerHTML = `
-                                    <div class="flex flex-col items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mx-auto text-slate-300 mb-1"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
-                                        <span class="text-[11px] font-bold px-1.5 py-0.5 rounded border text-slate-500 bg-slate-200 border-slate-300 shadow-sm w-full block whitespace-nowrap">ไม่มีข้อมูล</span>
-                                    </div>
-                                `;
-                            }
-                        } else {
-                            try {
-                                await fetchAndEvaluateCell(user, cfg, eq, year, month, daysInMonth, daysPassed, isCurrentMonth, specialKeywords);
-                            } catch(e) {
-                                updateDashboardCellError(user, eq);
-                            }
-                        }
-                        completedTasks++;
-                        const progress = (completedTasks / totalTasks) * 100;
-                        const pBar = document.getElementById('dash-matrix-progress');
-                        if (pBar) pBar.style.width = progress + '%';
-                    }));
-                };
-
-                for (let i = 0; i < users.length; i += chunkSize) {
-                    const chunk = users.slice(i, i + chunkSize);
-                    await Promise.all(chunk.map(user => processUser(user)));
-                }
-
-                setTimeout(() => {
-                    const pRow = document.getElementById('dash-progress-row');
-                    if(pRow) pRow.remove();
-                }, 500);
-
-            } catch (error) { 
-                console.error("Dashboard Init Error", error);
-                showCustomMessage('เกิดข้อผิดพลาดในการโหลดข้อมูล', error.message || 'โปรดลองใหม่อีกครั้ง');
-            }
-        }
-
-        async function fetchAndEvaluateCell(user, config, eqName, year, month, daysInMonth, daysPassed, isCurrentMonth, specialKeywords) {
-            const cacheKey = `dash-${user}-${config.sheetId}-${year}-${month}`;
-            let data = monthlyDataCache[cacheKey];
-
-            if (!data) {
-                try {
-                    const result = await apiCall('getMonthlySheetData', { sheetId: config.sheetId, sheetName: config.sheetName, year, month }, 'monthly');
-                    data = Array.isArray(result?.data) ? result.data : [];
-                    monthlyDataCache[cacheKey] = data; 
-                } catch(e) {
-                    data = [];
-                }
-            }
-
-            const normalizedTitle = config.title.toLowerCase().replace(/\s+/g, '');
-            const isSpecial = specialKeywords.some(kw => normalizedTitle.includes(kw.toLowerCase().replace(/\s+/g, '')));
-            
-            const targetCount = config.targetCount || 1;
-            let status = 'incomplete';
-            let ratioText = '';
-            const dailyStatus = {}; 
-
-            if (isSpecial) {
-                if (year < 2026 || (year === 2026 && month < 5)) {
-                    status = 'not_started';
-                    ratioText = 'เริ่ม พ.ค. 26';
-                    dailyStatus.specialCount = 0;
-                    dailyStatus.target = targetCount;
-                } else {
-                    const numberColIdx = getNumberColumnIndex(config.title);
-                    const COL_MONTH_IDX = 2, COL_YEAR_IDX = 3;
-                    const thaiMonthMap = {"มกราคม": 0, "กุมภาพันธ์": 1, "มีนาคม": 2, "เมษายน": 3, "พฤษภาคม": 4, "มิถุนายน": 5, "กรกฎาคม": 6, "สิงหาคม": 7, "กันยายน": 8, "ตุลาคม": 9, "พฤศจิกายน": 10, "ธันวาคม": 11};
-                    const checkedNumbers = new Set();
-                    
-                    if (Array.isArray(data)) {
-                        data.forEach(row => {
-                            try {
-                                const monthValue = String(row[COL_MONTH_IDX] || '').trim();
-                                const yearValue = parseInt(row[COL_YEAR_IDX], 10);
-                                const number = extractNumber(row, numberColIdx);
-                                
-                                if (!monthValue || isNaN(yearValue) || !number) return;
-                                
-                                let monthIndex = -1;
-                                if (!isNaN(monthValue)) monthIndex = parseInt(monthValue, 10) - 1;
-                                else if (thaiMonthMap.hasOwnProperty(monthValue)) monthIndex = thaiMonthMap[monthValue];
-                                
-                                const yearAD = yearValue > 2500 ? yearValue - 543 : yearValue;
-                                
-                                if (yearAD === year && monthIndex === (month - 1)) {
-                                    checkedNumbers.add(number);
-                                }
-                            } catch (e) { }
+                    button.onclick = () => {
+                        document.querySelectorAll(`#${targetUserButtonsContainer.id} button`).forEach(btn => {
+                            btn.classList.remove(selectedDailyBgClass, selectedMonthlyBgClass, selectedSpecialMonthlyBgClass, 'text-white', 'font-semibold', 'shadow');
+                            btn.classList.add('bg-white'); 
                         });
-                    }
 
-                    const checkedCount = checkedNumbers.size;
-                    if (checkedCount >= targetCount) status = 'complete';
-                    ratioText = `${checkedCount}/${targetCount}`;
-                    dailyStatus.specialCount = checkedCount;
-                    dailyStatus.target = targetCount;
-                }
-            } else {
-                const numberColIdx = getNumberColumnIndex(config.title);
-                const COL_DAY_IDX = 1, COL_MONTH_IDX = 2, COL_YEAR_IDX = 3;
-                const thaiMonthMap = {"มกราคม": 0, "กุมภาพันธ์": 1, "มีนาคม": 2, "เมษายน": 3, "พฤษภาคม": 4, "มิถุนายน": 5, "กรกฎาคม": 6, "สิงหาคม": 7, "กันยายน": 8, "ตุลาคม": 9, "พฤศจิกายน": 10, "ธันวาคม": 11};
-                const dailyNumbers = {};
-                
-                if (Array.isArray(data)) {
-                    data.forEach(row => {
-                        try {
-                            const dayValue = parseInt(row[COL_DAY_IDX], 10);
-                            const monthValue = String(row[COL_MONTH_IDX] || '').trim();
-                            const yearValue = parseInt(row[COL_YEAR_IDX], 10);
-                            const number = extractNumber(row, numberColIdx);
+                        button.classList.remove('bg-white');
+                        button.classList.add(isMonthly ? selectedMonthlyBgClass : (isSpecialMonthly ? selectedSpecialMonthlyBgClass : selectedDailyBgClass), 'text-white', 'font-semibold', 'shadow');
 
-                            if (!dayValue || !monthValue || isNaN(yearValue) || !number) return;
-
-                            let monthIndex = -1;
-                            if (!isNaN(monthValue)) monthIndex = parseInt(monthValue, 10) - 1;
-                            else if (thaiMonthMap.hasOwnProperty(monthValue)) monthIndex = thaiMonthMap[monthValue];
-                            
-                            const yearAD = yearValue > 2500 ? yearValue - 543 : yearValue;
-
-                            if (yearAD === year && monthIndex === (month - 1)) {
-                                 if (!dailyNumbers[dayValue]) dailyNumbers[dayValue] = new Set();
-                                dailyNumbers[dayValue].add(number);
-                            }
-                        } catch (e) { }
-                    });
-                }
-
-                let completedDaysCount = 0;
-                let pastDaysCompleteCount = 0;
-                const todayDay = new Date().getDate();
-
-                for (let i = 1; i <= daysInMonth; i++) {
-                    const isComplete = dailyNumbers[i] && dailyNumbers[i].size >= targetCount;
-                    if (isComplete) {
-                        dailyStatus[i] = 'complete';
-                        completedDaysCount++;
-                        if (i <= daysPassed) pastDaysCompleteCount++;
-                    } else {
-                        dailyStatus[i] = (isCurrentMonth && i > todayDay) ? 'upcoming' : 'incomplete';
-                    }
-                }
-                
-                if (config.title === 'แก๊ส LPG') {
-                    status = 'lpg';
-                    ratioText = `${completedDaysCount}/${daysInMonth}`;
-                } else {
-                    status = (pastDaysCompleteCount >= daysPassed && daysPassed > 0) ? 'complete' : 'incomplete';
-                    ratioText = `${completedDaysCount}/${daysInMonth}`;
-                }
-            }
-
-            updateDashboardCellUI(user, eqName, status, isSpecial, dailyStatus, ratioText, config.title);
-        }
-
-        function updateDashboardCellUI(user, eqName, status, isSpecial, dailyStatus, ratioText, rawTitle) {
-            const cellId = `cell-${user.replace(/\s+/g, '')}-${eqName.replace(/\s+/g, '')}`;
-            const cell = document.getElementById(cellId);
-            if (!cell) return;
-
-            cell.dataset.status = status;
-            cell.dataset.isSpecial = isSpecial;
-            cell.dataset.dailyData = JSON.stringify(dailyStatus);
-            cell.dataset.branch = user;
-            cell.dataset.equipment = eqName;
-            cell.dataset.ratioText = ratioText;
-            
-            cell.className = `px-2 py-2 text-center border-l border-slate-200 dash-cell align-middle`;
-            
-            let iconHtml = '';
-            let ratioColorClass = '';
-
-            if (status === 'not_started') {
-                cell.classList.add('bg-slate-50', 'text-slate-500');
-                iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mx-auto text-slate-400 mb-1"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`;
-                ratioColorClass = 'text-slate-500 bg-slate-200 border-slate-300';
-            } else if (status === 'na') {
-                cell.classList.add('bg-slate-50', 'text-slate-400');
-                iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mx-auto text-slate-300 mb-1"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>`;
-                ratioColorClass = 'text-slate-500 bg-slate-200 border-slate-300';
-            } else if (status === 'lpg') {
-                cell.classList.add('bg-blue-50', 'text-blue-700');
-                iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mx-auto text-blue-500 mb-1"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>`;
-                ratioColorClass = 'text-blue-700 bg-blue-100 border-blue-200';
-            } else if (status === 'complete') {
-                cell.classList.add('dash-status-complete');
-                iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mx-auto text-green-600 mb-1"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.052-.143z" clip-rule="evenodd" /></svg>`;
-                ratioColorClass = 'text-green-700 bg-green-100 border-green-200';
-            } else {
-                cell.classList.add('dash-status-incomplete');
-                iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mx-auto text-orange-500 mb-1"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>`;
-                ratioColorClass = 'text-orange-700 bg-orange-100 border-orange-200';
-            }
-            
-            cell.innerHTML = `
-                <div class="flex flex-col items-center justify-center">
-                    ${iconHtml}
-                    <span class="text-[11px] font-bold px-1.5 py-0.5 rounded border ${ratioColorClass} shadow-sm w-full block whitespace-nowrap">${ratioText}</span>
-                </div>
-            `;
-
-            cell.onclick = () => openDashboardDrilldown(cell);
-        }
-
-        function updateDashboardCellError(user, eqName) {
-            const cellId = `cell-${user.replace(/\s+/g, '')}-${eqName.replace(/\s+/g, '')}`;
-            const cell = document.getElementById(cellId);
-            if (!cell) return;
-            cell.innerHTML = `<span title="Error" class="text-red-500 font-bold">!</span>`;
-            cell.className = `px-4 py-3 text-center border-l border-slate-200 bg-red-50`;
-        }
-
-        // --- Dashboard Drilldown Logic ---
-        function openDashboardDrilldown(cellElement) {
-            const branch = cellElement.dataset.branch;
-            const equipment = cellElement.dataset.equipment;
-            const isSpecial = cellElement.dataset.isSpecial === 'true';
-            const status = cellElement.dataset.status;
-            const dailyData = JSON.parse(cellElement.dataset.dailyData);
-            
-            const monthInput = document.getElementById('dashboard-month-picker').value;
-            const [year, month] = monthInput.split('-');
-            const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
-            
-            document.getElementById('drilldown-title').textContent = `${equipment} - สาขา ${branch}`;
-            document.getElementById('drilldown-subtitle').textContent = `ประจำเดือน ${monthNames[parseInt(month)-1]} ${parseInt(year)+543}`;
-            
-            const statusBlock = document.getElementById('drilldown-status-block');
-            const gridContainer = document.getElementById('drilldown-grid');
-            gridContainer.innerHTML = '';
-
-            if (isSpecial) {
-                if (status === 'na') {
-                    statusBlock.innerHTML = `<div class="bg-slate-100 border border-slate-200 text-slate-600 p-4 rounded-xl flex items-center gap-4"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg><div><p class="font-bold text-lg">ไม่มีข้อมูลใช้งาน</p><p class="text-sm">สาขานี้ไม่ได้ตั้งค่าการใช้งานอุปกรณ์นี้</p></div></div>`;
-                } else if (status === 'not_started') {
-                    statusBlock.innerHTML = `<div class="bg-slate-100 border border-slate-200 text-slate-600 p-4 rounded-xl flex items-center gap-4"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg><div><p class="font-bold text-lg">ยังไม่มีข้อมูลในระบบ</p><p class="text-sm">อุปกรณ์ประเภทนี้เริ่มบันทึกข้อมูลตั้งแต่ พฤษภาคม 2026 เป็นต้นไป</p></div></div>`;
-                } else if (status === 'complete') {
-                    statusBlock.innerHTML = `<div class="bg-teal-100/50 border border-teal-200/80 text-teal-800 p-4 rounded-xl flex items-center gap-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-teal-500"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg><div><p class="font-bold text-lg">ครบแล้ว (${dailyData.specialCount}/${dailyData.target})</p><p class="text-sm">อุปกรณ์ประเภทนี้ตรวจนับรวมทั้งเดือน</p></div></div>`;
-                } else {
-                    statusBlock.innerHTML = `<div class="bg-orange-100/50 border border-orange-200/80 text-orange-800 p-4 rounded-xl flex items-center gap-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-orange-500"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg><div><p class="font-bold text-lg">ยังไม่ครบ (${dailyData.specialCount}/${dailyData.target})</p><p class="text-sm">ขาดอีก ${dailyData.target - dailyData.specialCount} อุปกรณ์</p></div></div>`;
-                }
-                gridContainer.parentElement.classList.add('hidden'); 
-            } else {
-                gridContainer.parentElement.classList.remove('hidden');
-                
-                if (status === 'na') {
-                    statusBlock.innerHTML = `<div class="bg-slate-100 border border-slate-200 text-slate-600 p-4 rounded-xl flex items-center gap-4"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg><div><p class="font-bold text-lg">ไม่มีข้อมูลใช้งาน</p><p class="text-sm">สาขานี้ไม่ได้ตั้งค่าการใช้งานอุปกรณ์นี้</p></div></div>`;
-                    gridContainer.parentElement.classList.add('hidden');
-                } else if (equipment === 'แก๊ส LPG') {
-                     statusBlock.innerHTML = `<div class="bg-blue-100/50 border border-blue-200/80 text-blue-800 p-4 rounded-xl flex items-center gap-4"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-blue-500"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg><div><p class="font-bold text-lg">สถานะพิเศษ (ตรวจแล้ว ${cellElement.dataset.ratioText} วัน)</p><p class="text-sm">ตรวจสอบทุกครั้งก่อนจัดเก็บ</p></div></div>`;
-                } else if (status === 'complete') {
-                    statusBlock.innerHTML = `<div class="bg-teal-100/50 border border-teal-200/80 text-teal-800 p-4 rounded-xl flex items-center gap-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-teal-500"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg><div><p class="font-bold text-lg">ครบถ้วน (ถึงปัจจุบัน)</p><p class="text-sm">ไม่มีวันที่ตรวจสอบตกหล่น</p></div></div>`;
-                } else {
-                    statusBlock.innerHTML = `<div class="bg-orange-100/50 border border-orange-200/80 text-orange-800 p-4 rounded-xl flex items-center gap-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-10 h-10 text-orange-500"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg><div><p class="font-bold text-lg">ยังไม่ครบ</p><p class="text-sm">มีบางวันที่ผ่านมาข้อมูลยังไม่ครบถ้วน</p></div></div>`;
-                }
-
-                if (status !== 'na') {
-                    const daysInMonth = new Date(parseInt(year), parseInt(month), 0).getDate();
-                    for (let i = 1; i <= daysInMonth; i++) {
-                        const dayStatus = dailyData[i];
-                        let bgClass, iconHtml;
-                        if (dayStatus === 'complete') {
-                            bgClass = 'bg-green-100 text-green-700 border-green-200';
-                            iconHtml = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.052-.143z" clip-rule="evenodd" /></svg>';
-                        } else if (dayStatus === 'upcoming') {
-                            bgClass = 'bg-slate-100 text-slate-400 border-slate-200';
-                            iconHtml = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h12.5a.75.75 0 010 1.5H3.75A.75.75 0 013 10z" clip-rule="evenodd" /></svg>';
-                        } else {
-                            bgClass = 'bg-orange-100 text-orange-700 border-orange-200';
-                            iconHtml = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94l-1.72-1.72z" clip-rule="evenodd" /></svg>';
+                        if (isMonthly) currentSelectedMonthlyUser = user; 
+                        else if (isSpecialMonthly) currentSelectedSpecialMonthlyUser = user;
+                        else currentSelectedDailyUser = user; 
+                        
+                        localStorage.setItem(selectedUserLocalStorageKey, user);
+                        displayFunction(user);
+                        
+                        if (window.innerWidth < 1024) {
+                            if (isMonthly) closeMonthlySidebar();
+                            else if (isSpecialMonthly) closeSpecialMonthlySidebar();
+                            else closeDailySidebar();
                         }
-
-                        gridContainer.insertAdjacentHTML('beforeend', `
-                            <div class="flex flex-col items-center justify-center p-2 rounded-lg text-sm font-medium border ${bgClass}">
-                                <span>${i}</span>
-                                ${iconHtml}
-                            </div>
-                        `);
-                    }
-                }
+                    };
+                    targetUserButtonsContainer.appendChild(button);
+                });
+            } catch (error) {
+                targetUserButtonsContainer.innerHTML = `<p class="text-red-500">เกิดข้อผิดพลาดในการโหลดรายชื่อผู้ใช้: ${error.message}</p>`;
+            } finally {
+                if(searchInput) searchInput.disabled = false;
             }
-
-            document.getElementById('dashboard-drilldown-modal').classList.remove('hidden');
-            document.body.classList.add('overflow-hidden');
         }
 
-        function closeDashboardDrilldown() {
-            document.getElementById('dashboard-drilldown-modal').classList.add('hidden');
-            document.body.classList.remove('overflow-hidden');
-        }
-
-        // --- View Logic Daily & Monthly ---
+        // --- Daily View Logic ---
         async function displayDailyUserCards(username) {
             document.getElementById('daily-user-info').classList.remove('hidden');
             document.getElementById('daily-welcome-message').classList.add('hidden');
@@ -1542,7 +1133,7 @@
                 
                 // กรองการ์ดกลุ่ม Special ออกจาก Daily Check
                 cardConfigurations = allConfigs.filter(config => {
-                    if (config.sheetId === 'N/A') return false; 
+                    if (config.sheetId === 'N/A') return false; // ซ่อนการ์ดที่ sheetId เป็น N/A ทันที
                     const normalizedTitle = config.title.toLowerCase().replace(/\s+/g, '');
                     const isSpecial = specialKeywords.some(kw => {
                         const normalizedKw = kw.toLowerCase().replace(/\s+/g, '');
@@ -1565,7 +1156,7 @@
 
             resultsEl.innerHTML = `<div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-indigo-500"></div>`;
             const customLabels = await fetchDataLabelsForCard(config.title);
-            const cacheKey = `daily-${currentSelectedDailyUser}-${config.sheetId}-${dateValue}`;
+            const cacheKey = `${config.sheetId}-${dateValue}`;
             
             if (dailyDataCache[cacheKey]) return processDailyData(dailyDataCache[cacheKey], resultsEl, config, customLabels);
             try {
@@ -1578,17 +1169,6 @@
         function processDailyData(dataRows, resultsEl, config, customLabels) {
              const dateString = new Date(document.getElementById('daily-global-check-date').value).toLocaleDateString('th-TH', { dateStyle: 'long' });
              renderDailyResults(resultsEl, dataRows, dateString, config, customLabels);
-        }
-
-        function refreshDailyCurrentView() {
-            if (currentSelectedDailyUser) { 
-                Object.keys(dailyDataCache).forEach(key => delete dailyDataCache[key]);
-                const btn = document.getElementById('daily-refresh-button');
-                const refreshIcon = btn.querySelector('svg');
-                refreshIcon.classList.add('animate-spin');
-                btn.disabled = true;
-                displayDailyUserCards(currentSelectedDailyUser).finally(() => { refreshIcon.classList.remove('animate-spin'); btn.disabled = false; });
-            } else { showCustomMessage('แจ้งเตือน', 'กรุณาเลือกผู้ใช้งานก่อนรีเฟรช'); }
         }
 
         function renderDailyApp() {
@@ -1618,8 +1198,7 @@
                     e.stopPropagation();
                     const icon = actionTarget.querySelector('svg');
                     icon.classList.add('animate-spin');
-                    const cacheKey = `daily-${currentSelectedDailyUser}-${config.sheetId}-${dateValue}`;
-                    delete dailyDataCache[cacheKey];
+                    delete dailyDataCache[`${config.sheetId}-${dateValue}`];
                     checkDailySheetData(config, dateValue, document.getElementById(resultsDivId)).finally(() => {
                         icon.classList.remove('animate-spin');
                     });
@@ -1631,116 +1210,6 @@
                 openDailyDetailPage(selectedConfig, selectedDate);
             });
             checkDailySheetData(config, dateValue, document.getElementById(resultsDivId));
-        }
-
-        // --- Detail Page Shared Functions ---
-        async function fetchDataLabelsForCard(cardTitle) {
-            const cacheKey = `dataLabels-${cardTitle}`;
-            if (dataLabelsCache[cacheKey]) {
-                return dataLabelsCache[cacheKey];
-            }
-
-            try {
-                const result = await apiCall('getDataLabelsForCard', {
-                    spreadsheetId: '17slzkEJpbc3YEcm0vQg_22QqTFtLyzp03-4CCIrmbpA',
-                    sheetName: 'ชื่อข้อมูล',
-                    cardTitle: cardTitle
-                }, 'monthly'); 
-
-                if (result && result.success && Array.isArray(result.labels)) {
-                    dataLabelsCache[cacheKey] = result.labels;
-                    return result.labels;
-                } else {
-                    console.warn(`No specific labels found for card: ${cardTitle} or API call was unsuccessful. Result:`, result);
-                    return [];
-                }
-            } catch (error) {
-                console.error(`Error fetching data labels for card ${cardTitle}:`, error);
-                return [];
-            }
-        }
-
-        async function renderDailyDetailCards(dataRows, config) {
-            const detailPageContent = document.getElementById('detail-page-content');
-            if (!dataRows || dataRows.length === 0) {
-                detailPageContent.innerHTML = `<div class="text-center py-12 col-span-full"><svg class="w-16 h-16 mx-auto text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg><h2 class="mt-4 text-2xl font-semibold text-slate-700">ไม่พบข้อมูล</h2><p class="mt-2 text-slate-500">ไม่พบข้อมูลสำหรับวันที่ที่เลือก</p></div>`;
-                return;
-            }
-
-            detailPageContent.innerHTML = '';
-            const customLabels = await fetchDataLabelsForCard(config.title);
-
-            dataRows.forEach((row) => {
-                const user = row[7] !== undefined && row[7] !== null ? row[7] : 'ไม่ระบุ';
-                const number = row[9] !== undefined && row[9] !== null ? row[9] : 'ไม่ระบุ';
-
-                let additionalDataHtml = '';
-                for (let i = 10; i < row.length; i++) {
-                    const dataLabel = customLabels[i - 10] || `ข้อมูล ${i - 9}`; 
-                    let dataValue = row[i] !== undefined && row[i] !== null ? row[i] : '';
-                    
-                    if (typeof dataValue === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(dataValue)) {
-                        try {
-                            const dateObj = new Date(dataValue);
-                            if (!isNaN(dateObj.getTime())) {
-                                dataValue = dateObj.toLocaleDateString('th-TH', {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    year: 'numeric'
-                                });
-                            }
-                        } catch (e) {
-                            console.error("Error parsing date string:", dataValue, e);
-                        }
-                    }
-
-                    let valueColorClass = 'text-slate-700';
-                    if (typeof dataValue === 'string') {
-                        if (dataValue.toLowerCase() === 'ปกติ' || dataValue.toLowerCase() === 'ผ่าน') {
-                            valueColorClass = 'text-green-800';
-                        } else if (dataValue.toLowerCase() === 'ไม่ปกติ' || dataValue.toLowerCase() === 'ไม่ผ่าน') {
-                            valueColorClass = 'text-red-800';
-                        }
-                    }
-
-                    if (dataValue) {
-                        additionalDataHtml += `
-                            <div class="bg-slate-50 p-3 rounded-lg">
-                                <p class="text-sm text-slate-500 font-medium">${dataLabel}</p>
-                                <p class="text-base font-semibold ${valueColorClass} mt-1">${dataValue}</p>
-                            </div>
-                        `;
-                    }
-                }
-
-                const cardHtml = `
-                    <div class="bg-white rounded-2xl shadow-lg p-5 flex flex-col space-y-4 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                        <div class="flex justify-between items-center pb-3 border-b border-slate-200">
-                             <h3 class="text-lg font-bold text-slate-800">หมายเลข:</h3>
-                             <span class="px-4 py-1.5 text-lg font-bold bg-indigo-100 text-indigo-700 rounded-full">${number}</span>
-                        </div>
-                        
-                        <div class="flex items-center space-x-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                            <div>
-                                <p class="text-sm text-slate-500">ผู้ลงข้อมูล</p>
-                                <p class="text-base font-semibold text-slate-700">${user}</p>
-                            </div>
-                        </div>
-
-                        ${additionalDataHtml ? `
-                        <div class="pt-4 space-y-3">
-                            <h4 class="text-base font-semibold text-slate-600">รายละเอียดเพิ่มเติม:</h4>
-                            <div class="grid grid-cols-2 gap-3">
-                                ${additionalDataHtml}
-                            </div>
-                        </div>` : ''}
-                    </div>
-                `;
-                detailPageContent.insertAdjacentHTML('beforeend', cardHtml);
-            });
         }
 
         function renderDailyResults(resultsEl, entries, date, config, customLabels = []) {
@@ -1804,6 +1273,18 @@
             resultsEl.innerHTML = `<div class="w-full">${statusBlock}${detailsBlock}${extraDataHtml}</div>`;
         }
 
+        function refreshDailyCurrentView() {
+            if (currentSelectedDailyUser) { 
+                Object.keys(dailyDataCache).forEach(key => delete dailyDataCache[key]);
+                const btn = document.getElementById('daily-refresh-button');
+                const refreshIcon = btn.querySelector('svg');
+                refreshIcon.classList.add('animate-spin');
+                btn.disabled = true;
+                displayDailyUserCards(currentSelectedDailyUser).finally(() => { refreshIcon.classList.remove('animate-spin'); btn.disabled = false; });
+            } else { showCustomMessage('แจ้งเตือน', 'กรุณาเลือกผู้ใช้งานก่อนรีเฟรช'); }
+        }
+
+        // --- Monthly View Logic ---
         async function displayMonthlyUserCards(username) {
             document.getElementById('monthly-user-info').classList.remove('hidden');
             document.getElementById('monthly-welcome-message').classList.add('hidden');
@@ -1815,8 +1296,9 @@
                 const allConfigs = Array.isArray(result.config) ? result.config : [];
                 const specialKeywords = ['ตู้น้ำดับเพลิง', 'ไฟฉุกเฉิน', 'ถังดับเพลิงco2', 'ถังดับเพลิง', 'co2', 'เคมีแห้ง'];
                 
+                // กรองการ์ดกลุ่ม Special ออกจาก Month Check ปกติด้วย
                 cardConfigurations = allConfigs.filter(config => {
-                    if (config.sheetId === 'N/A') return false; 
+                    if (config.sheetId === 'N/A') return false; // ซ่อนการ์ดที่ sheetId เป็น N/A ทันที
                     const normalizedTitle = config.title.toLowerCase().replace(/\s+/g, '');
                     const isSpecial = specialKeywords.some(kw => {
                         const normalizedKw = kw.toLowerCase().replace(/\s+/g, '');
@@ -1839,7 +1321,7 @@
 
             resultsEl.innerHTML = `<div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-amber-500"></div>`;
             const [year, month] = monthYearValue.split('-').map(Number);
-            const cacheKey = `monthly-${currentSelectedMonthlyUser}-${config.sheetId}-${year}-${month}`;
+            const cacheKey = `${config.sheetId}-${year}-${month}`;
 
             if (monthlyDataCache[cacheKey]) return processMonthlyData(monthlyDataCache[cacheKey], resultsEl, config.targetCount, year, month, config);
             
@@ -2001,8 +1483,7 @@
                     const icon = actionTarget.querySelector('svg');
                     icon.classList.add('animate-spin');
                     const [year, month] = monthValue.split('-').map(Number);
-                    const cacheKey = `monthly-${currentSelectedMonthlyUser}-${config.sheetId}-${year}-${month}`;
-                    delete monthlyDataCache[cacheKey];
+                    delete monthlyDataCache[`${config.sheetId}-${year}-${month}`];
                     delete monthlyDetailDataCache[`detail-${config.sheetId}-${year}-${month}`];
                     checkMonthlySheetData(config, monthValue, document.getElementById(resultsDivId)).finally(() => {
                         icon.classList.remove('animate-spin');
@@ -2031,7 +1512,7 @@
                 const allConfigs = Array.isArray(result.config) ? result.config : [];
                 const keywords = ['ตู้น้ำดับเพลิง', 'ไฟฉุกเฉิน', 'ถังดับเพลิงco2', 'ถังดับเพลิง', 'co2', 'เคมีแห้ง'];
                 specialCardConfigurations = allConfigs.filter(config => {
-                    if (config.sheetId === 'N/A') return false; 
+                    if (config.sheetId === 'N/A') return false; // ซ่อนการ์ดที่ sheetId เป็น N/A ทันที
                     const normalizedTitle = config.title.toLowerCase().replace(/\s+/g, '');
                     return keywords.some(kw => {
                         const normalizedKw = kw.toLowerCase().replace(/\s+/g, '');
@@ -2202,7 +1683,7 @@
             const detailsBlock = `
                 <div class="space-y-4 pt-4 text-sm mt-4 border-t border-slate-200">
                     <div class="flex items-start space-x-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.095a1.23 1.23 0 00.41-1.412A9.957 9.957 0 0010 12c-2.31 0-4.438.784-6.131 2.095z" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0 text-slate-400 mt-0.5"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.095a1.23 1.23 0 00.41-1.412A9.995 9.995 0 0010 12c-2.31 0-4.438.784-6.131 2.095z" /></svg>
                         <div class="w-full">
                             <p class="font-semibold text-slate-600">ผู้ลงข้อมูล:</p>
                             ${usersHtml}
@@ -2278,7 +1759,7 @@
             }
         }
 
-        // --- NEW: Yearly Detail Page Logic (For Special Monthly) ---
+        // --- Yearly Detail Page Logic (For Special Monthly) ---
         function openYearlyDetailPage(config, yearValue, source = 'special') {
             lastViewBeforeMonthlyDetail = source === 'special' ? 'special-monthly-summary-app-container' : 'monthly-summary-app-container';
             updatePrintOrientation();
@@ -2365,331 +1846,1290 @@
             }
         }
 
-        // --- Yearly Detail function (for Special Monthly) ---
-        async function renderYearlyDetailTables(dataRows, config, targetYear) {
+        // --- Daily Detail Page Logic ---
+        function openDailyDetailPage(config, dateValue) {
+            showDailyDetailPage();
+            document.getElementById('detail-page-header').textContent = `รายละเอียด: ${config.title} (${dateValue})`;
+            document.getElementById('detail-page-content').innerHTML = `<div class="flex justify-center items-center p-10 col-span-full"><div class="loader-lg mx-auto animate-spin rounded-full border-4 border-slate-200 border-t-indigo-500"></div></div>`;
+            fetchDailyDetailData(config, dateValue);
+        }
+
+        async function fetchDailyDetailData(config, dateValue) {
+            const detailPageContent = document.getElementById('detail-page-content');
+            if (config.sheetId === 'N/A' || !config.sheetId || !config.sheetName) {
+                detailPageContent.innerHTML = `<p class="text-slate-500 text-center col-span-full">ไม่สามารถแสดงรายละเอียดได้: การตั้งค่าไม่ถูกต้อง</p>`;
+                return;
+            }
+
+            try {
+                const filteredRows = await apiCall('getSheetData', { sheetId: config.sheetId, sheetName: config.sheetName, date: dateValue }, 'daily');
+                renderDailyDetailCards(filteredRows, config);
+            } catch (error) {
+                detailPageContent.innerHTML = `<p class="text-red-500 text-center col-span-full">เกิดข้อผิดพลาดในการโหลดข้อมูล: ${error.message}</p>`;
+            }
+        }
+
+        // --- Detail Page Shared Functions ---
+        async function fetchDataLabelsForCard(cardTitle) {
+            const cacheKey = `dataLabels-${cardTitle}`;
+            if (dataLabelsCache[cacheKey]) {
+                return dataLabelsCache[cacheKey];
+            }
+
+            try {
+                const result = await apiCall('getDataLabelsForCard', {
+                    spreadsheetId: '17slzkEJpbc3YEcm0vQg_22QqTFtLyzp03-4CCIrmbpA',
+                    sheetName: 'ชื่อข้อมูล',
+                    cardTitle: cardTitle
+                }, 'monthly'); 
+
+                if (result && result.success && Array.isArray(result.labels)) {
+                    dataLabelsCache[cacheKey] = result.labels;
+                    return result.labels;
+                } else {
+                    console.warn(`No specific labels found for card: ${cardTitle} or API call was unsuccessful. Result:`, result);
+                    return [];
+                }
+            } catch (error) {
+                console.error(`Error fetching data labels for card ${cardTitle}:`, error);
+                return [];
+            }
+        }
+
+        async function renderDailyDetailCards(dataRows, config) {
+            const detailPageContent = document.getElementById('detail-page-content');
+            if (!dataRows || dataRows.length === 0) {
+                detailPageContent.innerHTML = `<div class="text-center py-12 col-span-full"><svg class="w-16 h-16 mx-auto text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg><h2 class="mt-4 text-2xl font-semibold text-slate-700">ไม่พบข้อมูล</h2><p class="mt-2 text-slate-500">ไม่พบข้อมูลสำหรับวันที่ที่เลือก</p></div>`;
+                return;
+            }
+
+            detailPageContent.innerHTML = '';
+            const customLabels = await fetchDataLabelsForCard(config.title);
+
+            dataRows.forEach((row) => {
+                const user = row[7] !== undefined && row[7] !== null ? row[7] : 'ไม่ระบุ';
+                const number = row[9] !== undefined && row[9] !== null ? row[9] : 'ไม่ระบุ';
+
+                let additionalDataHtml = '';
+                for (let i = 10; i < row.length; i++) {
+                    const dataLabel = customLabels[i - 10] || `ข้อมูล ${i - 9}`; 
+                    let dataValue = row[i] !== undefined && row[i] !== null ? row[i] : '';
+                    
+                    if (typeof dataValue === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(dataValue)) {
+                        try {
+                            const dateObj = new Date(dataValue);
+                            if (!isNaN(dateObj.getTime())) {
+                                dataValue = dateObj.toLocaleDateString('th-TH', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric'
+                                });
+                            }
+                        } catch (e) {
+                            console.error("Error parsing date string:", dataValue, e);
+                        }
+                    }
+
+                    let valueColorClass = 'text-slate-700';
+                    if (typeof dataValue === 'string') {
+                        if (dataValue.toLowerCase() === 'ปกติ' || dataValue.toLowerCase() === 'ผ่าน') {
+                            valueColorClass = 'text-green-800';
+                        } else if (dataValue.toLowerCase() === 'ไม่ปกติ' || dataValue.toLowerCase() === 'ไม่ผ่าน') {
+                            valueColorClass = 'text-red-800';
+                        }
+                    }
+
+                    if (dataValue) {
+                        additionalDataHtml += `
+                            <div class="bg-slate-50 p-3 rounded-lg">
+                                <p class="text-sm text-slate-500 font-medium">${dataLabel}</p>
+                                <p class="text-base font-semibold ${valueColorClass} mt-1">${dataValue}</p>
+                            </div>
+                        `;
+                    }
+                }
+
+                const cardHtml = `
+                    <div class="bg-white rounded-2xl shadow-lg p-5 flex flex-col space-y-4 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                        <div class="flex justify-between items-center pb-3 border-b border-slate-200">
+                             <h3 class="text-lg font-bold text-slate-800">หมายเลข:</h3>
+                             <span class="px-4 py-1.5 text-lg font-bold bg-indigo-100 text-indigo-700 rounded-full">${number}</span>
+                        </div>
+                        
+                        <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <div>
+                                <p class="text-sm text-slate-500">ผู้ลงข้อมูล</p>
+                                <p class="text-base font-semibold text-slate-700">${user}</p>
+                            </div>
+                        </div>
+
+                        ${additionalDataHtml ? `
+                        <div class="pt-4 space-y-3">
+                            <h4 class="text-base font-semibold text-slate-600">รายละเอียดเพิ่มเติม:</h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                ${additionalDataHtml}
+                            </div>
+                        </div>` : ''}
+                    </div>
+                `;
+                detailPageContent.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+
+        async function renderMonthlyDetailTables(dataRows, config, monthYearValue) {
+            const monthlyDetailPageContent = document.getElementById('monthly-detail-page-content');
+            if (!dataRows) {
+                 monthlyDetailPageContent.innerHTML = `<div class="text-center py-12 px-4"><svg class="w-16 h-16 mx-auto text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg><h2 class="mt-4 text-2xl font-semibold text-slate-700">เกิดข้อผิดพลาด</h2><p class="mt-2 text-slate-500">ไม่สามารถโหลดข้อมูลได้</p></div>`;
+                return;
+            }
+            if (dataRows.length === 0) {
+                monthlyDetailPageContent.innerHTML = `<div class="text-center py-12 px-4"><svg class="w-16 h-16 mx-auto text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg><h2 class="mt-4 text-2xl font-semibold text-slate-700">ไม่พบข้อมูล</h2><p class="mt-2 text-slate-500">ไม่พบข้อมูลสำหรับเดือนที่เลือก</p></div>`;
+                return;
+            }
+
+            let allCustomLabels = await fetchDataLabelsForCard(config.title);
+            const titleMap = {
+                "สลิงผ้าแผนกเหล็ก": "Daily Check Sheet (แบบตรวจสอบสลิงผ้า แผนกเหล็กประจำวัน)",
+                "เครนโครงสร้าง": "Daily Check Sheet (แบบตรวจสอบเครนโครงสร้างประจำวัน)",
+                "เครื่องตัดไฟเบอร์": "Daily Check Sheet (แบบตรวจสอบเครื่องตัดไฟเบอร์ประจำวัน)",
+                "Stacker ไฟฟ้า": "Daily Check Sheet (แบบตรวจสอบรถ Stacker ไฟฟ้าประจำวัน)",
+                "รถเฮี้ยบ จัดส่ง": "Daily Check Sheet (แบบตรวจสอบรถเฮี๊ยบ (รถจัดส่งติดเครน) ประจำวัน)",
+                "รถจัดส่ง": "Daily Check Sheet (แบบตรวจสอบรถจัดส่งประจำวัน)",
+                "โฟล์คลิฟท์ประเภทเครื่องยนต์": "Daily Check Sheet (แบบตรวจสอบรถโฟล์คลิฟท์ประเภทเครื่องยนต์ LPG ประจำวัน)",
+                "รถโฟล์คลิฟท์ไฟฟ้า": "Daily Check Sheet (แบบตรวจสอบรถโฟล์คลิฟท์ประเภทไฟฟ้าประจำวัน)",
+                "รถสแตกเกอร์จัดส่ง": "Daily Check Sheet (แบบตรวจสอบรถแสตกเกอร์ไฟฟ้าสำหรับรถจัดส่งประจำวัน)",
+                "สลิงผ้า รถจัดส่งติดเครน": "Daily Check Sheet (แบบตรวจสอบสลิงผ้า แผนกจัดส่งประจำวัน)",
+                "แก๊ส LPG": "Daily Check Sheet (แบบตรวจสอบถังแก๊ส LPG)"
+            };
+            const displayTitle = titleMap[config.title] || `Daily Check Sheet (${config.title})`;
+
+            let hiddenLabels = ["ขนาดสลิง", "น้ำหนักยกของเครน", "ประเภทรถจัดส่ง", "แผนกผู้รับผิดชอบ", "การปรับปรุง","การปรับปรุงแก้ไข", "ข้อบกพร่องที่พบ", "รายละเอียดข้อบกพร่องที่พบ", "ชื่อ - นามสกุล","ชื่อ-นามสกุล", "รหัสพนักงาน", "ระยะเวลาการแก้ไข", "กำหนดวันที่คาดว่าจะแก้ไขแล้วเสร็จ", "จุดตรวจที่ 1", "จุดตรวจที่1", "ข้อมูล 1", "จุดตรวจที่ 6", "จุดตรวจที่ 7", "จุดตรวจที่ 8", "จุดตรวจที่ 9", "จุดตรวจที่6", "จุดตรวจที่7", "จุดตรวจที่8", "จุดตรวจที่9", "ข้อมูล 6", "ข้อมูล 7", "ข้อมูล 8", "ข้อมูล 9"];
+            
+            if (config.title.toLowerCase().replace(/\s+/g, '').includes('ตู้น้ำดับเพลิง')) {
+                hiddenLabels = hiddenLabels.filter(l => !["จุดตรวจที่ 1", "จุดตรวจที่1", "ข้อมูล 1"].includes(l));
+            }
+            
+            const displayLabels = allCustomLabels.filter(label => !hiddenLabels.includes(label));
+            const defectDetailLabel = "รายละเอียดข้อบกพร่องที่พบ";
+            const defectDetailIndex = allCustomLabels.indexOf(defectDetailLabel);
+
+            const [year, month] = monthYearValue.split('-').map(Number);
+            const daysInMonth = new Date(year, month, 0).getDate();
+            const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+            const monthName = monthNames[month - 1];
+            const buddhistYear = year + 543;
+            
+            const isLpgCard = config.title === "แก๊ส LPG";
+            const numberColIdx = getNumberColumnIndex(config.title);
+            const dataStartIndex = getDataStartIndex(config.title, numberColIdx);
+
+            // ระบบสร้างหัวข้ออัตโนมัติหากหาในชีต "ชื่อข้อมูล" ไม่เจอ
+            if (allCustomLabels.length === 0 && dataRows.length > 0) {
+                const maxLen = Math.max(...dataRows.map(r => r.length));
+                for (let i = dataStartIndex; i < maxLen; i++) {
+                    allCustomLabels.push(`จุดตรวจที่ ${i - dataStartIndex + 1}`);
+                }
+            }
+
+            let dataByNumber;
+
+            if (isLpgCard) {
+                dataByNumber = { 'all_data': dataRows };
+            } else {
+                dataByNumber = dataRows.reduce((acc, row) => {
+                    let number = extractNumber(row, numberColIdx);
+                    if (!number) number = 'N/A';
+                    if (!acc[number]) acc[number] = [];
+                    acc[number].push(row);
+                    return acc;
+                }, {});
+            }
+            
+            let finalHtml = '';
+            let mobileFinalHtml = '';
+            const sortedGroupKeys = Object.keys(dataByNumber).sort();
+            const activeUser = lastViewBeforeMonthlyDetail === 'special-monthly-summary-app-container' ? currentSelectedSpecialMonthlyUser : currentSelectedMonthlyUser;
+
+            sortedGroupKeys.forEach((groupKey, tableIndex) => {
+                const rowsForThisGroup = dataByNumber[groupKey];
+                const pivotData = {};
+                displayLabels.forEach(label => { pivotData[label] = {}; });
+                const signatures = {};
+                const notes = {};
+                const checkedNumbersByDay = {}; 
+                const processedDays = new Set();
+
+                rowsForThisGroup.forEach(row => {
+                    try {
+                        const day = parseInt(row[1], 10);
+                        if (isNaN(day)) return;
+                        
+                        if (isLpgCard) {
+                            const number = row[numberColIdx];
+                            if (number) {
+                                if (!checkedNumbersByDay[day]) checkedNumbersByDay[day] = [];
+                                if (!checkedNumbersByDay[day].includes(number)) checkedNumbersByDay[day].push(number);
+                            }
+                        }
+                        
+                        if (processedDays.has(day)) return; 
+                        processedDays.add(day); 
+                        
+                        // คอลัมน์ H (Index 7) คือ ชื่อผู้ตรวจสอบ
+                        signatures[day] = (row[7] !== undefined && row[7] !== null && row[7] !== '') ? row[7] : '-';
+                        if (defectDetailIndex !== -1) {
+                            const note = row[dataStartIndex + defectDetailIndex] || '';
+                            if (note) notes[day] = note; 
+                        }
+                        displayLabels.forEach(label => {
+                            const labelIndex = allCustomLabels.indexOf(label);
+                            pivotData[label][day] = row[dataStartIndex + labelIndex] || ''; 
+                        });
+                    } catch (e) {}
+                });
+                
+                const pageBreakClass = tableIndex > 0 ? 'page-break' : '';
+                const numberHeaderDisplay = !isLpgCard ? `<span>หมายเลข: ${groupKey}</span>` : '';
+                const headerJustifyClass = isLpgCard ? 'justify-end' : 'justify-between';
+
+                let tableHtml = `
+                    <div class="printable-table-container p-4 ${pageBreakClass}">
+                        <div class="text-center mb-2">
+                            <h2 class="text-lg font-bold">${displayTitle}</h2>
+                            <p class="text-md font-semibold">สาขา: ${activeUser || 'N/A'}</p>
+                        </div>
+                        <div class="flex ${headerJustifyClass} text-sm font-semibold mb-2 px-1">
+                            ${numberHeaderDisplay}
+                            <div class="flex items-center gap-x-4">
+                                <span>Month/เดือน: ${monthName}</span>
+                                <span>Year/ปี: ${buddhistYear}</span>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                        <table class="monthly-detail-table min-w-full bg-white border-2 border-slate-400 text-center">
+                            <thead class="bg-slate-200">
+                                <tr class="border-b-2 border-slate-400">
+                                    <th rowspan="2" class="border-r-2 border-slate-400 align-middle">ลำดับ</th>
+                                    <th rowspan="2" class="border-r-2 border-slate-400 text-left align-middle">Check Item / หัวข้อตรวจสอบ</th>
+                                    <th colspan="${daysInMonth}" class="border-b border-slate-400">Date of check / วันที่ตรวจสอบ</th>
+                                </tr>
+                                <tr class="border-b-2 border-slate-400">`;
+                for (let i = 1; i <= daysInMonth; i++) tableHtml += `<th class="border-r border-slate-300 font-normal text-center align-middle">${i}</th>`;
+                tableHtml += `</tr></thead><tbody>`;
+
+                if (isLpgCard) {
+                    tableHtml += `<tr class="border-b border-slate-300 bg-white">
+                                    <td class="border-r-2 border-slate-400"></td>
+                                    <td class="border-r-2 border-slate-400 text-left font-semibold">จำนวนถังแก๊ส</td>`;
+                    for (let i = 1; i <= daysInMonth; i++) {
+                        const numbersForDay = checkedNumbersByDay[i] ? checkedNumbersByDay[i].sort().join(', ') : '';
+                        tableHtml += `<td class="border-r border-slate-300 vertical-text-cell"><div>${numbersForDay}</div></td>`;
+                    }
+                    tableHtml += `</tr>`;
+                }
+
+                displayLabels.forEach((label, index) => {
+                    tableHtml += `<tr class="border-b border-slate-300">
+                                    <td class="border-r-2 border-slate-400">${index + 1}</td>
+                                    <td class="border-r-2 border-slate-400 text-left">${label}</td>`;
+                    for (let i = 1; i <= daysInMonth; i++) {
+                        let status = pivotData[label][i] || '';
+                        const statusString = String(status).toLowerCase();
+                        if (statusString === 'ปกติ' || statusString === 'ผ่าน') tableHtml += `<td class="border-r border-slate-300 text-green-600 font-bold">O</td>`;
+                        else if (statusString === 'ไม่ปกติ' || statusString === 'ไม่ผ่าน') tableHtml += `<td class="border-r border-slate-300 text-red-600 font-bold">X</td>`;
+                        else if (status) tableHtml += `<td class="border-r border-slate-300 vertical-text-cell"><div>${status}</div></td>`;
+                        else tableHtml += `<td class="border-r border-slate-300"></td>`;
+                    }
+                    tableHtml += `</tr>`;
+                });
+                tableHtml += `<tr class="border-t-2 border-slate-400 bg-white">
+                                <td class="border-r-2 border-slate-400 font-semibold" colspan="2">ผู้ตรวจสอบ</td>`;
+                for (let i = 1; i <= daysInMonth; i++) tableHtml += `<td class="signature-cell border-r border-slate-300"><div>${signatures[i] || ''}</div></td>`;
+                tableHtml += `</tr>`;
+                
+                tableHtml += `<tr class="border-t-2 border-slate-400 bg-white">
+                                <td class="border-r-2 border-slate-400 font-semibold" colspan="2">หมายเหตุ</td>`;
+                for (let i = 1; i <= daysInMonth; i++) tableHtml += `<td class="signature-cell border-r border-slate-300"><div>${notes[i] || ''}</div></td>`;
+                tableHtml += `</tr></tbody></table></div></div>`;
+                finalHtml += tableHtml;
+
+                const mobileNumberDisplay = !isLpgCard ? `<span class="font-semibold text-slate-700">หมายเลข: ${groupKey}</span>` : '';
+                mobileFinalHtml += `<div class="mobile-detail-container p-2">
+                                        <div class="text-center mb-4 bg-white p-3 rounded-lg shadow-sm">
+                                            <h2 class="text-lg font-bold text-slate-800">${displayTitle}</h2>
+                                            <p class="text-sm text-slate-600 mt-1">สาขา: ${activeUser || 'N/A'}</p>
+                                            <div class="text-sm text-slate-500 mt-2 flex justify-center items-center gap-x-2">
+                                                ${mobileNumberDisplay}
+                                                ${!isLpgCard ? '<span>&bull;</span>' : ''}
+                                                <span>เดือน: ${monthName}</span><span>&bull;</span><span>ปี: ${buddhistYear}</span>
+                                            </div>
+                                        </div>`;
+                const dataByDay = rowsForThisGroup.reduce((acc, row) => {
+                    const day = parseInt(row[1], 10);
+                    if (!isNaN(day)) { if (!acc[day]) acc[day] = []; acc[day].push(row); }
+                    return acc;
+                }, {});
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayDataRows = dataByDay[day];
+                    if (dayDataRows && dayDataRows.length > 0) {
+                        // คอลัมน์ H (Index 7) คือ ชื่อผู้ตรวจสอบ
+                        const signature = (dayDataRows[0][7] !== undefined && dayDataRows[0][7] !== null && dayDataRows[0][7] !== '') ? dayDataRows[0][7] : '-';
+                        const note = notes[day] || '';
+                        mobileFinalHtml += `
+                            <div class="mobile-day-card">
+                                <div class="mobile-day-card-header">
+                                    <h4 class="text-lg font-bold text-indigo-700">วันที่ ${day} ${monthName} ${buddhistYear}</h4>
+                                    <div class="text-sm text-slate-500"><span class="font-medium">ผู้ตรวจ:</span> <span class="font-semibold text-slate-700">${signature}</span></div>
+                                </div>
+                                <div class="mobile-check-grid">`;
+                        
+                        displayLabels.forEach((label) => {
+                            const labelIndex = allCustomLabels.indexOf(label);
+                            let status = '';
+                            for (const row of dayDataRows) {
+                                const currentStatus = row[dataStartIndex + labelIndex] || '';
+                                const csLower = String(currentStatus).toLowerCase();
+                                if (csLower === 'ไม่ปกติ' || csLower === 'ไม่ผ่าน') { status = currentStatus; break; }
+                                if (currentStatus) status = currentStatus;
+                            }
+                            
+                            let statusHtml = '<span class="text-slate-400">-</span>';
+                            const statusString = String(status).toLowerCase();
+                            
+                            if (statusString === 'ปกติ' || statusString === 'ผ่าน') statusHtml = `<div class="item-status text-green-600"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg><span>${status}</span></div>`;
+                            else if (statusString === 'ไม่ปกติ' || statusString === 'ไม่ผ่าน') statusHtml = `<div class="item-status text-red-600"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94l-1.72-1.72z" clip-rule="evenodd" /></svg><span>${status}</span></div>`;
+                            else if (status) statusHtml = `<div class="item-status text-slate-800"><span>${status}</span></div>`;
+                            mobileFinalHtml += `<div class="mobile-check-item"><p class="item-label">${label}</p>${statusHtml}</div>`;
+                        });
+                        mobileFinalHtml += `</div>`; 
+                        if (note) {
+                             mobileFinalHtml += `<div class="mobile-note-section"><div class="flex items-center gap-2 text-amber-800"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 flex-shrink-0"><path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z" /><path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z" /></svg><span class="font-semibold">หมายเหตุ</span></div><p class="text-sm text-slate-800 mt-2 pl-1">${String(note).replace(/\\n/g, '<br>')}</p></div>`;
+                        }
+                        mobileFinalHtml += `</div>`; 
+                    }
+                }
+                mobileFinalHtml += `</div>`;
+            });
+            monthlyDetailPageContent.innerHTML = finalHtml + mobileFinalHtml;
+        }
+
+        async function renderYearlyDetailTables(dataRows, config, yearValue) {
             const monthlyDetailPageContent = document.getElementById('monthly-detail-page-content');
             if (!dataRows || dataRows.length === 0) {
                  monthlyDetailPageContent.innerHTML = `<div class="text-center py-12 px-4"><svg class="w-16 h-16 mx-auto text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg><h2 class="mt-4 text-2xl font-semibold text-slate-700">ไม่พบข้อมูล</h2><p class="mt-2 text-slate-500">ไม่พบข้อมูลสำหรับปีที่เลือก</p></div>`;
                 return;
             }
 
-            const buddhistYear = parseInt(targetYear) + 543;
-            const displayTitle = `Yearly Check Sheet (${config.title})`;
-            const activeUser = lastViewBeforeMonthlyDetail === 'special-monthly-summary-app-container' ? currentSelectedSpecialMonthlyUser : currentSelectedMonthlyUser;
-
-            const numberColIdx = getNumberColumnIndex(config.title);
+            let allCustomLabels = await fetchDataLabelsForCard(config.title);
+            let hiddenLabels = ["ขนาดสลิง", "น้ำหนักยกของเครน", "ประเภทรถจัดส่ง", "แผนกผู้รับผิดชอบ", "การปรับปรุง","การปรับปรุงแก้ไข", "ข้อบกพร่องที่พบ", "รายละเอียดข้อบกพร่องที่พบ", "ชื่อ - นามสกุล","ชื่อ-นามสกุล", "รหัสพนักงาน", "ระยะเวลาการแก้ไข", "กำหนดวันที่คาดว่าจะแก้ไขแล้วเสร็จ", "จุดตรวจที่ 1", "จุดตรวจที่1", "ข้อมูล 1", "จุดตรวจที่ 6", "จุดตรวจที่ 7", "จุดตรวจที่ 8", "จุดตรวจที่ 9", "จุดตรวจที่6", "จุดตรวจที่7", "จุดตรวจที่8", "จุดตรวจที่9", "ข้อมูล 6", "ข้อมูล 7", "ข้อมูล 8", "ข้อมูล 9"];
             
-            // Group by equipment number
+            const buddhistYear = parseInt(yearValue) + 543;
+            const activeUser = currentSelectedSpecialMonthlyUser;
+            const numberColIdx = getNumberColumnIndex(config.title);
+            const dataStartIndex = getDataStartIndex(config.title, numberColIdx);
+            const isEmergencyLight = config.title.toLowerCase().replace(/\s+/g, '').includes('ไฟฉุกเฉิน');
+            const isFireHydrant = config.title.toLowerCase().replace(/\s+/g, '').includes('ตู้น้ำดับเพลิง');
+            // เพิ่มเงื่อนไขเช็คว่าเป็นถังดับเพลิงหรือไม่ เพื่อซ่อนคอลัมน์หมายเหตุ
+            const hideRemarkCol = config.title.toLowerCase().replace(/\s+/g, '').includes('ถังดับเพลิง');
+
+            if (isFireHydrant) {
+                hiddenLabels = hiddenLabels.filter(l => !["จุดตรวจที่ 1", "จุดตรวจที่1", "ข้อมูล 1"].includes(l));
+            }
+
+            // ระบบสร้างหัวข้ออัตโนมัติหากหาในชีต "ชื่อข้อมูล" ไม่เจอ
+            if (allCustomLabels.length === 0 && dataRows.length > 0) {
+                const maxLen = Math.max(...dataRows.map(r => r.length));
+                for (let i = dataStartIndex; i < maxLen; i++) {
+                    allCustomLabels.push(`จุดตรวจที่ ${i - dataStartIndex + 1}`);
+                }
+            }
+
+            const displayLabels = allCustomLabels.filter(label => !hiddenLabels.includes(label));
+            const defectDetailLabel = "รายละเอียดข้อบกพร่องที่พบ";
+            const defectDetailIndex = allCustomLabels.indexOf(defectDetailLabel);
+
+            // Group data by Item Number
             const dataByNumber = dataRows.reduce((acc, row) => {
                 let number = extractNumber(row, numberColIdx);
-                if (!number) return acc;
+                if (!number) number = 'N/A';
                 if (!acc[number]) acc[number] = [];
                 acc[number].push(row);
                 return acc;
             }, {});
 
-            let finalHtml = '';
-            const sortedGroupKeys = Object.keys(dataByNumber).sort((a,b) => a.localeCompare(b, undefined, {numeric:true}));
+            const fullMonthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
             
-            // Months in Thai
-            const monthNames = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
-            const thaiMonthMapFull = {"มกราคม": 0, "กุมภาพันธ์": 1, "มีนาคม": 2, "เมษายน": 3, "พฤษภาคม": 4, "มิถุนายน": 5, "กรกฎาคม": 6, "สิงหาคม": 7, "กันยายน": 8, "ตุลาคม": 9, "พฤศจิกายน": 10, "ธันวาคม": 11};
+            let finalHtml = '';
+            let mobileFinalHtml = '';
+            const sortedGroupKeys = Object.keys(dataByNumber).sort();
 
-            // Split into chunks of 15-20 rows for printing (optional)
-            const itemsPerPage = 20;
-            for (let i = 0; i < sortedGroupKeys.length; i += itemsPerPage) {
-                const chunkKeys = sortedGroupKeys.slice(i, i + itemsPerPage);
-                const pageBreakClass = i > 0 ? 'page-break' : '';
+            sortedGroupKeys.forEach((groupKey, tableIndex) => {
+                const rowsForThisGroup = dataByNumber[groupKey];
+                const dataByMonth = {};
+                
+                let locationVal = '-';
+                let typeVal = '-';
 
-                let tableHtml = `
-                    <div class="printable-table-container p-4 ${pageBreakClass}">
-                        <div class="text-center mb-4">
-                            <h2 class="text-xl font-bold">${displayTitle}</h2>
-                            <p class="text-md font-semibold mt-1">สาขา: ${activeUser || '-'} &nbsp;&nbsp;|&nbsp;&nbsp; ประจำปี: ${buddhistYear}</p>
-                        </div>
-                        <div class="overflow-x-auto">
-                        <table class="monthly-detail-table min-w-full bg-white border-2 border-slate-400 text-center">
-                            <thead class="bg-slate-200">
-                                <tr class="border-b-2 border-slate-400">
-                                    <th class="border-r-2 border-slate-400 align-middle py-2 w-12 text-sm">ลำดับ</th>
-                                    <th class="border-r-2 border-slate-400 text-left align-middle px-2 text-sm w-32">หมายเลขอุปกรณ์</th>`;
-                monthNames.forEach(m => {
-                    tableHtml += `<th class="border-r border-slate-300 font-semibold text-center align-middle py-2 w-10">${m}</th>`;
-                });
-                tableHtml += `      <th class="font-semibold text-center align-middle py-2 px-2 text-sm">หมายเหตุ</th>
-                                </tr>
-                            </thead>
-                            <tbody>`;
+                // ค้นหาข้อมูลล่าสุดของแต่ละเดือน
+                rowsForThisGroup.forEach(row => {
+                    // อัปเดตข้อมูลสถานที่และขนาดเสมอ เพื่อให้แสดงข้อมูลที่มีการเปลี่ยนแปลงล่าสุด
+                    if (isEmergencyLight || isFireHydrant) {
+                        if (row[9] && String(row[9]).trim() !== '') locationVal = String(row[9]).trim();
+                    } else {
+                        if (row[11] && String(row[11]).trim() !== '') locationVal = String(row[11]).trim();
+                        if (row[9] && String(row[9]).trim() !== '') typeVal = String(row[9]).trim();
+                    }
 
-                chunkKeys.forEach((groupKey, idx) => {
-                    const rows = dataByNumber[groupKey];
-                    const monthStatus = new Array(12).fill(false);
-                    let latestNote = '';
-                    
-                    rows.forEach(row => {
-                        let mVal = String(row[2] || '').trim();
-                        let mIdx = -1;
-                        if (!isNaN(mVal)) mIdx = parseInt(mVal, 10) - 1;
-                        else if (thaiMonthMapFull.hasOwnProperty(mVal)) mIdx = thaiMonthMapFull[mVal];
-                        
-                        if (mIdx >= 0 && mIdx < 12) {
-                            monthStatus[mIdx] = true;
-                            // find notes if any (assuming notes are typically at column 10+)
-                            const rowNote = row.slice(10).find(cell => cell && String(cell).length > 5 && !['ปกติ','ผ่าน','ไม่ปกติ','ไม่ผ่าน'].includes(String(cell)));
-                            if (rowNote) latestNote = rowNote;
+                    let m = parseInt(row[2], 10); // month col
+                    // ระบบดึงเดือนสำรองหากมีการใส่เป็นชื่อเดือน หรือปล่อยว่าง
+                    if (isNaN(m)) {
+                        const mStr = String(row[2] || '').trim();
+                        const thaiMonthMap = {"มกราคม": 1, "ม.ค.": 1, "กุมภาพันธ์": 2, "ก.พ.": 2, "มีนาคม": 3, "มี.ค.": 3, "เมษายน": 4, "เม.ย.": 4, "พฤษภาคม": 5, "พ.ค.": 5, "มิถุนายน": 6, "มิ.ย.": 6, "กรกฎาคม": 7, "ก.ค.": 7, "สิงหาคม": 8, "ส.ค.": 8, "กันยายน": 9, "ก.ย.": 9, "ตุลาคม": 10, "ต.ค.": 10, "พฤศจิกายน": 11, "พ.ย.": 11, "ธันวาคม": 12, "ธ.ค.": 12};
+                        for (const [key, val] of Object.entries(thaiMonthMap)) {
+                            if (mStr.includes(key)) { m = val; break; }
                         }
-                    });
+                    }
+                    if (isNaN(m) && row[0]) {
+                        const d = new Date(row[0]);
+                        if (!isNaN(d.getTime())) m = d.getMonth() + 1;
+                    }
 
-                    tableHtml += `<tr class="border-b border-slate-300 hover:bg-slate-50">
-                                    <td class="border-r-2 border-slate-400 py-1.5">${i + idx + 1}</td>
-                                    <td class="border-r-2 border-slate-400 text-left px-2 font-bold text-indigo-700">${groupKey}</td>`;
-                    
-                    monthStatus.forEach(status => {
-                        if (status) {
-                            tableHtml += `<td class="border-r border-slate-300 text-green-600 font-bold">O</td>`;
+                    if (!isNaN(m) && m >= 1 && m <= 12) {
+                        if (!dataByMonth[m]) {
+                            dataByMonth[m] = row;
                         } else {
-                            tableHtml += `<td class="border-r border-slate-300 text-slate-300">-</td>`;
+                            // เช็ค Timestamp (row[0]) เพื่อเปรียบเทียบหาข้อมูลที่ใหม่ที่สุด
+                            const existingDate = new Date(dataByMonth[m][0]);
+                            const currentDate = new Date(row[0]);
+                            
+                            // ถ้าแปลงเวลาไม่ได้ (ไม่มี Timestamp) หรือข้อมูลปัจจุบันใหม่กว่า/เท่ากับ ให้ใช้ข้อมูลล่าสุด
+                            if (isNaN(existingDate.getTime()) || isNaN(currentDate.getTime()) || currentDate >= existingDate) {
+                                dataByMonth[m] = row;
+                            }
                         }
-                    });
-                    
-                    tableHtml += `  <td class="text-left px-2 text-xs truncate max-w-[150px]" title="${latestNote}">${latestNote}</td>
-                                  </tr>`;
+                    }
                 });
 
-                tableHtml += `</tbody></table></div></div>`;
-                finalHtml += tableHtml;
-            }
+                const pageBreakClass = tableIndex > 0 ? 'page-break' : '';
 
-            if (finalHtml === '') {
-                monthlyDetailPageContent.innerHTML = `<div class="text-center py-12 px-4"><svg class="w-16 h-16 mx-auto text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg><h2 class="mt-4 text-2xl font-semibold text-slate-700">ไม่พบข้อมูล</h2><p class="mt-2 text-slate-500">ไม่พบข้อมูลที่ตรงกับเงื่อนไขในปีที่เลือก</p></div>`;
-            } else {
-                monthlyDetailPageContent.innerHTML = finalHtml;
-            }
+                // ส่วนจัดการ Header ของรายละเอียด (แยกตามประเภทการ์ด)
+                let detailsHeaderHtml = '';
+                if (isEmergencyLight || isFireHydrant) {
+                    detailsHeaderHtml = `
+                        <div class="flex flex-wrap sm:flex-nowrap items-end mb-4 gap-y-2">
+                            <span class="whitespace-nowrap">หมายเลข</span>
+                            <div class="w-[120px] sm:w-[150px] border-b-[2px] border-dotted border-black ml-2 mr-4 relative top-[-5px] text-center font-bold text-indigo-700">${groupKey}</div>
+                            <span class="whitespace-nowrap">สถานที่ติดตั้ง</span>
+                            <div class="flex-grow border-b-[2px] border-dotted border-black ml-2 relative top-[-5px] text-center font-bold text-indigo-700">${locationVal}</div>
+                        </div>
+                    `;
+                } else {
+                    detailsHeaderHtml = `
+                        <div class="flex flex-wrap sm:flex-nowrap items-end mb-4 gap-y-2">
+                            <span class="whitespace-nowrap">หมายเลข</span>
+                            <div class="w-[120px] sm:w-[150px] border-b-[2px] border-dotted border-black ml-2 mr-4 relative top-[-5px] text-center font-bold text-indigo-700">${groupKey}</div>
+                            <span class="whitespace-nowrap">สถานที่ติดตั้ง</span>
+                            <div class="flex-grow border-b-[2px] border-dotted border-black ml-2 relative top-[-5px] text-center font-bold text-indigo-700">${locationVal}</div>
+                        </div>
+                        <div class="flex flex-wrap sm:flex-nowrap items-end mb-4 gap-y-2">
+                            <span class="whitespace-nowrap">ขนาด</span>
+                            <div class="flex-grow border-b-[2px] border-dotted border-black ml-2 relative top-[-5px] text-center font-bold text-indigo-700">${typeVal}</div>
+                        </div>
+                    `;
+                }
+
+                const headerBgClass = isEmergencyLight ? 'bg-yellow-300 text-slate-900' : 'bg-red-600 text-white';
+                const remarkHeaderHtml = isFireHydrant ? 'บันทึกสิ่ง<br>ผิดปกติ' : 'หมายเหตุ/<br>ข้อผิดพลาด';
+
+                // --- Desktop Table HTML (Based on provided template) ---
+                let tableHtml = `
+                    <div class="printable-table-container p-2 sm:p-4 ${pageBreakClass}">
+                        <div class="bg-white mx-auto p-4 sm:p-8 shadow-md border border-slate-200 text-black" style="max-width: 800px; font-family: 'Sarabun', sans-serif;">
+                            <!-- Header -->
+                            <div class="${headerBgClass} text-center py-2 mb-6">
+                                <h1 class="text-xl sm:text-2xl font-bold tracking-wide">ใบตรวจเช็ค${config.title} สาขา ${activeUser || '-'}</h1>
+                            </div>
+
+                            <!-- Details Section -->
+                            <div class="mb-6 text-sm sm:text-base">
+                                <p class="font-bold mb-3">รายละเอียดของอุปกรณ์ :</p>
+                                ${detailsHeaderHtml}
+                            </div>
+
+                            <!-- Instructions Section -->
+                            <div class="mb-4 text-sm sm:text-base">
+                                <p class="mb-1">
+                                    <strong>ข้อปฏิบัติ :</strong> ให้ทำการตรวจสอบสภาพอุปกรณ์<span class="underline font-bold">ทุกเดือน</span>
+                                </p>
+                                <p class="mb-2">ลงบันทึกข้อมูลผู้ตรวจสอบให้ชัดเจน</p>
+                                
+                                <div class="flex flex-wrap items-center gap-4 sm:gap-6 mt-2">
+                                    <span>บันทึกผลการตรวจสอบ</span>
+                                    
+                                    <div class="flex items-center gap-2">
+                                        <svg class="w-6 h-6 text-green-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                            <path d="M8 12.5L10.5 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>ปกติ / ผ่าน</span>
+                                    </div>
+
+                                    <div class="flex items-center gap-2">
+                                        <svg class="w-6 h-6 text-red-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                            <path d="M9 9L15 15M15 9L9 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <span>ชำรุด / ไม่ผ่าน</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Table Section -->
+                            <div class="mt-6 overflow-x-auto">
+                                <table class="w-full text-center text-black border-collapse border border-black min-w-[600px]">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2" class="w-[12%] py-2 font-normal border border-black">วันที่</th>
+                                            <th colspan="${displayLabels.length}" class="py-1 font-normal border border-black">การตรวจสอบ</th>
+                                            <th rowspan="2" class="w-[15%] py-2 font-normal border border-black">ผู้ตรวจสอบ</th>
+                                            ${!hideRemarkCol ? `<th rowspan="2" class="w-[20%] py-2 font-normal border border-black text-sm leading-tight">${remarkHeaderHtml}</th>` : ''}
+                                        </tr>
+                                        <tr>
+                                            ${displayLabels.map(l => `<th class="w-[10%] py-1 font-normal text-xs sm:text-sm leading-tight border border-black">${l}</th>`).join('')}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                `;
+
+                for (let m = 1; m <= 12; m++) {
+                    const row = dataByMonth[m];
+                    const monthName = fullMonthNames[m - 1];
+                    let dateStr = '';
+                    let signature = '';
+                    let remarkError = '';
+                    let tds = displayLabels.map(() => '<td class="border border-black p-1 text-slate-300"></td>');
+
+                    if (row) {
+                        let day = parseInt(row[1], 10);
+                        if (isNaN(day) && row[0]) {
+                            const d = new Date(row[0]);
+                            if (!isNaN(d.getTime())) day = d.getDate();
+                        }
+                        if (!isNaN(day)) dateStr = `${day.toString().padStart(2, '0')}/${m.toString().padStart(2, '0')}/${yearValue.toString().slice(-2)}`;
+                        
+                        // คอลัมน์ H (Index 7) คือ ชื่อผู้ตรวจสอบ
+                        signature = (row[7] !== undefined && row[7] !== null && row[7] !== '') ? row[7] : '-';
+
+                        // หมายเหตุ/ข้อผิดพลาด (ตู้น้ำดับเพลิงดึงคอลัมน์ R=17, อื่นๆ ดึงคอลัมน์ O=14)
+                        remarkError = isFireHydrant ? (row[17] || '') : (row[14] || '');
+
+                        tds = displayLabels.map((label) => {
+                            let status = '';
+                            
+                            if (isFireHydrant) {
+                                // ล็อคคอลัมน์สำหรับตู้น้ำดับเพลิง
+                                const l = label.replace(/\s+/g, '');
+                                if (l.includes('จุดตรวจที่1') || l.includes('ข้อมูล1')) status = row[11] || '';
+                                else if (l.includes('จุดตรวจที่2') || l.includes('ข้อมูล2')) status = row[12] || '';
+                                else if (l.includes('จุดตรวจที่3') || l.includes('ข้อมูล3')) status = row[13] || '';
+                                else if (l.includes('จุดตรวจที่4') || l.includes('ข้อมูล4')) status = row[14] || '';
+                                else if (l.includes('จุดตรวจที่5') || l.includes('ข้อมูล5')) status = row[15] || '';
+                                else {
+                                    const labelIndex = allCustomLabels.indexOf(label);
+                                    status = row[dataStartIndex + labelIndex] || '';
+                                }
+                            } else {
+                                // ดึงข้อมูลล็อคตามคอลัมน์ M, N, O, P สำหรับถังดับเพลิง
+                                if (label.includes('มาตรวัด')) {
+                                    status = row[12] || '';
+                                } else if (label.includes('ซีล') || label.includes('ชีล') || label.includes('สลัก')) {
+                                    status = row[13] || '';
+                                } else if (label.includes('สายฉีด')) {
+                                    status = row[14] || '';
+                                } else if (label.includes('สภาพถัง')) {
+                                    status = row[15] || '';
+                                } else {
+                                    const labelIndex = allCustomLabels.indexOf(label);
+                                    status = row[dataStartIndex + labelIndex] || '';
+                                }
+                            }
+
+                            const s = String(status).toLowerCase();
+                            // แปลงสัญลักษณ์เพื่อความสวยงาม
+                            if (s === 'ปกติ' || s === 'ผ่าน') return '<td class="border border-black p-1"><svg class="w-6 h-6 mx-auto text-green-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M8 12.5L10.5 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>';
+                            if (s === 'ไม่ปกติ' || s === 'ไม่ผ่าน') return '<td class="border border-black p-1"><svg class="w-6 h-6 mx-auto text-red-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M9 9L15 15M15 9L9 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>';
+                            return `<td class="border border-black p-1 text-sm">${status}</td>`;
+                        });
+                    }
+                    
+                    const displayDate = dateStr ? dateStr : '';
+
+                    tableHtml += `
+                        <tr class="h-10 hover:bg-slate-50 transition-colors">
+                            <td class="border border-black p-1 font-medium">${displayDate}</td>
+                            ${tds.join('')}
+                            <td class="border border-black p-1 text-sm font-semibold">${signature}</td>
+                            ${!hideRemarkCol ? `<td class="border border-black p-1 text-xs text-left">${remarkError}</td>` : ''}
+                        </tr>
+                    `;
+                }
+                
+                tableHtml += `</tbody></table></div></div></div>`;
+                finalHtml += tableHtml;
+
+                const mobileHeaderBgClass = isEmergencyLight ? 'bg-yellow-300' : 'bg-white';
+                const mobileRemarkHeaderLabel = isFireHydrant ? 'บันทึกสิ่งผิดปกติ:' : 'หมายเหตุ/ข้อผิดพลาด:';
+
+                // --- Mobile View HTML ---
+                let mobileDetailsHeaderHtml = '';
+                if (isEmergencyLight || isFireHydrant) {
+                    mobileDetailsHeaderHtml = `
+                        <div><span class="font-semibold text-slate-700">หมายเลข:</span> <span class="font-bold text-rose-700">${groupKey}</span></div>
+                        <div><span class="font-semibold text-slate-700">สถานที่ติดตั้ง:</span> <span class="font-medium text-slate-800">${locationVal}</span></div>
+                    `;
+                } else {
+                    mobileDetailsHeaderHtml = `
+                        <div><span class="font-semibold text-slate-700">หมายเลข:</span> <span class="font-bold text-rose-700">${groupKey}</span></div>
+                        <div><span class="font-semibold text-slate-700">สถานที่ติดตั้ง:</span> <span class="font-medium text-slate-800">${locationVal}</span></div>
+                        <div class="mt-1 pt-1 border-t border-slate-200">
+                            <div><span class="font-semibold text-slate-700">ขนาด:</span> <span class="font-medium text-slate-800">${typeVal}</span></div>
+                        </div>
+                    `;
+                }
+
+                mobileFinalHtml += `
+                    <div class="mobile-detail-container p-2 mb-6">
+                        <div class="text-center mb-4 ${mobileHeaderBgClass} p-4 rounded-xl shadow-sm border border-slate-200">
+                            <h2 class="text-lg font-bold text-slate-800">ใบตรวจเช็ค${config.title} สาขา ${activeUser || '-'}</h2>
+                            <div class="text-sm text-slate-500 mt-3 flex flex-col gap-1 bg-slate-50 py-2 px-3 rounded-lg text-left">
+                                ${mobileDetailsHeaderHtml}
+                            </div>
+                        </div>
+                `;
+
+                let hasMobileData = false;
+                for (let m = 1; m <= 12; m++) {
+                    const row = dataByMonth[m];
+                    if (row) {
+                        hasMobileData = true;
+                        let day = parseInt(row[1], 10);
+                        if (isNaN(day) && row[0]) {
+                            const d = new Date(row[0]);
+                            if (!isNaN(d.getTime())) day = d.getDate();
+                        }
+                        const dateStr = `${isNaN(day) ? '-' : day} ${fullMonthNames[m-1]} ${buddhistYear}`;
+                        
+                        // คอลัมน์ H (Index 7) คือ ชื่อผู้ตรวจสอบ
+                        const signature = (row[7] !== undefined && row[7] !== null && row[7] !== '') ? row[7] : '-';
+                        
+                        // หมายเหตุ/ข้อผิดพลาด (ตู้น้ำดับเพลิงดึงคอลัมน์ R=17, อื่นๆ ดึงคอลัมน์ O=14)
+                        const remarkError = isFireHydrant ? (row[17] || '') : (row[14] || '');
+
+                        mobileFinalHtml += `
+                            <div class="mobile-day-card mb-4 bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                                <div class="flex justify-between items-start border-b border-slate-100 pb-3 mb-3">
+                                    <div>
+                                        <h4 class="text-lg font-bold text-rose-700">เดือน ${fullMonthNames[m-1]}</h4>
+                                        <p class="text-sm text-slate-500 mt-0.5">วันที่ตรวจ: ${dateStr}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-xs text-slate-500">ผู้ตรวจ</p>
+                                        <p class="text-sm font-semibold text-slate-700">${signature}</p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                        `;
+
+                        displayLabels.forEach((label) => {
+                            let status = '';
+                            
+                            if (isFireHydrant) {
+                                // ล็อคคอลัมน์สำหรับตู้น้ำดับเพลิง บน Mobile
+                                const l = label.replace(/\s+/g, '');
+                                if (l.includes('จุดตรวจที่1') || l.includes('ข้อมูล1')) status = row[11] || '';
+                                else if (l.includes('จุดตรวจที่2') || l.includes('ข้อมูล2')) status = row[12] || '';
+                                else if (l.includes('จุดตรวจที่3') || l.includes('ข้อมูล3')) status = row[13] || '';
+                                else if (l.includes('จุดตรวจที่4') || l.includes('ข้อมูล4')) status = row[14] || '';
+                                else if (l.includes('จุดตรวจที่5') || l.includes('ข้อมูล5')) status = row[15] || '';
+                                else {
+                                    const labelIndex = allCustomLabels.indexOf(label);
+                                    status = row[dataStartIndex + labelIndex] || '';
+                                }
+                            } else {
+                                // ดึงข้อมูลล็อคตามคอลัมน์ M, N, O, P สำหรับ Mobile
+                                if (label.includes('มาตรวัด')) {
+                                    status = row[12] || '';
+                                } else if (label.includes('ซีล') || label.includes('ชีล') || label.includes('สลัก')) {
+                                    status = row[13] || '';
+                                } else if (label.includes('สายฉีด')) {
+                                    status = row[14] || '';
+                                } else if (label.includes('สภาพถัง')) {
+                                    status = row[15] || '';
+                                } else {
+                                    const labelIndex = allCustomLabels.indexOf(label);
+                                    status = row[dataStartIndex + labelIndex] || '';
+                                }
+                            }
+
+                            let statusHtml = '<span class="text-slate-400">-</span>';
+                            const s = String(status).toLowerCase();
+                            
+                            if (s === 'ปกติ' || s === 'ผ่าน') statusHtml = `<div class="flex items-center gap-1 text-green-600 font-bold"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.052-.143z" clip-rule="evenodd" /></svg> ปกติ</div>`;
+                            else if (s === 'ไม่ปกติ' || s === 'ไม่ผ่าน') statusHtml = `<div class="flex items-center gap-1 text-red-600 font-bold"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg> ไม่ปกติ</div>`;
+                            else if (status) statusHtml = `<div class="text-slate-800 font-medium">${status}</div>`;
+
+                            mobileFinalHtml += `
+                                <div class="bg-slate-50 rounded-lg p-2 border border-slate-100">
+                                    <p class="text-xs text-slate-500 mb-1">${label}</p>
+                                    ${statusHtml}
+                                </div>
+                            `;
+                        });
+
+                        mobileFinalHtml += `</div>`; 
+                        
+                        if (!hideRemarkCol && remarkError && remarkError !== '-') {
+                            mobileFinalHtml += `
+                                <div class="mt-3 pt-3 border-t border-slate-100">
+                                    <p class="text-xs font-semibold text-rose-700 mb-1">${mobileRemarkHeaderLabel}</p>
+                                    <p class="text-sm text-slate-700">${String(remarkError).replace(/\n/g, '<br>')}</p>
+                                </div>
+                            `;
+                        }
+                        mobileFinalHtml += `</div>`; 
+                    }
+                }
+                
+                if(!hasMobileData) {
+                     mobileFinalHtml += `<div class="text-center p-6 bg-slate-50 rounded-xl border border-slate-200 text-slate-500">ไม่มีประวัติการตรวจสอบในปีนี้</div>`;
+                }
+
+                mobileFinalHtml += `</div>`; 
+            });
+
+            monthlyDetailPageContent.innerHTML = finalHtml + mobileFinalHtml;
         }
 
         // --- Print Preview Logic ---
-        function showPrintPreview(isMobile = false) {
-            let modal = document.getElementById('print-preview-modal');
-            if (!modal) {
-                modal = document.createElement('div');
-                modal.id = 'print-preview-modal';
-                document.body.appendChild(modal);
-            }
-            const contentHtml = document.getElementById('monthly-detail-page-content').innerHTML;
+        function showPrintPreview(isMonthlyDetail = false) {
+            const printPreviewModal = document.createElement('div');
+            printPreviewModal.id = 'print-preview-modal';
             
-            modal.innerHTML = `
-                <div id="print-preview-header">
-                    <h2 class="text-xl font-bold">ตัวอย่างก่อนพิมพ์ / ดาวน์โหลด</h2>
-                    <div class="preview-controls">
-                        <button class="close-btn" onclick="closePrintPreview()">ปิด</button>
-                        <button class="print-btn" onclick="window.print()">พิมพ์ / บันทึก PDF</button>
-                    </div>
-                </div>
-                <div id="print-preview-content">${contentHtml}</div>
-            `;
+            const header = document.createElement('div');
+            header.id = 'print-preview-header';
             
-            modal.style.display = 'flex';
+            const title = document.createElement('h2');
+            title.className = 'text-lg sm:text-xl font-bold';
+            title.textContent = 'ตัวอย่างก่อนพิมพ์';
+            
+            const controls = document.createElement('div');
+            controls.className = 'preview-controls';
+            
+            const printBtn = document.createElement('button');
+            printBtn.className = 'print-btn';
+            printBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg> พิมพ์/บันทึก PDF';
+            printBtn.onclick = () => window.print();
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'close-btn';
+            closeBtn.textContent = 'ปิด';
+            closeBtn.onclick = () => {
+                document.body.removeChild(printPreviewModal);
+                document.body.classList.remove('overflow-hidden');
+            };
+            
+            controls.appendChild(printBtn);
+            controls.appendChild(closeBtn);
+            header.appendChild(title);
+            header.appendChild(controls);
+            
+            const content = document.createElement('div');
+            content.id = 'print-preview-content';
+            
+            const sourceContent = document.getElementById('monthly-detail-page-content').cloneNode(true);
+            content.appendChild(sourceContent);
+            
+            printPreviewModal.appendChild(header);
+            printPreviewModal.appendChild(content);
+            
+            document.body.appendChild(printPreviewModal);
             document.body.classList.add('overflow-hidden');
         }
 
-        window.closePrintPreview = function() {
-            const modal = document.getElementById('print-preview-modal');
-            if (modal) modal.style.display = 'none';
-            document.body.classList.remove('overflow-hidden');
-        }
-
-        const printBtn = document.getElementById('monthly-detail-print-button');
-        if (printBtn) {
-            printBtn.addEventListener('click', () => {
-                showPrintPreview(window.innerWidth <= 767);
-            });
-        }
-
-        // --- Export Logic ---
-        function exportMonthlyDetailToExcel() {
-            const tables = document.querySelectorAll('#monthly-detail-page-content table');
-            if (!tables || tables.length === 0) {
-                showCustomMessage('แจ้งเตือน', 'ไม่มีข้อมูลสำหรับ Export');
-                return;
-            }
-            const wb = XLSX.utils.book_new();
-            tables.forEach((table, idx) => {
-                const ws = XLSX.utils.table_to_sheet(table);
-                XLSX.utils.book_append_sheet(wb, ws, `Page_${idx + 1}`);
-            });
-            const headerText = document.getElementById('monthly-detail-page-header').textContent;
-            XLSX.writeFile(wb, `${headerText}.xlsx`);
-        }
-
-        function exportMonthlySummaryToExcel(appContainer, user, monthValue, listContainerId) {
-            if (!user) {
-                showCustomMessage('แจ้งเตือน', 'กรุณาเลือกผู้ใช้งานก่อน Export');
-                return;
-            }
-            const cards = appContainer.querySelectorAll('[id$="-card-"]');
-            if (cards.length === 0) {
-                 showCustomMessage('แจ้งเตือน', 'ไม่มีข้อมูลสำหรับ Export');
-                 return;
-            }
-
-            const data = [];
-            const prefix = listContainerId === 'special-monthly-user-buttons-container' ? 'special-monthly' : 'monthly';
-            const configs = prefix === 'special-monthly' ? specialCardConfigurations : cardConfigurations;
-
-            configs.forEach((config, index) => {
-                const card = appContainer.querySelector(`#${prefix}-card-${index}`);
-                if (!card) return;
-                
-                const title = config.title;
-                const resultsDiv = card.querySelector(`#${prefix}-results-${index}`);
-                let statusText = 'N/A';
-                
-                if (resultsDiv && resultsDiv.textContent) {
-                    const text = resultsDiv.textContent;
-                    if (text.includes('ครบแล้ว')) statusText = 'ครบแล้ว';
-                    else if (text.includes('ยังไม่ครบ')) statusText = 'ยังไม่ครบ';
-                    else if (text.includes('สถานะพิเศษ')) statusText = 'สถานะพิเศษ (LPG)';
-                    else statusText = 'ไม่มีข้อมูล';
-                }
-                data.push({
-                    'อุปกรณ์': title,
-                    'สถานะ': statusText,
-                    'หมายเหตุ': config.comment || ''
-                });
-            });
-
-            const ws = XLSX.utils.json_to_sheet(data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Summary");
-            XLSX.writeFile(wb, `สรุปผล_${user}_${monthValue}.xlsx`);
-        }
-
-        // --- Custom Message Modal ---
+        // --- Custom Message Alert ---
         function showCustomMessage(title, message) {
-            let modal = document.getElementById('custom-message-modal');
-            if (!modal) {
-                modal = document.createElement('div');
-                modal.id = 'custom-message-modal';
-                modal.className = 'fixed inset-0 bg-black/60 z-[3000] flex items-center justify-center p-4';
-                document.body.appendChild(modal);
-            }
-            
-            modal.innerHTML = `
-                <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm flex flex-col overflow-hidden animate-in fade-in-0 zoom-in-95 duration-300">
-                    <div class="p-5 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
-                        <h3 class="text-lg font-bold text-slate-800">${title}</h3>
-                        <button onclick="document.getElementById('custom-message-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 transition">
-                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                        </button>
-                    </div>
-                    <div class="p-6 text-center">
-                        <p class="text-slate-600">${message}</p>
-                    </div>
-                    <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-end">
-                        <button onclick="document.getElementById('custom-message-modal').classList.add('hidden')" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition">ตกลง</button>
+            const existingModal = document.getElementById('custom-message-modal');
+            if (existingModal) existingModal.remove();
+
+            const modalHtml = `
+                <div id="custom-message-modal" class="fixed inset-0 bg-black/60 z-[3000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+                    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm flex flex-col transform transition-transform">
+                        <div class="p-6 text-center">
+                            <div class="w-16 h-16 mx-auto bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">${title}</h3>
+                            <p class="text-sm text-slate-500">${message}</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 border-t border-slate-100 rounded-b-2xl">
+                            <button id="custom-message-close" class="w-full py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition font-bold shadow-md">ตกลง</button>
+                        </div>
                     </div>
                 </div>
             `;
-            modal.classList.remove('hidden');
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            document.body.classList.add('overflow-hidden');
+            
+            document.getElementById('custom-message-close').addEventListener('click', () => {
+                document.getElementById('custom-message-modal').remove();
+                if (!document.querySelector('.fixed.inset-0:not(.hidden):not(#custom-message-modal)')) {
+                    document.body.classList.remove('overflow-hidden');
+                }
+            });
         }
 
-        // --- Event Listeners and Initialization ---
-        document.addEventListener('DOMContentLoaded', () => {
+        // --- Utilities ---
+        function renderDisabledMessage(resultsEl, title, message) {
+            resultsEl.innerHTML = `<div class="bg-slate-100/50 border border-slate-200 text-slate-500 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">${title}</p><p class="text-sm break-words">${message}</p></div></div>`;
+        }
+        function renderInfoMessage(resultsEl, title, message) {
+            resultsEl.innerHTML = `<div class="bg-indigo-50 border border-indigo-100 text-indigo-700 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">${title}</p><p class="text-sm break-words">${message}</p></div></div>`;
+        }
+        function renderError(resultsEl, msg) {
+            resultsEl.innerHTML = `<div class="bg-red-50 border border-red-100 text-red-700 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ข้อผิดพลาด</p><p class="text-sm break-words">${msg}</p></div></div>`;
+        }
+
+        // --- Search Utilities ---
+        function setupSearch(inputId, containerId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            input.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const container = document.getElementById(containerId);
+                const buttons = container.querySelectorAll('button');
+                buttons.forEach(button => {
+                    const text = button.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        button.style.display = 'block';
+                    } else {
+                        button.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // --- DASHBOARD LOGIC ---
+        let dashboardDataCache = {};
+        let dashboardIsFetching = false;
+        let currentDashboardFetchId = 0; // เพิ่มตัวแปรสำหรับจัดการการเปลี่ยนเดือนทันที
+        let allUsersList = [];
+        const dashboardBatchSize = 10; // จำนวน Worker ที่ทำงานขนานกัน
+        // 1 & 2. ปรับแก้ชื่ออุปกรณ์ ถังดับเพลิง และ ถังดับเพลิงCo2
+        const masterDevices = ["แก๊ส LPG", "สลิงผ้าแผนกเหล็ก", "เครนโครงสร้าง", "เครื่องตัดไฟเบอร์", "Stacker ไฟฟ้า", "รถเฮี้ยบ จัดส่ง", "รถจัดส่ง", "โฟล์คลิฟท์ประเภทเครื่องยนต์", "รถโฟล์คลิฟท์ไฟฟ้า", "รถสแตกเกอร์จัดส่ง", "สลิงผ้า รถจัดส่งติดเครน", "ตู้น้ำดับเพลิง", "ถังดับเพลิง", "ถังดับเพลิงCo2", "ไฟฉุกเฉิน"];
+        
+        function initDashboard() {
+            const pwdInput = document.getElementById('dashboard-password-input');
+            const err = document.getElementById('password-error-msg');
+            pwdInput.value = '';
+            err.classList.add('hidden');
+            document.getElementById('password-modal').classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+            
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            
+            const mSelect = document.getElementById('dashboard-month-select');
+            const ySelect = document.getElementById('dashboard-year-select');
+            
+            if (ySelect.options.length === 0) {
+                // สร้างตัวเลือกปี (ย้อนหลัง 5 ปี ล่วงหน้า 5 ปี)
+                for (let y = yyyy - 5; y <= yyyy + 5; y++) {
+                    const opt = document.createElement('option');
+                    opt.value = y;
+                    opt.text = y + 543; // แสดงเป็น พ.ศ. ให้สวยงามและคุ้นเคย
+                    ySelect.appendChild(opt);
+                }
+            }
+
+            mSelect.value = mm;
+            ySelect.value = yyyy;
+            document.getElementById('dashboard-month-picker').value = `${yyyy}-${mm}`;
+        }
+
+        document.getElementById('password-submit-btn').addEventListener('click', () => {
+            if (document.getElementById('dashboard-password-input').value === 'GBH') {
+                document.getElementById('password-modal').classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+                startDashboardLoad();
+            } else {
+                document.getElementById('password-error-msg').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('password-modal-close').addEventListener('click', () => {
+            document.getElementById('password-modal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
             showMainMenu();
-            populateVideoList();
+        });
 
-            const todayStr = new Date().toISOString().split('T')[0];
-            const currentMonthStr = todayStr.substring(0, 7);
+        async function startDashboardLoad() {
+            // เพิ่มเลข ID การดึงข้อมูลทุกครั้งที่เรียก เพื่อหยุดการทำงานของ Worker ตัวเก่าทันที
+            currentDashboardFetchId++;
+            const fetchId = currentDashboardFetchId;
+
+            dashboardIsFetching = true;
+            document.getElementById('dashboard-status-text').textContent = 'กำลังเตรียมตาราง...';
+            const tbody = document.getElementById('dashboard-table-body');
+            tbody.innerHTML = '';
             
-            document.getElementById('daily-global-check-date').value = todayStr;
-            document.getElementById('monthly-global-check-month').value = currentMonthStr;
-            document.getElementById('special-monthly-global-check-month').value = currentMonthStr;
+            try {
+                if (allUsersList.length === 0) {
+                    const cachedUsers = localStorage.getItem('cached_user_list');
+                    if (cachedUsers) {
+                        allUsersList = JSON.parse(cachedUsers);
+                    } else {
+                        const res = await apiCall('getAllUsers', {}, 'daily');
+                        allUsersList = res.users || [];
+                    }
+                }
+
+                // Build Header
+                const thead = document.getElementById('dashboard-table-head');
+                let headerHtml = '<tr><th scope="col" class="px-6 py-3 border-r border-slate-300 w-48 sticky left-0 bg-slate-100 z-30">สาขา / อุปกรณ์</th>';
+                masterDevices.forEach(device => {
+                    headerHtml += `<th scope="col" class="px-6 py-3 border-r border-slate-300 text-center tracking-wider">${device}</th>`;
+                });
+                headerHtml += '</tr>';
+                thead.innerHTML = headerHtml;
+
+                // Pre-fill Empty Rows
+                allUsersList.forEach((user, index) => {
+                    let rowHtml = `<tr id="dash-row-${index}" class="hover:bg-slate-50 transition-colors" data-user="${user}">`;
+                    rowHtml += `<td class="px-6 py-4 border-r border-slate-200 font-bold text-slate-900 sticky left-0 bg-white z-20 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">${user}</td>`;
+                    masterDevices.forEach((device, dIndex) => {
+                        rowHtml += `<td id="dash-cell-${index}-${dIndex}" class="px-2 py-4 border-r border-slate-200 text-center align-middle"><div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-fuchsia-500"></div></td>`;
+                    });
+                    rowHtml += '</tr>';
+                    tbody.insertAdjacentHTML('beforeend', rowHtml);
+                });
+
+                setupDashboardSearch();
+                // ส่งค่า fetchId เข้าไปด้วยเพื่อยืนยันสถานะล่าสุด
+                fetchDashboardInBatches(allUsersList, masterDevices, document.getElementById('dashboard-month-picker').value, fetchId);
+
+            } catch (err) {
+                if (fetchId === currentDashboardFetchId) {
+                    document.getElementById('dashboard-status-text').textContent = 'เกิดข้อผิดพลาด: ' + err.message;
+                }
+            }
+        }
+
+        async function fetchDashboardInBatches(users, devices, monthYear, fetchId) {
+            dashboardIsFetching = true;
+            let completedCount = 0;
+            if (fetchId !== currentDashboardFetchId) return; // หากมีการกดเปลี่ยนเดือนระหว่างนี้ ให้ยกเลิกทันที
+
+            document.getElementById('dashboard-status-text').textContent = `กำลังโหลดข้อมูล... (0/${users.length})`;
+            const [year, month] = monthYear.split('-').map(Number);
+            const specialDevices = ['ตู้น้ำดับเพลิง', 'ถังดับเพลิง', 'ถังดับเพลิงCo2', 'ไฟฉุกเฉิน'];
             
-            // Menu Navigation
-            document.getElementById('menu-daily-check').addEventListener('click', (e) => { e.preventDefault(); showDailyApp(); if (dashboardCache.allUsers.length === 0) loadAllUsers(document.getElementById('daily-user-buttons-container'), 'lastSelectedDailyUser', displayDailyUserCards); else { document.getElementById('daily-user-buttons-container').innerHTML = ''; loadAllUsers(document.getElementById('daily-user-buttons-container'), 'lastSelectedDailyUser', displayDailyUserCards); } });
-            document.getElementById('menu-summary').addEventListener('click', (e) => { e.preventDefault(); showMonthlyApp(); if (dashboardCache.allUsers.length === 0) loadAllUsers(document.getElementById('monthly-user-buttons-container'), 'lastSelectedMonthlyUser', displayMonthlyUserCards); else { document.getElementById('monthly-user-buttons-container').innerHTML = ''; loadAllUsers(document.getElementById('monthly-user-buttons-container'), 'lastSelectedMonthlyUser', displayMonthlyUserCards); } });
-            document.getElementById('menu-special-monthly').addEventListener('click', (e) => { e.preventDefault(); showSpecialMonthlyApp(); if (dashboardCache.allUsers.length === 0) loadAllUsers(document.getElementById('special-monthly-user-buttons-container'), 'lastSelectedSpecialMonthlyUser', displaySpecialMonthlyUserCards); else { document.getElementById('special-monthly-user-buttons-container').innerHTML = ''; loadAllUsers(document.getElementById('special-monthly-user-buttons-container'), 'lastSelectedSpecialMonthlyUser', displaySpecialMonthlyUserCards); } });
-            document.getElementById('menu-dashboard').addEventListener('click', (e) => { e.preventDefault(); openDashboardWithPassword(); });
-            document.getElementById('menu-user-manual').addEventListener('click', (e) => { e.preventDefault(); showUserManual(); });
+            // ใช้ Queue + Workers (จำกัดโหลดพร้อมกันแบบไม่รอกัน)
+            const queue = users.map((user, index) => ({ user, index }));
+            
+            async function worker() {
+                while (queue.length > 0) {
+                    if (fetchId !== currentDashboardFetchId) return; // ดักจับการเปลี่ยนเดือนก่อนดึงคิวใหม่
 
-            // Back Buttons
-            document.getElementById('daily-back-to-menu-button').addEventListener('click', showMainMenu);
-            document.getElementById('monthly-back-to-menu-button').addEventListener('click', showMainMenu);
-            document.getElementById('special-monthly-back-to-menu-button').addEventListener('click', showMainMenu);
-            document.getElementById('dashboard-back-button').addEventListener('click', showMainMenu);
-            document.getElementById('manual-back-to-menu-button').addEventListener('click', showMainMenu);
-            document.getElementById('detail-page-back-button').addEventListener('click', showDailyApp);
-            document.getElementById('monthly-detail-page-back-button').addEventListener('click', () => showView(lastViewBeforeMonthlyDetail));
+                    const { user, index: rowIndex } = queue.shift();
+                    
+                    try {
+                        // 1. ดึง Setting ของสาขานั้น
+                        const settingsRes = await apiCall('loadSettings', { username: user }, 'daily');
+                        if (fetchId !== currentDashboardFetchId) return; // ดักจับการเปลี่ยนเดือนระหว่างรอ API
 
-            // Password Modal
-            document.getElementById('password-cancel-btn').addEventListener('click', closeDashboardPasswordModal);
-            document.getElementById('password-submit-btn').addEventListener('click', verifyDashboardPassword);
-            document.getElementById('dashboard-password-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') verifyDashboardPassword(); });
+                        const configs = Array.isArray(settingsRes.config) ? settingsRes.config : [];
+                        
+                        // 2. ดึงข้อมูลทุกอุปกรณ์พร้อมกัน (Parallel Fetching) เพื่อความรวดเร็วสูงสุด
+                        const deviceFetchPromises = devices.map(async (deviceName, dIndex) => {
+                            const cell = document.getElementById(`dash-cell-${rowIndex}-${dIndex}`);
+                            if (!cell) return;
 
-            // Dashboard Events
-            document.getElementById('dashboard-refresh-btn').addEventListener('click', () => initDashboard(true));
-            document.getElementById('dashboard-month-picker').addEventListener('change', () => initDashboard());
-            document.getElementById('dashboard-search-branch').addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase().trim();
+                            const config = configs.find(c => c.title === deviceName);
+                            const isSpecial = specialDevices.includes(deviceName);
+                            
+                            if (isSpecial && (year < 2026 || (year === 2026 && month < 5))) {
+                                cell.innerHTML = `<span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded">เริ่มตรวจ พ.ค. 2026</span>`;
+                                return;
+                            }
+
+                            if (!config || config.sheetId === 'N/A' || config.sheetId === '') {
+                                cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่มีอุปกรณ์นี้"></div>`;
+                                return;
+                            }
+
+                            const targetCount = parseInt(config.targetCount) || 0;
+                            
+                            // ซ่อนสาขาที่เป้าหมายเป็น 0 (ยกเว้นแก๊ส LPG) ให้เป็นไม่มีข้อมูล เพื่อแก้ปัญหา Error และข้อมูลหลอกในสาขาที่ไม่มีอุปกรณ์ (เช่น ตระการ, บ้านผือ ฯลฯ)
+                            if (targetCount <= 0 && deviceName !== 'แก๊ส LPG') {
+                                cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่ได้กำหนดเป้าหมาย (ไม่มีอุปกรณ์)"></div>`;
+                                return;
+                            }
+
+                            try {
+                                const result = await apiCall('getMonthlySheetData', { sheetId: config.sheetId, sheetName: config.sheetName, year, month }, 'monthly');
+                                if (fetchId !== currentDashboardFetchId) return; // ป้องกันการลงข้อมูลผิดเดือนหลังโหลด API เสร็จ
+
+                                const data = Array.isArray(result?.data) ? result.data : [];
+                                
+                                let checkedDays = [];
+                                let actualCount = 0;
+                                const numberColIdx = getNumberColumnIndex(config.title);
+                                
+                                if (data.length > 0) {
+                                    if (deviceName === 'แก๊ส LPG') {
+                                        // แก๊ส LPG: นับจำนวนวันที่ตรวจเจอ (อย่างน้อย 1 ครั้งต่อวัน)
+                                        const dailyNumbers = new Set();
+                                        data.forEach(row => {
+                                            let mValue = parseInt(row[2]);
+                                            if (mValue === month || isNaN(mValue)) {
+                                                const d = parseInt(row[1]);
+                                                if(!isNaN(d)) dailyNumbers.add(d);
+                                            }
+                                        });
+                                        checkedDays = Array.from(dailyNumbers);
+                                        actualCount = checkedDays.length; 
+                                    } else if (isSpecial) {
+                                        // อุปกรณ์ดับเพลิง: นับจำนวนอุปกรณ์
+                                        const checkedNumbers = new Set();
+                                        data.forEach(row => {
+                                            let mValue = parseInt(row[2]);
+                                            if (mValue === month || isNaN(mValue)) {
+                                                const num = extractNumber(row, numberColIdx);
+                                                if (num) checkedNumbers.add(num);
+                                                const d = parseInt(row[1]);
+                                                if(!isNaN(d) && !checkedDays.includes(d)) checkedDays.push(d);
+                                            }
+                                        });
+                                        actualCount = checkedNumbers.size; 
+                                    } else {
+                                        // อุปกรณ์ทั่วไป: นับจำนวนวันที่ตรวจครบตาม target
+                                        const dailyNumbers = {};
+                                        data.forEach(row => {
+                                            let mValue = parseInt(row[2]);
+                                            let yValue = parseInt(row[3]);
+                                            if (yValue > 2500) yValue -= 543;
+                                            if ((yValue === year && mValue === month) || isNaN(mValue)) {
+                                                const dayValue = parseInt(row[1]);
+                                                const num = extractNumber(row, numberColIdx);
+                                                if (!isNaN(dayValue) && num) {
+                                                    if (!dailyNumbers[dayValue]) dailyNumbers[dayValue] = new Set();
+                                                    dailyNumbers[dayValue].add(num);
+                                                }
+                                            }
+                                        });
+                                        
+                                        Object.keys(dailyNumbers).forEach(day => {
+                                            if (dailyNumbers[day].size >= targetCount) {
+                                                checkedDays.push(parseInt(day));
+                                            }
+                                        });
+                                        actualCount = checkedDays.length;
+                                    }
+                                }
+
+                                // Render Cell
+                                let cellContent = '';
+                                const daysInMonth = new Date(year, month, 0).getDate();
+
+                                if (deviceName === 'แก๊ส LPG') {
+                                    // เงื่อนไข LPG: หากมีการตรวจพบอย่างน้อย 1 วัน เป็นสีเขียวทันที พร้อมโชว์ วันที่ตรวจ/วันในเดือน
+                                    if (actualCount > 0) {
+                                        cellContent = `<button class="px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-lg shadow-sm hover:bg-teal-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${daysInMonth}</button>`;
+                                    } else {
+                                        cellContent = `<button class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-lg shadow-sm hover:bg-amber-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[]')">${actualCount}/${daysInMonth}</button>`;
+                                    }
+                                } else if (isSpecial) {
+                                    // อุปกรณ์ดับเพลิง
+                                    if (actualCount >= targetCount && targetCount > 0) {
+                                        cellContent = `<button class="px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-lg shadow-sm hover:bg-teal-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${targetCount}</button>`;
+                                    } else {
+                                        cellContent = `<button class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-lg shadow-sm hover:bg-amber-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${targetCount}</button>`;
+                                    }
+                                } else {
+                                    // อุปกรณ์ทั่วไป (แสดงสีเขียวเมื่อตรวจครบตามจำนวนวันของเดือนนั้นจริงๆ เท่านั้น)
+                                    if (actualCount >= daysInMonth && daysInMonth > 0) {
+                                        cellContent = `<button class="px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-lg shadow-sm hover:bg-teal-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${daysInMonth}</button>`;
+                                    } else {
+                                        cellContent = `<button class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-lg shadow-sm hover:bg-amber-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${daysInMonth}</button>`;
+                                    }
+                                }
+                                cell.innerHTML = cellContent;
+
+                            } catch (err) {
+                                // เปลี่ยนจากข้อความ Error สีแดง เป็นจุดสีเทา (ไม่มีข้อมูล) เพื่อความเรียบร้อยของหน้าจอ
+                                cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่สามารถดึงข้อมูลได้"></div>`;
+                            }
+                        });
+
+                        // รอให้อุปกรณ์ทั้งหมดของสาขานี้โหลดเสร็จ
+                        await Promise.all(deviceFetchPromises);
+
+                    } catch (e) {
+                        for (let dIndex = 0; dIndex < devices.length; dIndex++) {
+                            const cell = document.getElementById(`dash-cell-${rowIndex}-${dIndex}`);
+                            if (cell && cell.innerHTML.includes('loader-sm')) {
+                                cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่สามารถดึงข้อมูลได้"></div>`;
+                            }
+                        }
+                    }
+                    
+                    if (fetchId !== currentDashboardFetchId) return; // หากยกเลิกระหว่างทางให้ออกทันที
+
+                    completedCount++;
+                    document.getElementById('dashboard-status-text').textContent = `กำลังโหลดข้อมูล... (${completedCount}/${users.length})`;
+                }
+            }
+
+            const workers = [];
+            for (let i = 0; i < Math.min(dashboardBatchSize, users.length); i++) {
+                workers.push(worker());
+            }
+
+            await Promise.all(workers);
+
+            // เมื่อครบทั้งหมดแล้วตรวจสอบอีกครั้งว่า ID ยังเป็นตัวล่าสุดหรือไม่
+            if (fetchId === currentDashboardFetchId) {
+                document.getElementById('dashboard-status-text').textContent = `โหลดข้อมูลเสร็จสิ้น (${users.length} สาขา)`;
+                dashboardIsFetching = false;
+            }
+        }
+
+        window.showDashboardDetail = function(device, user, daysStr) {
+            document.getElementById('dash-modal-title').textContent = `${device}`;
+            document.getElementById('dash-modal-subtitle').textContent = `สาขา: ${user}`;
+            const days = JSON.parse(daysStr);
+            const container = document.getElementById('dash-modal-days-container');
+            container.innerHTML = '';
+            
+            if (days.length === 0) {
+                container.innerHTML = '<span class="text-sm text-slate-500 italic">ไม่พบวันที่บันทึกข้อมูล</span>';
+            } else {
+                days.sort((a,b)=>a-b).forEach(d => {
+                    container.insertAdjacentHTML('beforeend', `<span class="w-8 h-8 flex items-center justify-center bg-fuchsia-100 text-fuchsia-700 font-bold rounded-lg text-sm shadow-sm">${d}</span>`);
+                });
+            }
+            document.getElementById('dashboard-detail-modal').classList.remove('hidden');
+        };
+
+        document.getElementById('dash-modal-close').addEventListener('click', () => {
+            document.getElementById('dashboard-detail-modal').classList.add('hidden');
+        });
+
+        document.getElementById('dashboard-refresh-button').addEventListener('click', () => {
+            // ไม่ต้องสนใจว่าโหลดเสร็จหรือยัง ให้ทำการโหลดใหม่และยกเลิกของเก่าทันที
+            startDashboardLoad();
+        });
+
+        // ควบคุมการเปลี่ยนเดือนผ่าน Dropdown ที่เพิ่มเข้าไปใหม่
+        document.getElementById('dashboard-month-select').addEventListener('change', () => {
+            const m = document.getElementById('dashboard-month-select').value;
+            const y = document.getElementById('dashboard-year-select').value;
+            document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
+            startDashboardLoad();
+        });
+
+        document.getElementById('dashboard-year-select').addEventListener('change', () => {
+            const m = document.getElementById('dashboard-month-select').value;
+            const y = document.getElementById('dashboard-year-select').value;
+            document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
+            startDashboardLoad();
+        });
+
+        function setupDashboardSearch() {
+            const input = document.getElementById('dashboard-search-input');
+            input.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
                 const rows = document.querySelectorAll('#dashboard-table-body tr');
-                let visibleCount = 0;
                 rows.forEach(row => {
-                    const branch = row.dataset.branch.toLowerCase();
-                    if (branch.includes(searchTerm)) {
+                    const user = row.dataset.user.toLowerCase();
+                    if (user.includes(term)) {
                         row.style.display = '';
-                        visibleCount++;
                     } else {
                         row.style.display = 'none';
                     }
                 });
-                const emptyState = document.getElementById('dashboard-empty-state');
-                if (visibleCount === 0 && rows.length > 0) emptyState.classList.remove('hidden');
-                else emptyState.classList.add('hidden');
             });
-            
-            document.getElementById('close-drilldown-btn').addEventListener('click', closeDashboardDrilldown);
+        }
 
-            // Sidebar Toggles
+        // --- Event Listeners Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            const todayStr = `${yyyy}-${mm}-${dd}`;
+            const thisMonthStr = `${yyyy}-${mm}`;
+
+            document.getElementById('daily-global-check-date').value = todayStr;
+            document.getElementById('monthly-global-check-month').value = thisMonthStr;
+            document.getElementById('special-monthly-global-check-month').value = thisMonthStr;
+
+            document.getElementById('menu-daily-check').addEventListener('click', (e) => { e.preventDefault(); showDailyApp(); loadAllUsers(document.getElementById('daily-user-buttons-container'), 'last_selected_daily_user', displayDailyUserCards); });
+            document.getElementById('menu-summary').addEventListener('click', (e) => { e.preventDefault(); showMonthlyApp(); loadAllUsers(document.getElementById('monthly-user-buttons-container'), 'last_selected_monthly_user', displayMonthlyUserCards); });
+            document.getElementById('menu-special-monthly').addEventListener('click', (e) => { e.preventDefault(); showSpecialMonthlyApp(); loadAllUsers(document.getElementById('special-monthly-user-buttons-container'), 'last_selected_special_monthly_user', displaySpecialMonthlyUserCards); });
+            document.getElementById('menu-dashboard').addEventListener('click', (e) => { e.preventDefault(); showDashboardApp(); });
+            document.getElementById('menu-user-manual').addEventListener('click', (e) => { e.preventDefault(); showUserManual(); populateVideoList(); });
+
+            document.getElementById('daily-back-to-menu-button').addEventListener('click', showMainMenu);
+            document.getElementById('monthly-back-to-menu-button').addEventListener('click', showMainMenu);
+            document.getElementById('special-monthly-back-to-menu-button').addEventListener('click', showMainMenu);
+            document.getElementById('manual-back-to-menu-button').addEventListener('click', showMainMenu);
+            document.getElementById('dashboard-back-to-menu-button').addEventListener('click', showMainMenu);
+            document.getElementById('detail-page-back-button').addEventListener('click', showDailyApp);
+            
+            document.getElementById('monthly-detail-page-back-button').addEventListener('click', () => {
+                showView(lastViewBeforeMonthlyDetail);
+            });
+
+            document.getElementById('monthly-detail-print-button').addEventListener('click', () => {
+                showPrintPreview(true);
+            });
+
             document.getElementById('daily-sidebar-toggle').addEventListener('click', openDailySidebar);
             document.getElementById('daily-sidebar-overlay').addEventListener('click', closeDailySidebar);
+
             document.getElementById('monthly-sidebar-toggle').addEventListener('click', openMonthlySidebar);
             document.getElementById('monthly-sidebar-overlay').addEventListener('click', closeMonthlySidebar);
+
             document.getElementById('special-monthly-sidebar-toggle').addEventListener('click', openSpecialMonthlySidebar);
             document.getElementById('special-monthly-sidebar-overlay').addEventListener('click', closeSpecialMonthlySidebar);
 
-            // Refresh Buttons
-            document.getElementById('daily-refresh-button').addEventListener('click', refreshDailyCurrentView);
-            document.getElementById('monthly-refresh-button').addEventListener('click', refreshMonthlyCurrentView);
-            document.getElementById('special-monthly-refresh-button').addEventListener('click', refreshSpecialMonthlyCurrentView);
-
-            // Date/Month Pickers
-            document.getElementById('daily-global-check-date').addEventListener('change', refreshDailyCurrentView);
-            document.getElementById('monthly-global-check-month').addEventListener('change', refreshMonthlyCurrentView);
-            document.getElementById('special-monthly-global-check-month').addEventListener('change', refreshSpecialMonthlyCurrentView);
-
-            // Modal Closers
             document.getElementById('close-video-modal').addEventListener('click', closeVideoPlayer);
-            document.getElementById('video-player-modal').addEventListener('click', (e) => { if (e.target.id === 'video-player-modal') closeVideoPlayer(); });
+            document.getElementById('video-player-modal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('video-player-modal')) closeVideoPlayer();
+            });
+
             document.getElementById('comment-modal-close').addEventListener('click', closeCommentModal);
             document.getElementById('comment-modal-cancel').addEventListener('click', closeCommentModal);
             document.getElementById('comment-modal-save').addEventListener('click', () => {
-                const newComment = document.getElementById('comment-modal-textarea').value.trim();
+                const newComment = document.getElementById('comment-modal-textarea').value;
                 if (currentEditingConfig) updateCardComment(currentEditingConfig, newComment);
             });
 
-            // Search Functions
-            const setupSearch = (inputId, containerId) => {
-                const searchInput = document.getElementById(inputId);
-                if (searchInput) {
-                    searchInput.addEventListener('input', (e) => {
-                        const searchTerm = e.target.value.toLowerCase();
-                        document.querySelectorAll(`#${containerId} button`).forEach(btn => {
-                            const text = btn.textContent.toLowerCase();
-                            btn.style.display = text.includes(searchTerm) ? 'block' : 'none';
-                        });
-                    });
-                }
-            };
+            document.getElementById('daily-global-check-date').addEventListener('change', refreshDailyCurrentView);
+            document.getElementById('daily-refresh-button').addEventListener('click', refreshDailyCurrentView);
+            
+            document.getElementById('monthly-global-check-month').addEventListener('change', refreshMonthlyCurrentView);
+            document.getElementById('monthly-refresh-button').addEventListener('click', refreshMonthlyCurrentView);
+
+            document.getElementById('special-monthly-global-check-month').addEventListener('change', refreshSpecialMonthlyCurrentView);
+            document.getElementById('special-monthly-refresh-button').addEventListener('click', refreshSpecialMonthlyCurrentView);
+
             setupSearch('daily-user-search-input', 'daily-user-buttons-container');
             setupSearch('monthly-user-search-input', 'monthly-user-buttons-container');
             setupSearch('special-monthly-user-search-input', 'special-monthly-user-buttons-container');
@@ -2697,17 +3137,10 @@
             // Export Buttons Logic
             const exportMonthlyDetailBtn = document.getElementById('monthly-detail-export-button');
             if (exportMonthlyDetailBtn) {
-                exportMonthlyDetailBtn.addEventListener('click', exportMonthlyDetailToExcel);
-            }
-            
-            const exportMonthlySummaryBtn = document.getElementById('monthly-export-excel-button');
-            if (exportMonthlySummaryBtn) {
-                 exportMonthlySummaryBtn.addEventListener('click', () => exportMonthlySummaryToExcel(document.getElementById('monthly-app-container'), currentSelectedMonthlyUser, document.getElementById('monthly-global-check-month').value, 'monthly-user-buttons-container'));
-            }
-            
-            const exportSpecialMonthlySummaryBtn = document.getElementById('special-monthly-export-excel-button');
-            if (exportSpecialMonthlySummaryBtn) {
-                 exportSpecialMonthlySummaryBtn.addEventListener('click', () => exportMonthlySummaryToExcel(document.getElementById('special-monthly-app-container'), currentSelectedSpecialMonthlyUser, document.getElementById('special-monthly-global-check-month').value, 'special-monthly-user-buttons-container'));
+                exportMonthlyDetailBtn.addEventListener('click', () => {
+                    // Logic for export if implemented
+                    showCustomMessage('แจ้งเตือน', 'ฟังก์ชันนี้กำลังอยู่ระหว่างการพัฒนา');
+                });
             }
         });
     </script>
