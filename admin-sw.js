@@ -1,5 +1,5 @@
 // Service Worker for Check Log Admin PWA
-const CACHE_NAME = 'checklog-admin-v4.31'; // อัปเดตเวอร์ชันเพื่อบังคับล้างแคชเก่า
+const CACHE_NAME = 'checklog-admin-v4.50'; // อัปเดตเวอร์ชันเพื่อบังคับล้างแคชเก่า
 
 const urlsToCache = [
     './',
