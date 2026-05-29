@@ -2443,123 +2443,6 @@
                                     status = row[dataStartIndex + labelIndex] || '';
                                 }
                             } else {
-                                // ดึงข้อมูลล็อคตามคอลัมน์ M, N, O, P สำหรับถังดับเพลิง
-                                if (label.includes('มาตรวัด')) {
-                                    status = row[12] || '';
-                                } else if (label.includes('ซีล') || label.includes('ชีล') || label.includes('สลัก')) {
-                                    status = row[13] || '';
-                                } else if (label.includes('สายฉีด')) {
-                                    status = row[14] || '';
-                                } else if (label.includes('สภาพถัง')) {
-                                    status = row[15] || '';
-                                } else {
-                                    const labelIndex = allCustomLabels.indexOf(label);
-                                    status = row[dataStartIndex + labelIndex] || '';
-                                }
-                            }
-
-                            const s = String(status).toLowerCase();
-                            // แปลงสัญลักษณ์เพื่อความสวยงาม
-                            if (s === 'ปกติ' || s === 'ผ่าน') return '<td class="border border-black p-1"><svg class="w-6 h-6 mx-auto text-green-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M8 12.5L10.5 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>';
-                            if (s === 'ไม่ปกติ' || s === 'ไม่ผ่าน') return '<td class="border border-black p-1"><svg class="w-6 h-6 mx-auto text-red-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M9 9L15 15M15 9L9 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>';
-                            return `<td class="border border-black p-1 text-sm">${status}</td>`;
-                        });
-                    }
-                    
-                    const displayDate = dateStr ? dateStr : '';
-
-                    tableHtml += `
-                        <tr class="h-10 hover:bg-slate-50 transition-colors">
-                            <td class="border border-black p-1 font-medium">${displayDate}</td>
-                            ${tds.join('')}
-                            <td class="border border-black p-1 text-sm font-semibold">${signature}</td>
-                            ${!hideRemarkCol ? `<td class="border border-black p-1 text-xs text-left">${remarkError}</td>` : ''}
-                        </tr>
-                    `;
-                }
-                
-                tableHtml += `</tbody></table></div></div></div>`;
-                finalHtml += tableHtml;
-
-                const mobileHeaderBgClass = isEmergencyLight ? 'bg-yellow-300' : 'bg-white';
-                const mobileRemarkHeaderLabel = isFireHydrant ? 'บันทึกสิ่งผิดปกติ:' : 'หมายเหตุ/ข้อผิดพลาด:';
-
-                // --- Mobile View HTML ---
-                let mobileDetailsHeaderHtml = '';
-                if (isEmergencyLight || isFireHydrant) {
-                    mobileDetailsHeaderHtml = `
-                        <div><span class="font-semibold text-slate-700">หมายเลข:</span> <span class="font-bold text-rose-700">${groupKey}</span></div>
-                        <div><span class="font-semibold text-slate-700">สถานที่ติดตั้ง:</span> <span class="font-medium text-slate-800">${locationVal}</span></div>
-                    `;
-                } else {
-                    mobileDetailsHeaderHtml = `
-                        <div><span class="font-semibold text-slate-700">หมายเลข:</span> <span class="font-bold text-rose-700">${groupKey}</span></div>
-                        <div><span class="font-semibold text-slate-700">สถานที่ติดตั้ง:</span> <span class="font-medium text-slate-800">${locationVal}</span></div>
-                        <div class="mt-1 pt-1 border-t border-slate-200">
-                            <div><span class="font-semibold text-slate-700">ขนาด:</span> <span class="font-medium text-slate-800">${typeVal}</span></div>
-                        </div>
-                    `;
-                }
-
-                mobileFinalHtml += `
-                    <div class="mobile-detail-container p-2 mb-6">
-                        <div class="text-center mb-4 ${mobileHeaderBgClass} p-4 rounded-xl shadow-sm border border-slate-200">
-                            <h2 class="text-lg font-bold text-slate-800">ใบตรวจเช็ค${config.title} สาขา ${activeUser || '-'}</h2>
-                            <div class="text-sm text-slate-500 mt-3 flex flex-col gap-1 bg-slate-50 py-2 px-3 rounded-lg text-left">
-                                ${mobileDetailsHeaderHtml}
-                            </div>
-                        </div>
-                `;
-
-                let hasMobileData = false;
-                for (let m = 1; m <= 12; m++) {
-                    const row = dataByMonth[m];
-                    if (row) {
-                        hasMobileData = true;
-                        let day = parseInt(row[1], 10);
-                        if (isNaN(day) && row[0]) {
-                            const d = new Date(row[0]);
-                            if (!isNaN(d.getTime())) day = d.getDate();
-                        }
-                        const dateStr = `${isNaN(day) ? '-' : day} ${fullMonthNames[m-1]} ${buddhistYear}`;
-                        
-                        // คอลัมน์ H (Index 7) คือ ชื่อผู้ตรวจสอบ
-                        const signature = (row[7] !== undefined && row[7] !== null && row[7] !== '') ? row[7] : '-';
-                        
-                        // หมายเหตุ/ข้อผิดพลาด (ตู้น้ำดับเพลิงดึงคอลัมน์ R=17, อื่นๆ ดึงคอลัมน์ O=14)
-                        const remarkError = isFireHydrant ? (row[17] || '') : (row[14] || '');
-
-                        mobileFinalHtml += `
-                            <div class="mobile-day-card mb-4 bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
-                                <div class="flex justify-between items-start border-b border-slate-100 pb-3 mb-3">
-                                    <div>
-                                        <h4 class="text-lg font-bold text-rose-700">เดือน ${fullMonthNames[m-1]}</h4>
-                                        <p class="text-sm text-slate-500 mt-0.5">วันที่ตรวจ: ${dateStr}</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-xs text-slate-500">ผู้ตรวจ</p>
-                                        <p class="text-sm font-semibold text-slate-700">${signature}</p>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-3">
-                        `;
-
-                        displayLabels.forEach((label) => {
-                            let status = '';
-                            
-                            if (isFireHydrant) {
-                                // ล็อคคอลัมน์สำหรับตู้น้ำดับเพลิง บน Mobile
-                                const l = label.replace(/\s+/g, '');
-                                if (l.includes('จุดตรวจที่1') || l.includes('ข้อมูล1')) status = row[11] || '';
-                                else if (l.includes('จุดตรวจที่2') || l.includes('ข้อมูล2')) status = row[12] || '';
-                                else if (l.includes('จุดตรวจที่3') || l.includes('ข้อมูล3')) status = row[13] || '';
-                                else if (l.includes('จุดตรวจที่4') || l.includes('ข้อมูล4')) status = row[14] || '';
-                                else if (l.includes('จุดตรวจที่5') || l.includes('ข้อมูล5')) status = row[15] || '';
-                                else {
-                                    const labelIndex = allCustomLabels.indexOf(label);
-                                    status = row[dataStartIndex + labelIndex] || '';
-                                }
-                            } else {
                                 // ดึงข้อมูลล็อคตามคอลัมน์ M, N, O, P สำหรับ Mobile
                                 if (label.includes('มาตรวัด')) {
                                     status = row[12] || '';
@@ -3066,6 +2949,24 @@
             });
         }
 
+        // --- Service Worker Registration ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                // To avoid needing a separate sw.js file on your server during setup,
+                // we create a Blob from the template code below and register it.
+                // In production, it's highly recommended to have a real 'sw.js' file.
+                const swCode = document.getElementById('service-worker-code').textContent;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+
+                navigator.serviceWorker.register(swUrl).then(function(registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+
         // --- Event Listeners Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             const today = new Date();
@@ -3143,18 +3044,82 @@
                 });
             }
         });
+    </script>
 
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js')
-                .then(registration => {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                })
-                .catch(error => {
-                    console.log('ServiceWorker registration failed: ', error);
-                });
+    <!-- 
+      Service Worker Code Template 
+      (This is used to dynamically create the SW if sw.js is not present as a separate file)
+    -->
+    <script type="text/plain" id="service-worker-code">
+        // Service Worker for Check Log Admin PWA
+        const CACHE_NAME = 'checklog-admin-v4.4';
+        const urlsToCache = [
+            './',
+            './index.html',
+            'https://cdn.tailwindcss.com',
+            'https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap',
+            'https://fonts.gstatic.com/s/sarabun/v15/DtVjJx26TKEr37c9WJpP.woff2', // Example font file
+            'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+            'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/512.png',
+            'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/180.png',
+            'https://raw.githubusercontent.com/mm12346/checklog/refs/heads/main/192.png'
+        ];
+
+        self.addEventListener('install', (event) => {
+            event.waitUntil(
+                caches.open(CACHE_NAME)
+                    .then((cache) => {
+                        console.log('Opened cache');
+                        return cache.addAll(urlsToCache);
+                    })
+                    .catch((error) => {
+                        console.error('Failed to cache during install:', error);
+                    })
+            );
         });
-    }
+
+        self.addEventListener('activate', (event) => {
+            event.waitUntil(
+                caches.keys().then((cacheNames) => {
+                    return Promise.all(
+                        cacheNames.map((cacheName) => {
+                            if (cacheName !== CACHE_NAME) {
+                                console.log('Deleting old cache:', cacheName);
+                                return caches.delete(cacheName);
+                            }
+                        })
+                    );
+                })
+            );
+        });
+
+        self.addEventListener('fetch', (event) => {
+            if (event.request.method === 'GET') {
+                event.respondWith(
+                    caches.match(event.request).then((response) => {
+                        if (response) {
+                            return response;
+                        }
+                        return fetch(event.request).then((networkResponse) => {
+                            if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+                                return networkResponse;
+                            }
+                            const responseToCache = networkResponse.clone();
+                            caches.open(CACHE_NAME).then((cache) => {
+                                cache.put(event.request, responseToCache);
+                            });
+                            return networkResponse;
+                        }).catch((error) => {
+                            console.error('Fetch failed:', error);
+                            if (event.request.mode === 'navigate') {
+                                return caches.match('./index.html');
+                            }
+                            return new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
+                        });
+                    })
+                );
+            }
+        });
     </script>
 </body>
 </html>
