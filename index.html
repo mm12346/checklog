@@ -332,7 +332,7 @@
         <div class="relative z-10 text-center mt-16 mb-4">
             <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 text-xs font-semibold text-slate-500 backdrop-blur-md border border-slate-200/60 shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-indigo-400"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.83-5.83M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
-                V 4.4 (เพิ่มตู้ดับเพลิง, ถังดับเพลิง, ไฟฉุกเฉิน, แดชบอร์ด)
+                V 4.5 (เพิ่มตู้ดับเพลิง, ถังดับเพลิง, ไฟฉุกเฉิน, แดชบอร์ด)
             </span>
         </div>
     </div>
@@ -2443,6 +2443,123 @@
                                     status = row[dataStartIndex + labelIndex] || '';
                                 }
                             } else {
+                                // ดึงข้อมูลล็อคตามคอลัมน์ M, N, O, P สำหรับถังดับเพลิง
+                                if (label.includes('มาตรวัด')) {
+                                    status = row[12] || '';
+                                } else if (label.includes('ซีล') || label.includes('ชีล') || label.includes('สลัก')) {
+                                    status = row[13] || '';
+                                } else if (label.includes('สายฉีด')) {
+                                    status = row[14] || '';
+                                } else if (label.includes('สภาพถัง')) {
+                                    status = row[15] || '';
+                                } else {
+                                    const labelIndex = allCustomLabels.indexOf(label);
+                                    status = row[dataStartIndex + labelIndex] || '';
+                                }
+                            }
+
+                            const s = String(status).toLowerCase();
+                            // แปลงสัญลักษณ์เพื่อความสวยงาม
+                            if (s === 'ปกติ' || s === 'ผ่าน') return '<td class="border border-black p-1"><svg class="w-6 h-6 mx-auto text-green-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M8 12.5L10.5 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>';
+                            if (s === 'ไม่ปกติ' || s === 'ไม่ผ่าน') return '<td class="border border-black p-1"><svg class="w-6 h-6 mx-auto text-red-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M9 9L15 15M15 9L9 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>';
+                            return `<td class="border border-black p-1 text-sm">${status}</td>`;
+                        });
+                    }
+                    
+                    const displayDate = dateStr ? dateStr : '';
+
+                    tableHtml += `
+                        <tr class="h-10 hover:bg-slate-50 transition-colors">
+                            <td class="border border-black p-1 font-medium">${displayDate}</td>
+                            ${tds.join('')}
+                            <td class="border border-black p-1 text-sm font-semibold">${signature}</td>
+                            ${!hideRemarkCol ? `<td class="border border-black p-1 text-xs text-left">${remarkError}</td>` : ''}
+                        </tr>
+                    `;
+                }
+                
+                tableHtml += `</tbody></table></div></div></div>`;
+                finalHtml += tableHtml;
+
+                const mobileHeaderBgClass = isEmergencyLight ? 'bg-yellow-300' : 'bg-white';
+                const mobileRemarkHeaderLabel = isFireHydrant ? 'บันทึกสิ่งผิดปกติ:' : 'หมายเหตุ/ข้อผิดพลาด:';
+
+                // --- Mobile View HTML ---
+                let mobileDetailsHeaderHtml = '';
+                if (isEmergencyLight || isFireHydrant) {
+                    mobileDetailsHeaderHtml = `
+                        <div><span class="font-semibold text-slate-700">หมายเลข:</span> <span class="font-bold text-rose-700">${groupKey}</span></div>
+                        <div><span class="font-semibold text-slate-700">สถานที่ติดตั้ง:</span> <span class="font-medium text-slate-800">${locationVal}</span></div>
+                    `;
+                } else {
+                    mobileDetailsHeaderHtml = `
+                        <div><span class="font-semibold text-slate-700">หมายเลข:</span> <span class="font-bold text-rose-700">${groupKey}</span></div>
+                        <div><span class="font-semibold text-slate-700">สถานที่ติดตั้ง:</span> <span class="font-medium text-slate-800">${locationVal}</span></div>
+                        <div class="mt-1 pt-1 border-t border-slate-200">
+                            <div><span class="font-semibold text-slate-700">ขนาด:</span> <span class="font-medium text-slate-800">${typeVal}</span></div>
+                        </div>
+                    `;
+                }
+
+                mobileFinalHtml += `
+                    <div class="mobile-detail-container p-2 mb-6">
+                        <div class="text-center mb-4 ${mobileHeaderBgClass} p-4 rounded-xl shadow-sm border border-slate-200">
+                            <h2 class="text-lg font-bold text-slate-800">ใบตรวจเช็ค${config.title} สาขา ${activeUser || '-'}</h2>
+                            <div class="text-sm text-slate-500 mt-3 flex flex-col gap-1 bg-slate-50 py-2 px-3 rounded-lg text-left">
+                                ${mobileDetailsHeaderHtml}
+                            </div>
+                        </div>
+                `;
+
+                let hasMobileData = false;
+                for (let m = 1; m <= 12; m++) {
+                    const row = dataByMonth[m];
+                    if (row) {
+                        hasMobileData = true;
+                        let day = parseInt(row[1], 10);
+                        if (isNaN(day) && row[0]) {
+                            const d = new Date(row[0]);
+                            if (!isNaN(d.getTime())) day = d.getDate();
+                        }
+                        const dateStr = `${isNaN(day) ? '-' : day} ${fullMonthNames[m-1]} ${buddhistYear}`;
+                        
+                        // คอลัมน์ H (Index 7) คือ ชื่อผู้ตรวจสอบ
+                        const signature = (row[7] !== undefined && row[7] !== null && row[7] !== '') ? row[7] : '-';
+                        
+                        // หมายเหตุ/ข้อผิดพลาด (ตู้น้ำดับเพลิงดึงคอลัมน์ R=17, อื่นๆ ดึงคอลัมน์ O=14)
+                        const remarkError = isFireHydrant ? (row[17] || '') : (row[14] || '');
+
+                        mobileFinalHtml += `
+                            <div class="mobile-day-card mb-4 bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                                <div class="flex justify-between items-start border-b border-slate-100 pb-3 mb-3">
+                                    <div>
+                                        <h4 class="text-lg font-bold text-rose-700">เดือน ${fullMonthNames[m-1]}</h4>
+                                        <p class="text-sm text-slate-500 mt-0.5">วันที่ตรวจ: ${dateStr}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-xs text-slate-500">ผู้ตรวจ</p>
+                                        <p class="text-sm font-semibold text-slate-700">${signature}</p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                        `;
+
+                        displayLabels.forEach((label) => {
+                            let status = '';
+                            
+                            if (isFireHydrant) {
+                                // ล็อคคอลัมน์สำหรับตู้น้ำดับเพลิง บน Mobile
+                                const l = label.replace(/\s+/g, '');
+                                if (l.includes('จุดตรวจที่1') || l.includes('ข้อมูล1')) status = row[11] || '';
+                                else if (l.includes('จุดตรวจที่2') || l.includes('ข้อมูล2')) status = row[12] || '';
+                                else if (l.includes('จุดตรวจที่3') || l.includes('ข้อมูล3')) status = row[13] || '';
+                                else if (l.includes('จุดตรวจที่4') || l.includes('ข้อมูล4')) status = row[14] || '';
+                                else if (l.includes('จุดตรวจที่5') || l.includes('ข้อมูล5')) status = row[15] || '';
+                                else {
+                                    const labelIndex = allCustomLabels.indexOf(label);
+                                    status = row[dataStartIndex + labelIndex] || '';
+                                }
+                            } else {
                                 // ดึงข้อมูลล็อคตามคอลัมน์ M, N, O, P สำหรับ Mobile
                                 if (label.includes('มาตรวัด')) {
                                     status = row[12] || '';
@@ -2949,18 +3066,6 @@
             });
         }
 
-        // --- Service Worker Registration ---
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                // Register external sw.js
-                navigator.serviceWorker.register('./sw.js').then(function(registration) {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, function(err) {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-            });
-        }
-
         // --- Event Listeners Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             const today = new Date();
@@ -3029,17 +3134,6 @@
             setupSearch('monthly-user-search-input', 'monthly-user-buttons-container');
             setupSearch('special-monthly-user-search-input', 'special-monthly-user-buttons-container');
             
-            // --- Service Worker Registration ---
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('./sw.js').then(function(registration) {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    }, function(err) {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
-                });
-            }
-
             // Export Buttons Logic
             const exportMonthlyDetailBtn = document.getElementById('monthly-detail-export-button');
             if (exportMonthlyDetailBtn) {
@@ -3049,6 +3143,19 @@
                 });
             }
         });
+
+        // --- Service Worker Registration ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('Service Worker ลงทะเบียนสำเร็จ: Scope คือ', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.error('Service Worker ลงทะเบียนไม่สำเร็จ:', error);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
