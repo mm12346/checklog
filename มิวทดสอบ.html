@@ -207,6 +207,13 @@
         .dashboard-table th:first-child {
             z-index: 30;
         }
+        .loader-sm { width: 20px; height: 20px; }
+
+        /* Multi-select Dropdown CSS */
+        .dropdown-menu {
+            max-height: 250px;
+            overflow-y: auto;
+        }
 
         @media (max-width: 767px) {
             .printable-table-container { display: none; }
@@ -332,13 +339,13 @@
         <div class="relative z-10 text-center mt-16 mb-4">
             <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 text-xs font-semibold text-slate-500 backdrop-blur-md border border-slate-200/60 shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-indigo-400"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.83-5.83M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
-                V 4.3 (เพิ่มตู้ดับเพลิง, ถังดับเพลิง, ไฟฉุกเฉิน, แดชบอร์ด)
+                V 4.5 (เพิ่มตู้ดับเพลิง, ถังดับเพลิง, ไฟฉุกเฉิน, แดชบอร์ด)
             </span>
         </div>
     </div>
 
     <!-- NEW: Dashboard Application Page -->
-    <div id="dashboard-app-container" class="hidden min-h-screen bg-slate-50">
+    <div id="dashboard-app-container" class="min-h-screen bg-slate-50">
         <header class="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
             <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -358,12 +365,30 @@
                     </div>
                     
                     <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-                        <div class="relative w-full sm:w-48">
-                            <input type="text" id="dashboard-search-input" placeholder="ค้นหาสาขา..." class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition text-sm">
+                        <!-- ค้นหาสาขาอย่างรวดเร็ว -->
+                        <div class="relative w-full sm:w-44">
+                            <input type="text" id="dashboard-search-input" placeholder="ค้นหาชื่อสาขา..." class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition text-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-3 top-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                         </div>
+
+                        <!-- ตัวเลือกติ๊กเลือกสาขาแบบ Multi-select -->
+                        <div class="relative w-full sm:w-56" id="branch-select-container">
+                            <button id="branch-dropdown-btn" class="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl flex items-center justify-between text-sm text-slate-700 font-medium hover:bg-slate-200 transition">
+                                <span id="branch-dropdown-label" class="truncate">กำลังโหลดสาขา...</span>
+                                <svg class="w-4 h-4 ml-2 shrink-0 transition-transform duration-200" id="branch-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <!-- เมนูตัวเลือกติ๊กถูก -->
+                            <div id="branch-dropdown-menu" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-3 dropdown-menu">
+                                <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
+                                    <button id="branch-select-all" class="text-xs text-fuchsia-600 font-bold hover:underline">เลือกทั้งหมด</button>
+                                    <button id="branch-clear-all" class="text-xs text-slate-500 font-bold hover:underline">ล้างทั้งหมด</button>
+                                </div>
+                                <div id="branch-checkboxes" class="space-y-2 max-h-40 overflow-y-auto">
+                                    <!-- สร้างจาก JS -->
+                                </div>
+                            </div>
+                        </div>
                         
-                        <!-- NEW: แทนที่ input type="month" แบบเดิมด้วย Dropdown เพื่อแก้ปัญหาจอดำและเลื่อนปีได้อิสระ -->
                         <div class="flex items-center gap-2 flex-grow sm:w-auto">
                             <select id="dashboard-month-select" class="w-full sm:w-auto px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 transition text-sm cursor-pointer outline-none font-medium text-slate-700 shadow-sm">
                                 <option value="01">มกราคม</option>
@@ -385,9 +410,11 @@
                             <input type="hidden" id="dashboard-month-picker">
                         </div>
 
-                        <button id="dashboard-refresh-button" title="โหลดข้อมูลใหม่" class="p-2 bg-fuchsia-600 text-white hover:bg-fuchsia-700 rounded-xl shadow-sm transition flex items-center justify-center">
-                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <button id="dashboard-refresh-button" title="โหลดข้อมูลใหม่" class="p-2 bg-fuchsia-600 text-white hover:bg-fuchsia-700 rounded-xl shadow-sm transition flex items-center justify-center">
+                                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -395,14 +422,45 @@
 
         <main class="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto">
             <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden flex flex-col">
-                <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-                    <p class="text-sm font-medium text-slate-600" id="dashboard-status-text">กำลังรอโหลดข้อมูล...</p>
-                    <div class="flex gap-4 text-xs font-semibold">
+                <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex flex-col gap-2 w-full sm:w-auto">
+                        <p class="text-sm font-medium text-slate-600" id="dashboard-status-text">กำลังรอโหลดข้อมูล...</p>
+                        <!-- ตัวกรองข้อมูล -->
+                        <div class="flex flex-wrap items-center gap-2 mt-1 w-full sm:w-auto">
+                            <span class="text-xs font-semibold text-slate-500">ตัวกรอง:</span>
+                            
+                            <!-- ตัวเลือกติ๊กเลือกอุปกรณ์แบบ Multi-select -->
+                            <div class="relative w-48 sm:w-56" id="device-select-container">
+                                <button id="device-dropdown-btn" class="w-full px-2 py-1.5 bg-white border border-slate-300 rounded-lg flex items-center justify-between text-xs text-slate-700 font-medium hover:bg-slate-50 transition shadow-sm">
+                                    <span id="device-dropdown-label" class="truncate">กำลังโหลดอุปกรณ์...</span>
+                                    <svg class="w-4 h-4 ml-2 shrink-0 transition-transform duration-200" id="device-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                                <div id="device-dropdown-menu" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-xl z-50 p-2 dropdown-menu min-w-max">
+                                    <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
+                                        <button id="device-select-all" class="text-xs text-fuchsia-600 font-bold hover:underline">เลือกทั้งหมด</button>
+                                        <button id="device-clear-all" class="text-xs text-slate-500 font-bold hover:underline">ล้างทั้งหมด</button>
+                                    </div>
+                                    <div id="device-checkboxes" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                                        <!-- สร้างจาก JS -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <select id="dashboard-filter-status" class="px-2 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-fuchsia-500 outline-none w-28 sm:w-32 text-slate-700 shadow-sm cursor-pointer transition">
+                                <option value="ALL">-- ทุกสถานะ --</option>
+                                <option value="COMPLETE">ครบ</option>
+                                <option value="INCOMPLETE">ยังไม่ครบ</option>
+                                <option value="NODATA">ไม่มีข้อมูล</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 text-xs font-semibold ml-auto sm:ml-0 mt-2 sm:mt-0">
                         <span class="flex items-center gap-1"><div class="w-3 h-3 bg-teal-100 rounded border border-teal-300"></div> ครบ</span>
                         <span class="flex items-center gap-1"><div class="w-3 h-3 bg-amber-100 rounded border border-amber-300"></div> ยังไม่ครบ</span>
                         <span class="flex items-center gap-1"><div class="w-3 h-3 bg-slate-100 rounded border border-slate-300"></div> ไม่มีข้อมูล</span>
                     </div>
                 </div>
+                
                 <div class="dashboard-table-container overflow-auto max-h-[70vh]">
                     <table class="dashboard-table w-full text-sm text-left whitespace-nowrap">
                         <thead class="text-xs text-slate-700 uppercase bg-slate-100 border-b-2 border-slate-300" id="dashboard-table-head">
@@ -417,7 +475,10 @@
         </main>
     </div>
 
-    <!-- NEW: Password Modal -->
+    <!-- ========================================== -->
+    <!-- HTML: MODALS (PASSWORD & DETAIL)           -->
+    <!-- ========================================== -->
+    <!-- Password Modal -->
     <div id="password-modal" class="hidden fixed inset-0 bg-black/60 z-[2000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm flex flex-col transform transition-transform">
             <div class="flex justify-between items-center p-5 border-b border-slate-100">
@@ -440,7 +501,7 @@
         </div>
     </div>
 
-    <!-- NEW: Dashboard Day Detail Modal -->
+    <!-- Dashboard Day Detail Modal -->
     <div id="dashboard-detail-modal" class="hidden fixed inset-0 bg-black/60 z-[2000] flex items-center justify-center p-4 backdrop-blur-sm">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col">
             <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50 rounded-t-2xl">
@@ -2722,14 +2783,80 @@
             });
         }
 
-        // --- DASHBOARD LOGIC ---
-        let dashboardDataCache = {};
+        <!-- ========================================== -->
+    <!-- JAVASCRIPT: DASHBOARD LOGIC                -->
+    <!-- ========================================== -->
+    <script>
+        // --- ส่วนจำลองการตั้งค่า API ---
+        const SCRIPT_URLS = [
+             'https://script.google.com/macros/s/AKfycbwsKgINhyiziRXNHyLVGjox-AoOYn4n1Iwz0vnLrX0tK26YGLGT0UOfzJfBU1fGbAlf/exec',
+            'https://script.google.com/macros/s/AKfycbwZX0ywhNK28ZFXHNgEb9cYhl2IMtQpznVP4qykO1ptJorqNMrfDw-SSzYQjHUCQQ/exec'
+        ];
+        const MONTHLY_SCRIPT_URLS = [
+            'https://script.google.com/macros/s/AKfycbxeqQDZMAPu7xuQkwFAU_rsVY4r_ttS_QVSISA9HFoLZSB97NKXeOdSZoxAkIotZTdf/exec',
+            'https://script.google.com/macros/s/AKfycbzy25HmhhLEg_-rOKr4K2VHSMkSvtDZ4uyk18ZB9oNFj1h9CK7K90Z35Vwn3qfzYjsGMg/exec'
+        ];
+
+        // --- ระบบควบคุมการกดยกเลิกโหลดของเก่า เพื่อตอบสนองการสลับเปลี่ยนตัวกรองได้ทันที ---
+        let currentAbortController = null;
+
+        async function apiCall(action, payload = {}, scriptType = 'daily', abortSignal = null) {
+            const isGet = action.startsWith('load') || action.startsWith('get') || action.startsWith('getDataLabelsForCard') || action === 'getAllUsers';
+            const options = { 
+                method: isGet ? 'GET' : 'POST', 
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                signal: abortSignal 
+            };
+            const urls = scriptType === 'daily' ? [...SCRIPT_URLS] : [...MONTHLY_SCRIPT_URLS]; 
+            
+            for (const baseUrl of urls) {
+                const url = new URL(baseUrl);
+                if (isGet) {
+                    Object.entries({ action, ...payload }).forEach(([key, value]) => url.searchParams.append(key, value));
+                } else {
+                    options.body = JSON.stringify({ action, ...payload });
+                }
+                try {
+                    const res = await fetch(url, options);
+                    if (!res.ok) continue;
+                    const result = await res.json();
+                    if (result.error || result.success === false) continue;
+                    return result;
+                } catch (error) { 
+                    if (error.name === 'AbortError') {
+                        throw error; // ยอมรับการ Abort เพื่อตัดกระบวนการทำงานทันที
+                    }
+                    continue; 
+                }
+            }
+            throw new Error(`Failed to fetch API`);
+        }
+
+        function getNumberColumnIndex(title) {
+            if (!title) return 9; 
+            const normalizedTitle = title.toLowerCase().replace(/\s+/g, '');
+            const keywords = ['ตู้น้ำดับเพลิง', 'ไฟฉุกเฉิน', 'ถังดับเพลิงco2', 'ถังดับเพลิง', 'co2', 'เคมีแห้ง'];
+            if (keywords.some(kw => normalizedTitle.includes(kw))) return 10; 
+            return 9; 
+        }
+
+        function extractNumber(row, numberColIdx) {
+            if (numberColIdx === 10) return String(row[10] || '').trim() || String(row[9] || '').trim();
+            return String(row[9] || '').trim();
+        }
+
+        // ==========================================
+        // MAIN DASHBOARD LOGIC
+        // ==========================================
         let dashboardIsFetching = false;
-        let currentDashboardFetchId = 0; // เพิ่มตัวแปรสำหรับจัดการการเปลี่ยนเดือนทันที
+        let currentDashboardFetchId = 0; 
         let allUsersList = [];
-        const dashboardBatchSize = 10; // จำนวน Worker ที่ทำงานขนานกัน
-        // 1 & 2. ปรับแก้ชื่ออุปกรณ์ ถังดับเพลิง และ ถังดับเพลิงCo2
+        let selectedBranches = new Set(); // เก็บรายชื่อสาขาที่ต้องการกรอง
+        let usersFetchPromise = null;
+        
+        const dashboardBatchSize = 10; 
         const masterDevices = ["แก๊ส LPG", "สลิงผ้าแผนกเหล็ก", "เครนโครงสร้าง", "เครื่องตัดไฟเบอร์", "Stacker ไฟฟ้า", "รถเฮี้ยบ จัดส่ง", "รถจัดส่ง", "โฟล์คลิฟท์ประเภทเครื่องยนต์", "รถโฟล์คลิฟท์ไฟฟ้า", "รถสแตกเกอร์จัดส่ง", "สลิงผ้า รถจัดส่งติดเครน", "ตู้น้ำดับเพลิง", "ถังดับเพลิง", "ถังดับเพลิงCo2", "ไฟฉุกเฉิน"];
+        let selectedDevices = new Set(masterDevices); // เก็บรายชื่ออุปกรณ์ที่ต้องการกรอง
         
         function initDashboard() {
             const pwdInput = document.getElementById('dashboard-password-input');
@@ -2747,11 +2874,10 @@
             const ySelect = document.getElementById('dashboard-year-select');
             
             if (ySelect.options.length === 0) {
-                // สร้างตัวเลือกปี (ย้อนหลัง 5 ปี ล่วงหน้า 5 ปี)
                 for (let y = yyyy - 5; y <= yyyy + 5; y++) {
                     const opt = document.createElement('option');
                     opt.value = y;
-                    opt.text = y + 543; // แสดงเป็น พ.ศ. ให้สวยงามและคุ้นเคย
+                    opt.text = y + 543; 
                     ySelect.appendChild(opt);
                 }
             }
@@ -2774,11 +2900,35 @@
         document.getElementById('password-modal-close').addEventListener('click', () => {
             document.getElementById('password-modal').classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
-            showMainMenu();
+            alert('กลับสู่เมนูหลัก (Mock)');
         });
 
+        // คืนค่ารายการสาขาที่กำลังเลือกกรองอยู่ ณ ขณะนี้ (รวมทั้งกล่องค้นหาข้อความด้วย)
+        function getFilteredUsers() {
+            const term = (document.getElementById('dashboard-search-input')?.value || '').toLowerCase().trim();
+            let filtered = allUsersList;
+            
+            // กรองตามการติ๊กสาขา
+            if (selectedBranches.size > 0 && selectedBranches.size !== allUsersList.length) {
+                filtered = filtered.filter(user => selectedBranches.has(user));
+            }
+            // กรองตามช่องค้นหา
+            if (term) {
+                filtered = filtered.filter(user => user.toLowerCase().includes(term));
+            }
+            
+            return filtered;
+        }
+
         async function startDashboardLoad() {
-            // เพิ่มเลข ID การดึงข้อมูลทุกครั้งที่เรียก เพื่อหยุดการทำงานของ Worker ตัวเก่าทันที
+            // ยกเลิกคำสั่งเก่ายังคงค้างอยู่ (ถ้ามี)
+            if (currentAbortController) {
+                currentAbortController.abort();
+            }
+            // สร้าง AbortController ใหม่สำหรับการโหลดรอบนี้
+            currentAbortController = new AbortController();
+            const signal = currentAbortController.signal;
+
             currentDashboardFetchId++;
             const fetchId = currentDashboardFetchId;
 
@@ -2789,73 +2939,111 @@
             
             try {
                 if (allUsersList.length === 0) {
-                    const cachedUsers = localStorage.getItem('cached_user_list');
-                    if (cachedUsers) {
-                        allUsersList = JSON.parse(cachedUsers);
-                    } else {
-                        const res = await apiCall('getAllUsers', {}, 'daily');
-                        allUsersList = res.users || [];
+                    if (!usersFetchPromise) {
+                        const cachedUsers = localStorage.getItem('cached_user_list');
+                        if (cachedUsers) {
+                            allUsersList = JSON.parse(cachedUsers);
+                            usersFetchPromise = Promise.resolve(allUsersList);
+                        } else {
+                            usersFetchPromise = apiCall('getAllUsers', {}, 'daily', signal).then(res => {
+                                allUsersList = res.users || [];
+                                localStorage.setItem('cached_user_list', JSON.stringify(allUsersList));
+                                return allUsersList;
+                            });
+                        }
                     }
+                    await usersFetchPromise;
                 }
+                
+                if (fetchId !== currentDashboardFetchId || signal.aborted) return;
 
-                // Build Header
+                // เมื่อได้ User ครบแล้ว นำมาสร้างตัวกรอง Dropdown สาขา (เฉพาะรอบแรก)
+                setupBranchDropdown();
+                // สร้างตัวกรอง Dropdown อุปกรณ์ (เฉพาะรอบแรก)
+                setupDeviceDropdown();
+
+                const devicesToFetch = Array.from(selectedDevices);
+                
+                // คัดกรองและส่ง "เฉพาะสาขาที่ติ๊กเลือกและค้นหาเจอ" ไปดึงข้อมูลเท่านั้น ทำให้ทำงานเร็วมาก
+                const usersToFetch = getFilteredUsers();
+                const usersToFetchSet = new Set(usersToFetch);
+
                 const thead = document.getElementById('dashboard-table-head');
                 let headerHtml = '<tr><th scope="col" class="px-6 py-3 border-r border-slate-300 w-48 sticky left-0 bg-slate-100 z-30">สาขา / อุปกรณ์</th>';
-                masterDevices.forEach(device => {
-                    headerHtml += `<th scope="col" class="px-6 py-3 border-r border-slate-300 text-center tracking-wider">${device}</th>`;
+                masterDevices.forEach((device) => {
+                    const isVisible = selectedDevices.has(device);
+                    const displayStyle = isVisible ? '' : 'style="display:none;"';
+                    headerHtml += `<th scope="col" class="px-6 py-3 border-r border-slate-300 text-center tracking-wider" ${displayStyle}>${device}</th>`;
                 });
                 headerHtml += '</tr>';
                 thead.innerHTML = headerHtml;
 
-                // Pre-fill Empty Rows
+                // สร้างแถวข้อมูลตารางทั้งหมดตามผู้ใช้ในระบบ
                 allUsersList.forEach((user, index) => {
                     let rowHtml = `<tr id="dash-row-${index}" class="hover:bg-slate-50 transition-colors" data-user="${user}">`;
                     rowHtml += `<td class="px-6 py-4 border-r border-slate-200 font-bold text-slate-900 sticky left-0 bg-white z-20 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">${user}</td>`;
+                    
+                    const isTarget = usersToFetchSet.has(user); // เช็คว่าเป็นคิวที่ต้องดึงข้อมูลหรือไม่
+
                     masterDevices.forEach((device, dIndex) => {
-                        rowHtml += `<td id="dash-cell-${index}-${dIndex}" class="px-2 py-4 border-r border-slate-200 text-center align-middle"><div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-fuchsia-500"></div></td>`;
+                        const isVisible = selectedDevices.has(device);
+                        const displayStyle = isVisible ? '' : 'style="display:none;"';
+                        
+                        let cellContent = '';
+                        if (isTarget) {
+                            cellContent = `<div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-fuchsia-500"></div>`;
+                        } else {
+                            // แจ้งเตือนด้วยจุดสีเทา กรณีสาขานั้นโดนข้ามไป (ไม่ได้เลือก หรือโดนตัวกรองค้นหาซ่อน) ไม่ต้องเสียเวลาโหลด
+                            cellContent = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ข้ามการโหลด (ถูกกรองออก)"></div>`;
+                        }
+
+                        rowHtml += `<td id="dash-cell-${index}-${dIndex}" class="px-2 py-4 border-r border-slate-200 text-center align-middle" ${displayStyle}>${cellContent}</td>`;
                     });
                     rowHtml += '</tr>';
                     tbody.insertAdjacentHTML('beforeend', rowHtml);
                 });
 
+                applyDashboardFilters(); 
                 setupDashboardSearch();
-                // ส่งค่า fetchId เข้าไปด้วยเพื่อยืนยันสถานะล่าสุด
-                fetchDashboardInBatches(allUsersList, masterDevices, document.getElementById('dashboard-month-picker').value, fetchId);
+                
+                fetchDashboardInBatches(usersToFetch, devicesToFetch, document.getElementById('dashboard-month-picker').value, fetchId, signal);
 
             } catch (err) {
+                if (err.name === 'AbortError') {
+                    return; // การดึงข้อมูลถูกยกเลิกสำเร็จเนื่องจากเปลี่ยนฟิลเตอร์ใหม่
+                }
                 if (fetchId === currentDashboardFetchId) {
                     document.getElementById('dashboard-status-text').textContent = 'เกิดข้อผิดพลาด: ' + err.message;
                 }
             }
         }
 
-        async function fetchDashboardInBatches(users, devices, monthYear, fetchId) {
+        async function fetchDashboardInBatches(users, devicesToFetch, monthYear, fetchId, signal) {
             dashboardIsFetching = true;
             let completedCount = 0;
-            if (fetchId !== currentDashboardFetchId) return; // หากมีการกดเปลี่ยนเดือนระหว่างนี้ ให้ยกเลิกทันที
+            if (fetchId !== currentDashboardFetchId || signal.aborted) return;
 
             document.getElementById('dashboard-status-text').textContent = `กำลังโหลดข้อมูล... (0/${users.length})`;
             const [year, month] = monthYear.split('-').map(Number);
             const specialDevices = ['ตู้น้ำดับเพลิง', 'ถังดับเพลิง', 'ถังดับเพลิงCo2', 'ไฟฉุกเฉิน'];
             
-            // ใช้ Queue + Workers (จำกัดโหลดพร้อมกันแบบไม่รอกัน)
-            const queue = users.map((user, index) => ({ user, index }));
+            // Map Index ที่ถูกต้องเพื่อให้ตรงกับเลขแถว HTML เสมอ
+            const queue = users.map(user => ({ user, index: allUsersList.indexOf(user) }));
             
             async function worker() {
                 while (queue.length > 0) {
-                    if (fetchId !== currentDashboardFetchId) return; // ดักจับการเปลี่ยนเดือนก่อนดึงคิวใหม่
+                    if (fetchId !== currentDashboardFetchId || signal.aborted) return; 
 
                     const { user, index: rowIndex } = queue.shift();
                     
                     try {
-                        // 1. ดึง Setting ของสาขานั้น
-                        const settingsRes = await apiCall('loadSettings', { username: user }, 'daily');
-                        if (fetchId !== currentDashboardFetchId) return; // ดักจับการเปลี่ยนเดือนระหว่างรอ API
+                        const settingsRes = await apiCall('loadSettings', { username: user }, 'daily', signal);
+                        if (fetchId !== currentDashboardFetchId || signal.aborted) return;
 
                         const configs = Array.isArray(settingsRes.config) ? settingsRes.config : [];
                         
-                        // 2. ดึงข้อมูลทุกอุปกรณ์พร้อมกัน (Parallel Fetching) เพื่อความรวดเร็วสูงสุด
-                        const deviceFetchPromises = devices.map(async (deviceName, dIndex) => {
+                        const deviceFetchPromises = devicesToFetch.map(async (deviceName) => {
+                            const dIndex = masterDevices.indexOf(deviceName);
                             const cell = document.getElementById(`dash-cell-${rowIndex}-${dIndex}`);
                             if (!cell) return;
 
@@ -2863,7 +3051,7 @@
                             const isSpecial = specialDevices.includes(deviceName);
                             
                             if (isSpecial && (year < 2026 || (year === 2026 && month < 5))) {
-                                cell.innerHTML = `<span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded">เริ่มตรวจ พ.ค. 2026</span>`;
+                                cell.innerHTML = `<span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded border border-slate-200">เริ่มตรวจ พ.ค. 2026</span>`;
                                 return;
                             }
 
@@ -2874,15 +3062,14 @@
 
                             const targetCount = parseInt(config.targetCount) || 0;
                             
-                            // ซ่อนสาขาที่เป้าหมายเป็น 0 (ยกเว้นแก๊ส LPG) ให้เป็นไม่มีข้อมูล เพื่อแก้ปัญหา Error และข้อมูลหลอกในสาขาที่ไม่มีอุปกรณ์ (เช่น ตระการ, บ้านผือ ฯลฯ)
                             if (targetCount <= 0 && deviceName !== 'แก๊ส LPG') {
                                 cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่ได้กำหนดเป้าหมาย (ไม่มีอุปกรณ์)"></div>`;
                                 return;
                             }
 
                             try {
-                                const result = await apiCall('getMonthlySheetData', { sheetId: config.sheetId, sheetName: config.sheetName, year, month }, 'monthly');
-                                if (fetchId !== currentDashboardFetchId) return; // ป้องกันการลงข้อมูลผิดเดือนหลังโหลด API เสร็จ
+                                const result = await apiCall('getMonthlySheetData', { sheetId: config.sheetId, sheetName: config.sheetName, year, month }, 'monthly', signal);
+                                if (fetchId !== currentDashboardFetchId || signal.aborted) return;
 
                                 const data = Array.isArray(result?.data) ? result.data : [];
                                 
@@ -2892,7 +3079,6 @@
                                 
                                 if (data.length > 0) {
                                     if (deviceName === 'แก๊ส LPG') {
-                                        // แก๊ส LPG: นับจำนวนวันที่ตรวจเจอ (อย่างน้อย 1 ครั้งต่อวัน)
                                         const dailyNumbers = new Set();
                                         data.forEach(row => {
                                             let mValue = parseInt(row[2]);
@@ -2904,7 +3090,6 @@
                                         checkedDays = Array.from(dailyNumbers);
                                         actualCount = checkedDays.length; 
                                     } else if (isSpecial) {
-                                        // อุปกรณ์ดับเพลิง: นับจำนวนอุปกรณ์
                                         const checkedNumbers = new Set();
                                         data.forEach(row => {
                                             let mValue = parseInt(row[2]);
@@ -2917,7 +3102,6 @@
                                         });
                                         actualCount = checkedNumbers.size; 
                                     } else {
-                                        // อุปกรณ์ทั่วไป: นับจำนวนวันที่ตรวจครบตาม target
                                         const dailyNumbers = {};
                                         data.forEach(row => {
                                             let mValue = parseInt(row[2]);
@@ -2942,26 +3126,22 @@
                                     }
                                 }
 
-                                // Render Cell
                                 let cellContent = '';
                                 const daysInMonth = new Date(year, month, 0).getDate();
 
                                 if (deviceName === 'แก๊ส LPG') {
-                                    // เงื่อนไข LPG: หากมีการตรวจพบอย่างน้อย 1 วัน เป็นสีเขียวทันที พร้อมโชว์ วันที่ตรวจ/วันในเดือน
                                     if (actualCount > 0) {
                                         cellContent = `<button class="px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-lg shadow-sm hover:bg-teal-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${daysInMonth}</button>`;
                                     } else {
                                         cellContent = `<button class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-lg shadow-sm hover:bg-amber-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[]')">${actualCount}/${daysInMonth}</button>`;
                                     }
                                 } else if (isSpecial) {
-                                    // อุปกรณ์ดับเพลิง
                                     if (actualCount >= targetCount && targetCount > 0) {
                                         cellContent = `<button class="px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-lg shadow-sm hover:bg-teal-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${targetCount}</button>`;
                                     } else {
                                         cellContent = `<button class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-lg shadow-sm hover:bg-amber-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${targetCount}</button>`;
                                     }
                                 } else {
-                                    // อุปกรณ์ทั่วไป (แสดงสีเขียวเมื่อตรวจครบตามจำนวนวันของเดือนนั้นจริงๆ เท่านั้น)
                                     if (actualCount >= daysInMonth && daysInMonth > 0) {
                                         cellContent = `<button class="px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-lg shadow-sm hover:bg-teal-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${daysInMonth}</button>`;
                                     } else {
@@ -2969,26 +3149,30 @@
                                     }
                                 }
                                 cell.innerHTML = cellContent;
+                                applyDashboardFilters(); 
 
                             } catch (err) {
-                                // เปลี่ยนจากข้อความ Error สีแดง เป็นจุดสีเทา (ไม่มีข้อมูล) เพื่อความเรียบร้อยของหน้าจอ
+                                if (err.name === 'AbortError') return;
                                 cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่สามารถดึงข้อมูลได้"></div>`;
+                                applyDashboardFilters(); 
                             }
                         });
 
-                        // รอให้อุปกรณ์ทั้งหมดของสาขานี้โหลดเสร็จ
                         await Promise.all(deviceFetchPromises);
 
                     } catch (e) {
-                        for (let dIndex = 0; dIndex < devices.length; dIndex++) {
+                        if (e.name === 'AbortError') return;
+                        devicesToFetch.forEach((deviceName) => {
+                            const dIndex = masterDevices.indexOf(deviceName);
                             const cell = document.getElementById(`dash-cell-${rowIndex}-${dIndex}`);
                             if (cell && cell.innerHTML.includes('loader-sm')) {
                                 cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่สามารถดึงข้อมูลได้"></div>`;
                             }
-                        }
+                        });
+                        applyDashboardFilters(); 
                     }
                     
-                    if (fetchId !== currentDashboardFetchId) return; // หากยกเลิกระหว่างทางให้ออกทันที
+                    if (fetchId !== currentDashboardFetchId || signal.aborted) return; 
 
                     completedCount++;
                     document.getElementById('dashboard-status-text').textContent = `กำลังโหลดข้อมูล... (${completedCount}/${users.length})`;
@@ -3002,11 +3186,206 @@
 
             await Promise.all(workers);
 
-            // เมื่อครบทั้งหมดแล้วตรวจสอบอีกครั้งว่า ID ยังเป็นตัวล่าสุดหรือไม่
-            if (fetchId === currentDashboardFetchId) {
+            if (fetchId === currentDashboardFetchId && !signal.aborted) {
                 document.getElementById('dashboard-status-text').textContent = `โหลดข้อมูลเสร็จสิ้น (${users.length} สาขา)`;
                 dashboardIsFetching = false;
             }
+        }
+
+        // ==========================================
+        // MULTI-SELECT BRANCH DROPDOWN LOGIC
+        // ==========================================
+        function setupBranchDropdown() {
+            const container = document.getElementById('branch-checkboxes');
+            // ทำการเคลียร์และสร้างรายการสาขาใหม่เฉพาะเมื่อสร้างครั้งแรกเพื่อความลื่นไหล
+            if (container.children.length === 0) {
+                allUsersList.forEach(user => {
+                    const label = document.createElement('label');
+                    label.className = 'flex items-center gap-2 py-1 px-1.5 hover:bg-slate-100 rounded-lg cursor-pointer text-xs font-semibold text-slate-700';
+                    
+                    const cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.value = user;
+                    cb.className = 'rounded text-fuchsia-600 focus:ring-fuchsia-500 w-4 h-4 cursor-pointer';
+                    
+                    // ค่าเริ่มต้น: เลือกทั้งหมด
+                    cb.checked = true;
+                    selectedBranches.add(user);
+
+                    cb.addEventListener('change', () => {
+                        if (cb.checked) {
+                            selectedBranches.add(user);
+                        } else {
+                            selectedBranches.delete(user);
+                        }
+                        updateBranchDropdownLabel();
+                        // สั่งโหลดข้อมูลใหม่ทันทีที่เปลี่ยนตัวกรอง (จะยกเลิกของเก่าและโหลดเฉพาะที่เลือกใหม่ทันที)
+                        startDashboardLoad();
+                    });
+
+                    label.appendChild(cb);
+                    label.appendChild(document.createTextNode(user));
+                    container.appendChild(label);
+                });
+                updateBranchDropdownLabel();
+            }
+        }
+
+        function updateBranchDropdownLabel() {
+            const label = document.getElementById('branch-dropdown-label');
+            if (selectedBranches.size === 0) {
+                label.textContent = "ไม่ได้เลือกสาขาเลย";
+            } else if (selectedBranches.size === allUsersList.length) {
+                label.textContent = "เลือกทุกสาขา (" + allUsersList.length + ")";
+            } else {
+                label.textContent = `เลือกแล้ว (${selectedBranches.size} สาขา)`;
+            }
+        }
+
+        // ควบคุมปุ่มย่อย เลือกทั้งหมด / ล้างทั้งหมด
+        document.getElementById('branch-select-all').addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectedBranches.clear();
+            const checkboxes = document.querySelectorAll('#branch-checkboxes input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.checked = true;
+                selectedBranches.add(cb.value);
+            });
+            updateBranchDropdownLabel();
+            startDashboardLoad(); // สั่งโหลดใหม่ทันที
+        });
+
+        document.getElementById('branch-clear-all').addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectedBranches.clear();
+            const checkboxes = document.querySelectorAll('#branch-checkboxes input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.checked = false;
+            });
+            updateBranchDropdownLabel();
+            startDashboardLoad(); // สั่งโหลดใหม่ทันที
+        });
+
+        // เปิด-ปิด Dropdown สาขา
+        const dropdownBtn = document.getElementById('branch-dropdown-btn');
+        const dropdownMenu = document.getElementById('branch-dropdown-menu');
+        const dropdownArrow = document.getElementById('branch-arrow');
+
+        dropdownBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = dropdownMenu.classList.contains('hidden');
+            if (isHidden) {
+                dropdownMenu.classList.remove('hidden');
+                dropdownArrow.classList.add('rotate-180');
+            } else {
+                dropdownMenu.classList.add('hidden');
+                dropdownArrow.classList.remove('rotate-180');
+            }
+        });
+
+        // คลิกนอกเมนูเพื่อปิด
+        document.addEventListener('click', (e) => {
+            if (!document.getElementById('branch-select-container').contains(e.target)) {
+                dropdownMenu.classList.add('hidden');
+                dropdownArrow.classList.remove('rotate-180');
+            }
+        });
+
+        // ==========================================
+        // MULTI-SELECT DEVICE DROPDOWN LOGIC
+        // ==========================================
+        function setupDeviceDropdown() {
+            const container = document.getElementById('device-checkboxes');
+            if (container && container.children.length === 0) {
+                masterDevices.forEach(device => {
+                    const label = document.createElement('label');
+                    label.className = 'flex items-center gap-2 py-1 px-1.5 hover:bg-slate-100 rounded-md cursor-pointer text-xs font-semibold text-slate-700 whitespace-nowrap';
+                    
+                    const cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.value = device;
+                    cb.className = 'rounded text-fuchsia-600 focus:ring-fuchsia-500 w-3.5 h-3.5 cursor-pointer';
+                    
+                    cb.checked = selectedDevices.has(device);
+
+                    cb.addEventListener('change', () => {
+                        if (cb.checked) {
+                            selectedDevices.add(device);
+                        } else {
+                            selectedDevices.delete(device);
+                        }
+                        updateDeviceDropdownLabel();
+                        startDashboardLoad(); // อัปเดตตารางและดึงข้อมูลเฉพาะที่เลือกทันที
+                    });
+
+                    label.appendChild(cb);
+                    label.appendChild(document.createTextNode(device));
+                    container.appendChild(label);
+                });
+                updateDeviceDropdownLabel();
+            }
+        }
+
+        function updateDeviceDropdownLabel() {
+            const label = document.getElementById('device-dropdown-label');
+            if (!label) return;
+            if (selectedDevices.size === 0) {
+                label.textContent = "ไม่ได้เลือกอุปกรณ์เลย";
+            } else if (selectedDevices.size === masterDevices.length) {
+                label.textContent = "เลือกทุกอุปกรณ์ (" + masterDevices.length + ")";
+            } else {
+                label.textContent = `เลือกแล้ว (${selectedDevices.size})`;
+            }
+        }
+
+        // เปิด-ปิด Dropdown อุปกรณ์
+        const devDropdownBtn = document.getElementById('device-dropdown-btn');
+        const devDropdownMenu = document.getElementById('device-dropdown-menu');
+        const devDropdownArrow = document.getElementById('device-arrow');
+
+        if (devDropdownBtn) {
+            devDropdownBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = devDropdownMenu.classList.contains('hidden');
+                if (isHidden) {
+                    devDropdownMenu.classList.remove('hidden');
+                    devDropdownArrow.classList.add('rotate-180');
+                } else {
+                    devDropdownMenu.classList.add('hidden');
+                    devDropdownArrow.classList.remove('rotate-180');
+                }
+            });
+
+            document.getElementById('device-select-all').addEventListener('click', (e) => {
+                e.stopPropagation();
+                const checkboxes = document.querySelectorAll('#device-checkboxes input[type="checkbox"]');
+                checkboxes.forEach(cb => {
+                    cb.checked = true;
+                    selectedDevices.add(cb.value);
+                });
+                updateDeviceDropdownLabel();
+                startDashboardLoad();
+            });
+
+            document.getElementById('device-clear-all').addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedDevices.clear();
+                const checkboxes = document.querySelectorAll('#device-checkboxes input[type="checkbox"]');
+                checkboxes.forEach(cb => {
+                    cb.checked = false;
+                });
+                updateDeviceDropdownLabel();
+                startDashboardLoad();
+            });
+
+            // คลิกนอกเมนูอุปกรณ์เพื่อปิด
+            document.addEventListener('click', (e) => {
+                const devContainer = document.getElementById('device-select-container');
+                if (devContainer && !devContainer.contains(e.target)) {
+                    if (devDropdownMenu) devDropdownMenu.classList.add('hidden');
+                    if (devDropdownArrow) devDropdownArrow.classList.remove('rotate-180');
+                }
+            });
         }
 
         window.showDashboardDetail = function(device, user, daysStr) {
@@ -3026,45 +3405,171 @@
             document.getElementById('dashboard-detail-modal').classList.remove('hidden');
         };
 
-        document.getElementById('dash-modal-close').addEventListener('click', () => {
-            document.getElementById('dashboard-detail-modal').classList.add('hidden');
+        // Event Listeners สำหรับแดชบอร์ด
+        document.addEventListener('DOMContentLoaded', () => {
+            initDashboard();
+
+            const statusFilterElement = document.getElementById('dashboard-filter-status');
+            if (statusFilterElement) {
+                statusFilterElement.addEventListener('change', () => {
+                    // หากเปลี่ยนตัวกรอง "สถานะ" ให้แสดง/ซ่อนข้อมูลทันทีด้วย CSS (Visual Filter)
+                    // (ไม่ต้องยกเลิกและโหลดใหม่ เพราะระบบต้องดึงข้อมูลก่อนถึงจะรู้ว่าสถานะคืออะไร)
+                    applyDashboardFilters(); 
+                });
+            }
+
+            document.getElementById('dash-modal-close').addEventListener('click', () => {
+                document.getElementById('dashboard-detail-modal').classList.add('hidden');
+            });
+
+            document.getElementById('dashboard-refresh-button').addEventListener('click', () => {
+                startDashboardLoad();
+            });
+
+            // เปลี่ยนเดือนปี => ตัดคำสั่งโหลดเก่าทิ้ง แล้วส่งโหลดชุดใหม่ทันที
+            document.getElementById('dashboard-month-select').addEventListener('change', () => {
+                const m = document.getElementById('dashboard-month-select').value;
+                const y = document.getElementById('dashboard-year-select').value;
+                document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
+                startDashboardLoad();
+            });
+
+            document.getElementById('dashboard-year-select').addEventListener('change', () => {
+                const m = document.getElementById('dashboard-month-select').value;
+                const y = document.getElementById('dashboard-year-select').value;
+                document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
+                startDashboardLoad();
+            });
+
+            document.getElementById('dashboard-back-to-menu-button').addEventListener('click', () => {
+                alert('ปุ่มกลับสู่เมนูหลัก (นำโค้ดไปประกอบร่างแล้วจะใช้งานได้ปกติ)');
+            });
         });
 
-        document.getElementById('dashboard-refresh-button').addEventListener('click', () => {
-            // ไม่ต้องสนใจว่าโหลดเสร็จหรือยัง ให้ทำการโหลดใหม่และยกเลิกของเก่าทันที
-            startDashboardLoad();
-        });
-
-        // ควบคุมการเปลี่ยนเดือนผ่าน Dropdown ที่เพิ่มเข้าไปใหม่
-        document.getElementById('dashboard-month-select').addEventListener('change', () => {
-            const m = document.getElementById('dashboard-month-select').value;
-            const y = document.getElementById('dashboard-year-select').value;
-            document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
-            startDashboardLoad();
-        });
-
-        document.getElementById('dashboard-year-select').addEventListener('change', () => {
-            const m = document.getElementById('dashboard-month-select').value;
-            const y = document.getElementById('dashboard-year-select').value;
-            document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
-            startDashboardLoad();
-        });
+        // ==========================================
+        // SMART SEARCH DEBOUNCE LOGIC
+        // ==========================================
+        let searchDebounceTimer = null;
+        function handleSearchInput() {
+            applyDashboardFilters(); // แสดงผลลัพธ์จาก CSS ให้เห็นทันทีก่อน
+            
+            clearTimeout(searchDebounceTimer);
+            // รอ 0.6 วินาที หลังจากพิมพ์เสร็จ ค่อยสั่งยกเลิกคิวเก่าและดึงข้อมูลใหม่เฉพาะที่ค้นหาเจอ (ประหยัดแบนด์วิดท์มหาศาล)
+            searchDebounceTimer = setTimeout(() => {
+                startDashboardLoad(); 
+            }, 600);
+        }
 
         function setupDashboardSearch() {
             const input = document.getElementById('dashboard-search-input');
-            input.addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                const rows = document.querySelectorAll('#dashboard-table-body tr');
-                rows.forEach(row => {
-                    const user = row.dataset.user.toLowerCase();
-                    if (user.includes(term)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
+            if (!input) return;
+            input.removeEventListener('input', handleSearchInput); 
+            input.addEventListener('input', handleSearchInput);
+        }
+
+        // ==========================================
+        // FILTER FUNCTION (ตัวกรองทำงานจริง)
+        // ==========================================
+        function applyDashboardFilters() {
+            const searchInput = document.getElementById('dashboard-search-input');
+            const statusFilterElement = document.getElementById('dashboard-filter-status');
+            
+            if (!searchInput || !statusFilterElement) return;
+
+            const term = searchInput.value.toLowerCase().trim();
+            const statusFilter = statusFilterElement.value;
+
+            const rows = document.querySelectorAll('#dashboard-table-body tr');
+
+            rows.forEach(row => {
+                const user = row.dataset.user;
+                const userLower = user.toLowerCase();
+                
+                // เงื่อนไขที่ 1: ค้นหาคำค้นสาขาอย่างย่อ
+                let matchSearch = userLower.includes(term);
+                
+                // เงื่อนไขที่ 2: เป็นสาขาที่ผู้ใช้ติ๊กเลือก (Multi-select Checkboxes)
+                let matchBranch = selectedBranches.has(user);
+
+                // เงื่อนไขที่ 3: สถานะตรงตามเงื่อนไข (คำนวณจากกลุ่มของอุปกรณ์)
+                let matchStatus = false;
+
+                if (statusFilter === 'ALL' || selectedDevices.size === 0) {
+                    matchStatus = true;
+                } else {
+                    let hasComplete = false;
+                    let hasIncomplete = false;
+                    let hasLoading = false;
+                    let hasData = false;
+
+                    // ตรวจสอบเฉพาะอุปกรณ์ที่ถูกเลือกให้แสดงผลอยู่
+                    for (let device of selectedDevices) {
+                        const deviceIndex = masterDevices.indexOf(device);
+                        if (deviceIndex > -1) {
+                            const rowIndex = row.id.split('-')[2]; 
+                            const cell = document.getElementById(`dash-cell-${rowIndex}-${deviceIndex}`);
+                            
+                            if (cell) {
+                                const html = cell.innerHTML;
+                                
+                                if (html.includes('loader-sm')) {
+                                    hasLoading = true;
+                                } else if (html.includes('bg-teal-100')) {
+                                    hasComplete = true;
+                                    hasData = true;
+                                } else if (html.includes('bg-amber-100')) {
+                                    hasIncomplete = true;
+                                    hasData = true;
+                                }
+                                
+                                // --- ตัดสินใจล่วงหน้า (Early Break / Short-circuit) เพื่อความเร็ว ---
+                                if (statusFilter === 'COMPLETE' && hasIncomplete) {
+                                    break; // กรองด้วย "ครบ" เจอสีเหลืองอันเดียว เบรคลูปตัดสาขานี้ทิ้งได้เลย ไม่ต้องสนเซลล์อื่น
+                                }
+                                if (statusFilter === 'INCOMPLETE' && hasIncomplete) {
+                                    break; // กรองด้วย "ไม่ครบ" เจอสีเหลืองอันเดียว แสดงแน่นอน เบรคลูปได้เลย
+                                }
+                                if (statusFilter === 'NODATA' && hasData) {
+                                    break; // กรองด้วย "ไม่มีข้อมูล" เจอเขียว/เหลืองอันเดียว ตัดทิ้งได้เลย
+                                }
+                            }
+                        }
                     }
-                });
+
+                    if (statusFilter === 'COMPLETE') {
+                        if (hasIncomplete) {
+                            matchStatus = false; // เจอสีเหลือง ตัดทิ้งทันทีไม่ต้องรอโหลด
+                        } else {
+                            // ถ้ายังไม่เจอสีเหลือง ให้แสดงไว้ก่อนถ้ากำลังโหลด หรือแสดงเพราะมีสีเขียว
+                            matchStatus = hasLoading ? true : hasComplete;
+                        }
+                    } else if (statusFilter === 'INCOMPLETE') {
+                        if (hasIncomplete) {
+                            matchStatus = true; // เจอสีเหลืองปุ๊บ แสดงทันทีไม่ต้องรอ
+                        } else {
+                            matchStatus = hasLoading ? true : false;
+                        }
+                    } else if (statusFilter === 'NODATA') {
+                        if (hasData) {
+                            matchStatus = false; // มีข้อมูลโผล่มาปุ๊บ ตัดทิ้งทันทีไม่ต้องรอ
+                        } else {
+                            // ไม่มีข้อมูลเลย (อาจจะว่างหมด หรือกำลังโหลด)
+                            matchStatus = hasLoading ? true : true;
+                        }
+                    }
+                }
+
+                // แถวจะปรากฏเมื่อผ่านทั้ง 3 เงื่อนไขพร้อมกันเท่านั้น
+                if (matchSearch && matchBranch && matchStatus) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
             });
         }
+    </script>
+</body>
+</html>
 
         // --- Event Listeners Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -3143,6 +3648,19 @@
                 });
             }
         });
+
+        // --- Service Worker Registration ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('Service Worker ลงทะเบียนสำเร็จ: Scope คือ', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.error('Service Worker ลงทะเบียนไม่สำเร็จ:', error);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
