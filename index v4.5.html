@@ -208,16 +208,6 @@
             z-index: 30;
         }
 
-        /* Multi-select Dropdown CSS */
-
-        .dropdown-menu {
-
-            max-height: 250px;
-
-            overflow-y: auto;
-
-        }
-
         @media (max-width: 767px) {
             .printable-table-container { display: none; }
             .mobile-detail-container { display: block; }
@@ -347,319 +337,131 @@
         </div>
     </div>
 
+    <!-- NEW: Dashboard Application Page -->
     <div id="dashboard-app-container" class="hidden min-h-screen bg-slate-50">
-
         <header class="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
-
             <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-
-              <div class="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-
+                <div class="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div class="flex items-center gap-3">
-
                         <button id="dashboard-back-to-menu-button" title="กลับไปหน้าเมนูหลัก" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition">
-
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m8-8l-8 8 8 8" /></svg>
-
                         </button>
-
                         <div class="flex items-center gap-2">
-
                             <div class="p-1.5 bg-fuchsia-100 text-fuchsia-600 rounded-lg">
-
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
-
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
-
                                 </svg>
-
                             </div>
-
                             <h1 class="text-xl font-bold text-slate-800">แดชบอร์ดภาพรวม</h1>
-
                         </div>
-
                     </div>
-
                     
                     <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-
-                        <div class="relative w-full sm:w-44">
-
-                            <input type="text" id="dashboard-search-input" placeholder="ค้นหาชื่อสาขา..." class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition text-sm">
-
+                        <div class="relative w-full sm:w-48">
+                            <input type="text" id="dashboard-search-input" placeholder="ค้นหาสาขา..." class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition text-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-3 top-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                         </div>
-
-
-                        <div class="relative w-full sm:w-56" id="branch-select-container">
-
-                            <button id="branch-dropdown-btn" class="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl flex items-center justify-between text-sm text-slate-700 font-medium hover:bg-slate-200 transition">
-
-                                <span id="branch-dropdown-label" class="truncate">กำลังโหลดสาขา...</span>
-
-                                <svg class="w-4 h-4 ml-2 shrink-0 transition-transform duration-200" id="branch-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-
-                            </button>
-
-                            <div id="branch-dropdown-menu" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-3 dropdown-menu">
-
-                                <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
-
-                                    <button id="branch-select-all" class="text-xs text-fuchsia-600 font-bold hover:underline">เลือกทั้งหมด</button>
-
-                                    <button id="branch-clear-all" class="text-xs text-slate-500 font-bold hover:underline">ล้างทั้งหมด</button>
-
-                                </div>
-
-                                <div id="branch-checkboxes" class="space-y-2 max-h-40 overflow-y-auto">
-
-                                    </div>
-
-                            </div>
-
-                        </div>
-
                         
+                        <!-- NEW: แทนที่ input type="month" แบบเดิมด้วย Dropdown เพื่อแก้ปัญหาจอดำและเลื่อนปีได้อิสระ -->
                         <div class="flex items-center gap-2 flex-grow sm:w-auto">
-
                             <select id="dashboard-month-select" class="w-full sm:w-auto px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 transition text-sm cursor-pointer outline-none font-medium text-slate-700 shadow-sm">
-
                                 <option value="01">มกราคม</option>
-
                                 <option value="02">กุมภาพันธ์</option>
-
                                 <option value="03">มีนาคม</option>
-
                                 <option value="04">เมษายน</option>
-
                                 <option value="05">พฤษภาคม</option>
-
                                 <option value="06">มิถุนายน</option>
-
                                 <option value="07">กรกฎาคม</option>
-
                                 <option value="08">สิงหาคม</option>
-
                                 <option value="09">กันยายน</option>
-
                                 <option value="10">ตุลาคม</option>
-
                                 <option value="11">พฤศจิกายน</option>
-
                                 <option value="12">ธันวาคม</option>
-
                             </select>
-
                             <select id="dashboard-year-select" class="w-full sm:w-auto px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 transition text-sm cursor-pointer outline-none font-medium text-slate-700 shadow-sm">
-
-                                </select>
-
+                                <!-- ตัวเลือกปีจะถูกสร้างโดย Javascript -->
+                            </select>
                             <input type="hidden" id="dashboard-month-picker">
-
                         </div>
 
-
-                        <div class="flex items-center gap-2">
-
-                            <button id="dashboard-refresh-button" title="โหลดข้อมูลใหม่" class="p-2 bg-fuchsia-600 text-white hover:bg-fuchsia-700 rounded-xl shadow-sm transition flex items-center justify-center">
-
-                                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
-
-                            </button>
-
-                        </div>
-
+                        <button id="dashboard-refresh-button" title="โหลดข้อมูลใหม่" class="p-2 bg-fuchsia-600 text-white hover:bg-fuchsia-700 rounded-xl shadow-sm transition flex items-center justify-center">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
+                        </button>
                     </div>
-
                 </div>
-
             </div>
-
         </header>
 
-
         <main class="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto">
-
             <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden flex flex-col">
-
-                <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-
-                    <div class="flex flex-col gap-2 w-full sm:w-auto">
-
-                        <p class="text-sm font-medium text-slate-600" id="dashboard-status-text">กำลังรอโหลดข้อมูล...</p>
-
-                        <div class="flex flex-wrap items-center gap-2 mt-1 w-full sm:w-auto">
-
-                            <span class="text-xs font-semibold text-slate-500">ตัวกรอง:</span>
-
-                            
-                            <div class="relative w-48 sm:w-56" id="device-select-container">
-
-                                <button id="device-dropdown-btn" class="w-full px-2 py-1.5 bg-white border border-slate-300 rounded-lg flex items-center justify-between text-xs text-slate-700 font-medium hover:bg-slate-50 transition shadow-sm">
-
-                                    <span id="device-dropdown-label" class="truncate">กำลังโหลดอุปกรณ์...</span>
-
-                                    <svg class="w-4 h-4 ml-2 shrink-0 transition-transform duration-200" id="device-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-
-                                </button>
-
-                                <div id="device-dropdown-menu" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-xl z-50 p-2 dropdown-menu min-w-max">
-
-                                    <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
-
-                                        <button id="device-select-all" class="text-xs text-fuchsia-600 font-bold hover:underline">เลือกทั้งหมด</button>
-
-                                        <button id="device-clear-all" class="text-xs text-slate-500 font-bold hover:underline">ล้างทั้งหมด</button>
-
-                                    </div>
-
-                                    <div id="device-checkboxes" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-
-                                        </div>
-
-                                </div>
-
-                            </div>
-
-
-                            <select id="dashboard-filter-status" class="px-2 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-fuchsia-500 outline-none w-28 sm:w-32 text-slate-700 shadow-sm cursor-pointer transition">
-
-                                <option value="ALL">-- ทุกสถานะ --</option>
-
-                                <option value="COMPLETE">ครบ</option>
-
-                                <option value="INCOMPLETE">ยังไม่ครบ</option>
-
-                                <option value="NODATA">ไม่มีข้อมูล</option>
-
-                            </select>
-
-                        </div>
-
-                    </div>
-
-                    <div class="flex gap-4 text-xs font-semibold ml-auto sm:ml-0 mt-2 sm:mt-0">
-
+                <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                    <p class="text-sm font-medium text-slate-600" id="dashboard-status-text">กำลังรอโหลดข้อมูล...</p>
+                    <div class="flex gap-4 text-xs font-semibold">
                         <span class="flex items-center gap-1"><div class="w-3 h-3 bg-teal-100 rounded border border-teal-300"></div> ครบ</span>
-
                         <span class="flex items-center gap-1"><div class="w-3 h-3 bg-amber-100 rounded border border-amber-300"></div> ยังไม่ครบ</span>
-
                         <span class="flex items-center gap-1"><div class="w-3 h-3 bg-slate-100 rounded border border-slate-300"></div> ไม่มีข้อมูล</span>
-
                     </div>
-
                 </div>
-
-                
                 <div class="dashboard-table-container overflow-auto max-h-[70vh]">
-
                     <table class="dashboard-table w-full text-sm text-left whitespace-nowrap">
-
                         <thead class="text-xs text-slate-700 uppercase bg-slate-100 border-b-2 border-slate-300" id="dashboard-table-head">
-
-                            </thead>
-
+                            <!-- จะถูกสร้างโดย JavaScript -->
+                        </thead>
                         <tbody id="dashboard-table-body" class="divide-y divide-slate-200 text-slate-700">
-
-                            </tbody>
-
+                            <!-- จะถูกสร้างโดย JavaScript -->
+                        </tbody>
                     </table>
-
                 </div>
-
             </div>
-
         </main>
-
     </div>
 
-
+    <!-- NEW: Password Modal -->
     <div id="password-modal" class="hidden fixed inset-0 bg-black/60 z-[2000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
-
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm flex flex-col transform transition-transform">
-
             <div class="flex justify-between items-center p-5 border-b border-slate-100">
-
                 <div class="flex items-center gap-2 text-fuchsia-600">
-
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
-
                     <h3 class="text-lg font-bold">ยืนยันตัวตน</h3>
-
                 </div>
-
                 <button id="password-modal-close" class="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition">
-
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-
                 </button>
-
             </div>
-
             <div class="p-6">
-
                 <p class="text-sm text-slate-500 mb-4 text-center">กรุณาใส่รหัสผ่านเพื่อเข้าสู่ระบบแดชบอร์ด</p>
-
                 <input type="password" id="dashboard-password-input" placeholder="รหัสผ่าน..." class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:outline-none transition text-center tracking-widest font-mono text-lg">
-
                 <p id="password-error-msg" class="text-red-500 text-xs text-center mt-2 hidden">รหัสผ่านไม่ถูกต้อง</p>
-
             </div>
-
             <div class="p-5 bg-slate-50 border-t border-slate-100 rounded-b-2xl">
-
                 <button id="password-submit-btn" class="w-full py-3 bg-fuchsia-600 text-white rounded-xl hover:bg-fuchsia-700 transition font-bold shadow-md hover:shadow-lg">เข้าสู่ระบบ</button>
-
             </div>
-
         </div>
-
     </div>
 
-
+    <!-- NEW: Dashboard Day Detail Modal -->
     <div id="dashboard-detail-modal" class="hidden fixed inset-0 bg-black/60 z-[2000] flex items-center justify-center p-4 backdrop-blur-sm">
-
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col">
-
             <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50 rounded-t-2xl">
-
                 <div>
-
                     <h3 id="dash-modal-title" class="text-lg font-bold text-slate-800">รายละเอียด</h3>
-
                     <p id="dash-modal-subtitle" class="text-sm text-slate-500"></p>
-
                 </div>
-
                 <button id="dash-modal-close" class="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-full transition">
-
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-
                 </button>
-
             </div>
-
             <div class="p-6 max-h-[60vh] overflow-y-auto">
-
                 <div class="mb-4">
-
                     <p class="text-sm font-semibold text-slate-600 mb-2">วันที่พบการตรวจสอบข้อมูลในระบบ:</p>
-
                     <div id="dash-modal-days-container" class="flex flex-wrap gap-2">
-
-                        </div>
-
+                        <!-- ถูกสร้างโดย JS -->
+                    </div>
                 </div>
-
                 <p class="text-xs text-slate-400 mt-4">* หมายเหตุ: แสดงเฉพาะวันที่พบร่องรอยการบันทึกข้อมูลในระบบ</p>
-
             </div>
-
         </div>
-
     </div>
 
     <!-- Daily Check App Container -->
@@ -1220,82 +1022,32 @@
         }
 
         // --- API Call Utility ---
-        // --- ระบบควบคุมการกดยกเลิกโหลดของเก่า เพื่อตอบสนองการสลับเปลี่ยนตัวกรองได้ทันที ---
-
-        let currentAbortController = null;
-
-
-        async function apiCall(action, payload = {}, scriptType = 'daily', abortSignal = null) {
-
-            const isGet = action.startsWith('load') || action.startsWith('get') || action.startsWith('getDataLabelsForCard') || action === 'getAllUsers';
-
-            const options = {
- 
-                method: isGet ? 'GET' : 'POST',
- 
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-
-                signal: abortSignal 
-            };
-
-            const urls = scriptType === 'daily' ? [...SCRIPT_URLS] : [...MONTHLY_SCRIPT_URLS];
-
-            
-            // สุ่ม URL เพื่อกระจายโหลด (ของ Check log v4.5)
+        async function apiCall(action, payload = {}, scriptType = 'daily') {
+            const isGet = action.startsWith('load') || action.startsWith('get') || action.startsWith('getDataLabelsForCard');
+            const options = { method: isGet ? 'GET' : 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' } };
+            const urls = scriptType === 'daily' ? [...SCRIPT_URLS] : [...MONTHLY_SCRIPT_URLS]; 
 
             for (let i = urls.length - 1; i > 0; i--) {
-
                 const j = Math.floor(Math.random() * (i + 1));
-
-                [urls[i], urls[j]] = [urls[j], urls[i]];
- 
+                [urls[i], urls[j]] = [urls[j], urls[i]]; 
             }
-
             
             for (const baseUrl of urls) {
-
                 const url = new URL(baseUrl);
-
                 if (isGet) {
-
                     Object.entries({ action, ...payload }).forEach(([key, value]) => url.searchParams.append(key, value));
-
                 } else {
-
                     options.body = JSON.stringify({ action, ...payload });
-
                 }
-
                 try {
-
                     const res = await fetch(url, options);
-
                     if (!res.ok) continue;
-
                     const result = await res.json();
-
                     if (result.error || result.success === false) continue;
-
                     return result;
-
-                } catch (error) {
- 
-                    // รองรับการ Abort จากแดชบอร์ด
-
-                    if (error.name === 'AbortError') {
-
-                        throw error;
- 
-                    }
-
-                    continue;
- 
-                }
-
+                } catch (error) { continue; }
             }
-
-            throw new Error(`Failed to fetch data from API endpoints for action: ${action}.`);
-
+            throw new Error(`Failed to fetch data from all available ${scriptType} API endpoints for action: ${action}.`);
         }
 
         // --- User Loading ---
@@ -2971,1207 +2723,348 @@
         }
 
         // --- DASHBOARD LOGIC ---
-
         let dashboardDataCache = {};
-
         let dashboardIsFetching = false;
-
-        let currentDashboardFetchId = 0;
- 
+        let currentDashboardFetchId = 0; // เพิ่มตัวแปรสำหรับจัดการการเปลี่ยนเดือนทันที
         let allUsersList = [];
-
-        let selectedBranches = new Set();
- // เก็บรายชื่อสาขาที่ต้องการกรอง
-
-        let usersFetchPromise = null;
-
-        
-        const dashboardBatchSize = 10;
-
+        const dashboardBatchSize = 10; // จำนวน Worker ที่ทำงานขนานกัน
+        // 1 & 2. ปรับแก้ชื่ออุปกรณ์ ถังดับเพลิง และ ถังดับเพลิงCo2
         const masterDevices = ["แก๊ส LPG", "สลิงผ้าแผนกเหล็ก", "เครนโครงสร้าง", "เครื่องตัดไฟเบอร์", "Stacker ไฟฟ้า", "รถเฮี้ยบ จัดส่ง", "รถจัดส่ง", "โฟล์คลิฟท์ประเภทเครื่องยนต์", "รถโฟล์คลิฟท์ไฟฟ้า", "รถสแตกเกอร์จัดส่ง", "สลิงผ้า รถจัดส่งติดเครน", "ตู้น้ำดับเพลิง", "ถังดับเพลิง", "ถังดับเพลิงCo2", "ไฟฉุกเฉิน"];
-
-        let selectedDevices = new Set(masterDevices); // เก็บรายชื่ออุปกรณ์ที่ต้องการกรอง
-
         
         function initDashboard() {
-
             const pwdInput = document.getElementById('dashboard-password-input');
-
             const err = document.getElementById('password-error-msg');
-
             pwdInput.value = '';
-
             err.classList.add('hidden');
-
             document.getElementById('password-modal').classList.remove('hidden');
-
             document.body.classList.add('overflow-hidden');
-
             
             const today = new Date();
-
             const yyyy = today.getFullYear();
-
             const mm = String(today.getMonth() + 1).padStart(2, '0');
-
             
             const mSelect = document.getElementById('dashboard-month-select');
-
             const ySelect = document.getElementById('dashboard-year-select');
-
+            
             if (ySelect.options.length === 0) {
-
+                // สร้างตัวเลือกปี (ย้อนหลัง 5 ปี ล่วงหน้า 5 ปี)
                 for (let y = yyyy - 5; y <= yyyy + 5; y++) {
-
                     const opt = document.createElement('option');
-
                     opt.value = y;
-
-                    opt.text = y + 543;
- 
+                    opt.text = y + 543; // แสดงเป็น พ.ศ. ให้สวยงามและคุ้นเคย
                     ySelect.appendChild(opt);
-
                 }
-
             }
-
 
             mSelect.value = mm;
-
             ySelect.value = yyyy;
-
             document.getElementById('dashboard-month-picker').value = `${yyyy}-${mm}`;
-
         }
-
 
         document.getElementById('password-submit-btn').addEventListener('click', () => {
-
             if (document.getElementById('dashboard-password-input').value === 'GBH') {
-
                 document.getElementById('password-modal').classList.add('hidden');
-
                 document.body.classList.remove('overflow-hidden');
-
                 startDashboardLoad();
-
             } else {
-
                 document.getElementById('password-error-msg').classList.remove('hidden');
-
             }
-
         });
-
-        
-        // แก้ไขปุ่มปิด/กลับหน้าหลัก ให้ลิงก์กลับไปที่ showMainMenu() อย่างถูกต้อง
 
         document.getElementById('password-modal-close').addEventListener('click', () => {
-
             document.getElementById('password-modal').classList.add('hidden');
-
             document.body.classList.remove('overflow-hidden');
-
             showMainMenu();
-
         });
-
-        
-        document.getElementById('dashboard-back-to-menu-button').addEventListener('click', () => {
-
-            if (currentAbortController) { currentAbortController.abort(); }
-
-            showMainMenu();
-
-        });
-
-
-        // คืนค่ารายการสาขาที่กำลังเลือกกรองอยู่ ณ ขณะนี้ (รวมทั้งกล่องค้นหาข้อความด้วย)
-
-        function getFilteredUsers() {
-
-            const term = (document.getElementById('dashboard-search-input')?.value || '').toLowerCase().trim();
-
-            let filtered = allUsersList;
-
-            
-            if (selectedBranches.size > 0 && selectedBranches.size !== allUsersList.length) {
-
-                filtered = filtered.filter(user => selectedBranches.has(user));
-
-            }
-
-            if (term) {
-
-                filtered = filtered.filter(user => user.toLowerCase().includes(term));
-
-            }
-
-            return filtered;
-
-        }
-
 
         async function startDashboardLoad() {
-
-            if (currentAbortController) {
-
-                currentAbortController.abort();
-
-            }
-
-            currentAbortController = new AbortController();
-
-            const signal = currentAbortController.signal;
-
-
+            // เพิ่มเลข ID การดึงข้อมูลทุกครั้งที่เรียก เพื่อหยุดการทำงานของ Worker ตัวเก่าทันที
             currentDashboardFetchId++;
-
             const fetchId = currentDashboardFetchId;
 
-
             dashboardIsFetching = true;
-
             document.getElementById('dashboard-status-text').textContent = 'กำลังเตรียมตาราง...';
-
             const tbody = document.getElementById('dashboard-table-body');
-
             tbody.innerHTML = '';
-
             
             try {
-
                 if (allUsersList.length === 0) {
-                    if (!usersFetchPromise) {
-
-                        const cachedUsers = localStorage.getItem('cached_user_list');
-
-                        if (cachedUsers) {
-
-                            allUsersList = JSON.parse(cachedUsers);
-
-                            usersFetchPromise = Promise.resolve(allUsersList);
-
-                        } else {
-
-                            usersFetchPromise = apiCall('getAllUsers', {}, 'daily', signal).then(res => {
-
-                                allUsersList = res.users || [];
-
-                                localStorage.setItem('cached_user_list', JSON.stringify(allUsersList));
-
-                                return allUsersList;
-
-                            });
-
-                        }
-
+                    const cachedUsers = localStorage.getItem('cached_user_list');
+                    if (cachedUsers) {
+                        allUsersList = JSON.parse(cachedUsers);
+                    } else {
+                        const res = await apiCall('getAllUsers', {}, 'daily');
+                        allUsersList = res.users || [];
                     }
-
-                    await usersFetchPromise;
-
                 }
 
-                
-                if (fetchId !== currentDashboardFetchId || signal.aborted) return;
-
-                
-                setupBranchDropdown();
-
-                setupDeviceDropdown();
-
-                const devicesToFetch = Array.from(selectedDevices);
-
-                
-                const usersToFetch = getFilteredUsers();
-
-                const usersToFetchSet = new Set(usersToFetch);
-
-
+                // Build Header
                 const thead = document.getElementById('dashboard-table-head');
-
                 let headerHtml = '<tr><th scope="col" class="px-6 py-3 border-r border-slate-300 w-48 sticky left-0 bg-slate-100 z-30">สาขา / อุปกรณ์</th>';
-
-                masterDevices.forEach((device) => {
-
-                    const isVisible = selectedDevices.has(device);
-
-                    const displayStyle = isVisible ? '' : 'style="display:none;"';
-
-                    headerHtml += `<th scope="col" class="px-6 py-3 border-r border-slate-300 text-center tracking-wider" ${displayStyle}>${device}</th>`;
-
+                masterDevices.forEach(device => {
+                    headerHtml += `<th scope="col" class="px-6 py-3 border-r border-slate-300 text-center tracking-wider">${device}</th>`;
                 });
-
                 headerHtml += '</tr>';
-
                 thead.innerHTML = headerHtml;
 
-
+                // Pre-fill Empty Rows
                 allUsersList.forEach((user, index) => {
-
                     let rowHtml = `<tr id="dash-row-${index}" class="hover:bg-slate-50 transition-colors" data-user="${user}">`;
-
                     rowHtml += `<td class="px-6 py-4 border-r border-slate-200 font-bold text-slate-900 sticky left-0 bg-white z-20 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">${user}</td>`;
-
-             
-                    const isTarget = usersToFetchSet.has(user);
-
-
                     masterDevices.forEach((device, dIndex) => {
-
-                        const isVisible = selectedDevices.has(device);
-
-                        const displayStyle = isVisible ? '' : 'style="display:none;"';
-
-                        
-                        let cellContent = '';
-
-                        if (isTarget) {
-
-                            cellContent = `<div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-fuchsia-500"></div>`;
-
-                        } else {
-
-                            cellContent = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ข้ามการโหลด (ถูกกรองออก)"></div>`;
-
-                        }
-
-
-                        rowHtml += `<td id="dash-cell-${index}-${dIndex}" class="px-2 py-4 border-r border-slate-200 text-center align-middle" ${displayStyle}>${cellContent}</td>`;
-
+                        rowHtml += `<td id="dash-cell-${index}-${dIndex}" class="px-2 py-4 border-r border-slate-200 text-center align-middle"><div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-fuchsia-500"></div></td>`;
                     });
-
                     rowHtml += '</tr>';
-
                     tbody.insertAdjacentHTML('beforeend', rowHtml);
-
                 });
 
-
-                applyDashboardFilters();
- 
                 setupDashboardSearch();
-
-                
-                fetchDashboardInBatches(usersToFetch, devicesToFetch, document.getElementById('dashboard-month-picker').value, fetchId, signal);
+                // ส่งค่า fetchId เข้าไปด้วยเพื่อยืนยันสถานะล่าสุด
+                fetchDashboardInBatches(allUsersList, masterDevices, document.getElementById('dashboard-month-picker').value, fetchId);
 
             } catch (err) {
-
-                if (err.name === 'AbortError') { return; }
-
                 if (fetchId === currentDashboardFetchId) {
-
                     document.getElementById('dashboard-status-text').textContent = 'เกิดข้อผิดพลาด: ' + err.message;
-
                 }
-
             }
-
         }
 
-
-        async function fetchDashboardInBatches(users, devicesToFetch, monthYear, fetchId, signal) {
-
+        async function fetchDashboardInBatches(users, devices, monthYear, fetchId) {
             dashboardIsFetching = true;
-
             let completedCount = 0;
-
-            if (fetchId !== currentDashboardFetchId || signal.aborted) return;
-
+            if (fetchId !== currentDashboardFetchId) return; // หากมีการกดเปลี่ยนเดือนระหว่างนี้ ให้ยกเลิกทันที
 
             document.getElementById('dashboard-status-text').textContent = `กำลังโหลดข้อมูล... (0/${users.length})`;
-
             const [year, month] = monthYear.split('-').map(Number);
-
             const specialDevices = ['ตู้น้ำดับเพลิง', 'ถังดับเพลิง', 'ถังดับเพลิงCo2', 'ไฟฉุกเฉิน'];
-
             
-            const queue = users.map(user => ({ user, index: allUsersList.indexOf(user) }));
-
+            // ใช้ Queue + Workers (จำกัดโหลดพร้อมกันแบบไม่รอกัน)
+            const queue = users.map((user, index) => ({ user, index }));
+            
             async function worker() {
-
                 while (queue.length > 0) {
-
-                    if (fetchId !== currentDashboardFetchId || signal.aborted) return;
+                    if (fetchId !== currentDashboardFetchId) return; // ดักจับการเปลี่ยนเดือนก่อนดึงคิวใหม่
 
                     const { user, index: rowIndex } = queue.shift();
-
                     
                     try {
-
-                        const settingsRes = await apiCall('loadSettings', { username: user }, 'daily', signal);
-
-                        if (fetchId !== currentDashboardFetchId || signal.aborted) return;
-
+                        // 1. ดึง Setting ของสาขานั้น
+                        const settingsRes = await apiCall('loadSettings', { username: user }, 'daily');
+                        if (fetchId !== currentDashboardFetchId) return; // ดักจับการเปลี่ยนเดือนระหว่างรอ API
 
                         const configs = Array.isArray(settingsRes.config) ? settingsRes.config : [];
-
-                        const deviceFetchPromises = devicesToFetch.map(async (deviceName) => {
-
-                            const dIndex = masterDevices.indexOf(deviceName);
-
+                        
+                        // 2. ดึงข้อมูลทุกอุปกรณ์พร้อมกัน (Parallel Fetching) เพื่อความรวดเร็วสูงสุด
+                        const deviceFetchPromises = devices.map(async (deviceName, dIndex) => {
                             const cell = document.getElementById(`dash-cell-${rowIndex}-${dIndex}`);
-
                             if (!cell) return;
 
-
                             const config = configs.find(c => c.title === deviceName);
-
                             const isSpecial = specialDevices.includes(deviceName);
-
                             
                             if (isSpecial && (year < 2026 || (year === 2026 && month < 5))) {
-
-                                cell.innerHTML = `<span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded border border-slate-200">เริ่มตรวจ พ.ค. 2026</span>`;
-
+                                cell.innerHTML = `<span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded">เริ่มตรวจ พ.ค. 2026</span>`;
                                 return;
-
                             }
-
 
                             if (!config || config.sheetId === 'N/A' || config.sheetId === '') {
-
                                 cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่มีอุปกรณ์นี้"></div>`;
-
                                 return;
-
                             }
-
 
                             const targetCount = parseInt(config.targetCount) || 0;
-
                             
+                            // ซ่อนสาขาที่เป้าหมายเป็น 0 (ยกเว้นแก๊ส LPG) ให้เป็นไม่มีข้อมูล เพื่อแก้ปัญหา Error และข้อมูลหลอกในสาขาที่ไม่มีอุปกรณ์ (เช่น ตระการ, บ้านผือ ฯลฯ)
                             if (targetCount <= 0 && deviceName !== 'แก๊ส LPG') {
-
                                 cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่ได้กำหนดเป้าหมาย (ไม่มีอุปกรณ์)"></div>`;
-
                                 return;
-
                             }
 
-
                             try {
-
-                                const result = await apiCall('getMonthlySheetData', { sheetId: config.sheetId, sheetName: config.sheetName, year, month }, 'monthly', signal);
-
-                                if (fetchId !== currentDashboardFetchId || signal.aborted) return;
-
+                                const result = await apiCall('getMonthlySheetData', { sheetId: config.sheetId, sheetName: config.sheetName, year, month }, 'monthly');
+                                if (fetchId !== currentDashboardFetchId) return; // ป้องกันการลงข้อมูลผิดเดือนหลังโหลด API เสร็จ
 
                                 const data = Array.isArray(result?.data) ? result.data : [];
-
                                 
                                 let checkedDays = [];
-
                                 let actualCount = 0;
-
                                 const numberColIdx = getNumberColumnIndex(config.title);
-
                                 
                                 if (data.length > 0) {
-
                                     if (deviceName === 'แก๊ส LPG') {
-
+                                        // แก๊ส LPG: นับจำนวนวันที่ตรวจเจอ (อย่างน้อย 1 ครั้งต่อวัน)
                                         const dailyNumbers = new Set();
-
                                         data.forEach(row => {
-
                                             let mValue = parseInt(row[2]);
-
                                             if (mValue === month || isNaN(mValue)) {
-
                                                 const d = parseInt(row[1]);
-
                                                 if(!isNaN(d)) dailyNumbers.add(d);
-
                                             }
-
                                         });
-
                                         checkedDays = Array.from(dailyNumbers);
-
-                                        actualCount = checkedDays.length;
- 
+                                        actualCount = checkedDays.length; 
                                     } else if (isSpecial) {
-
+                                        // อุปกรณ์ดับเพลิง: นับจำนวนอุปกรณ์
                                         const checkedNumbers = new Set();
-
                                         data.forEach(row => {
-
                                             let mValue = parseInt(row[2]);
-
                                             if (mValue === month || isNaN(mValue)) {
-
                                                 const num = extractNumber(row, numberColIdx);
-
                                                 if (num) checkedNumbers.add(num);
-
                                                 const d = parseInt(row[1]);
-
                                                 if(!isNaN(d) && !checkedDays.includes(d)) checkedDays.push(d);
-
                                             }
-
                                         });
-
-                                        actualCount = checkedNumbers.size;
- 
+                                        actualCount = checkedNumbers.size; 
                                     } else {
-
+                                        // อุปกรณ์ทั่วไป: นับจำนวนวันที่ตรวจครบตาม target
                                         const dailyNumbers = {};
-
                                         data.forEach(row => {
-
                                             let mValue = parseInt(row[2]);
-
                                             let yValue = parseInt(row[3]);
-
                                             if (yValue > 2500) yValue -= 543;
-
                                             if ((yValue === year && mValue === month) || isNaN(mValue)) {
-
                                                 const dayValue = parseInt(row[1]);
-
                                                 const num = extractNumber(row, numberColIdx);
-
                                                 if (!isNaN(dayValue) && num) {
-
                                                     if (!dailyNumbers[dayValue]) dailyNumbers[dayValue] = new Set();
                                                     dailyNumbers[dayValue].add(num);
-
                                                 }
-
                                             }
-
                                         });
-
+                                        
                                         Object.keys(dailyNumbers).forEach(day => {
-
                                             if (dailyNumbers[day].size >= targetCount) {
-
                                                 checkedDays.push(parseInt(day));
-
                                             }
-
                                         });
-
                                         actualCount = checkedDays.length;
-
                                     }
-
                                 }
 
-
+                                // Render Cell
                                 let cellContent = '';
-
                                 const daysInMonth = new Date(year, month, 0).getDate();
 
-
-                                if (deviceName ==='แก๊ส LPG') {
-
+                                if (deviceName === 'แก๊ส LPG') {
+                                    // เงื่อนไข LPG: หากมีการตรวจพบอย่างน้อย 1 วัน เป็นสีเขียวทันที พร้อมโชว์ วันที่ตรวจ/วันในเดือน
                                     if (actualCount > 0) {
-
                                         cellContent = `<button class="px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-lg shadow-sm hover:bg-teal-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${daysInMonth}</button>`;
-
                                     } else {
-
                                         cellContent = `<button class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-lg shadow-sm hover:bg-amber-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[]')">${actualCount}/${daysInMonth}</button>`;
-
                                     }
-
                                 } else if (isSpecial) {
-
+                                    // อุปกรณ์ดับเพลิง
                                     if (actualCount >= targetCount && targetCount > 0) {
-
                                         cellContent = `<button class="px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-lg shadow-sm hover:bg-teal-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${targetCount}</button>`;
-
                                     } else {
-
                                         cellContent = `<button class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-lg shadow-sm hover:bg-amber-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${targetCount}</button>`;
-
                                     }
-
                                 } else {
-
+                                    // อุปกรณ์ทั่วไป (แสดงสีเขียวเมื่อตรวจครบตามจำนวนวันของเดือนนั้นจริงๆ เท่านั้น)
                                     if (actualCount >= daysInMonth && daysInMonth > 0) {
                                         cellContent = `<button class="px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-lg shadow-sm hover:bg-teal-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${daysInMonth}</button>`;
                                     } else {
-
                                         cellContent = `<button class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-lg shadow-sm hover:bg-amber-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${daysInMonth}</button>`;
-
                                     }
-
                                 }
-
                                 cell.innerHTML = cellContent;
 
-                                applyDashboardFilters();
- 
-
                             } catch (err) {
-
-                                if (err.name === 'AbortError') return;
-
-
-                               cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่สามารถดึงข้อมูลได้"></div>`;
-
-                                applyDashboardFilters();
-
+                                // เปลี่ยนจากข้อความ Error สีแดง เป็นจุดสีเทา (ไม่มีข้อมูล) เพื่อความเรียบร้อยของหน้าจอ
+                                cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่สามารถดึงข้อมูลได้"></div>`;
                             }
-
                         });
 
+                        // รอให้อุปกรณ์ทั้งหมดของสาขานี้โหลดเสร็จ
                         await Promise.all(deviceFetchPromises);
 
-
                     } catch (e) {
-
-                        if (e.name === 'AbortError') return;
-
-                        devicesToFetch.forEach((deviceName) => {
-
-                            const dIndex = masterDevices.indexOf(deviceName);
-
+                        for (let dIndex = 0; dIndex < devices.length; dIndex++) {
                             const cell = document.getElementById(`dash-cell-${rowIndex}-${dIndex}`);
-
                             if (cell && cell.innerHTML.includes('loader-sm')) {
-
                                 cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่สามารถดึงข้อมูลได้"></div>`;
-
                             }
-
-                        });
-
-                        applyDashboardFilters();
- 
+                        }
                     }
-
                     
-                    if (fetchId !== currentDashboardFetchId || signal.aborted) return;
+                    if (fetchId !== currentDashboardFetchId) return; // หากยกเลิกระหว่างทางให้ออกทันที
 
                     completedCount++;
-
                     document.getElementById('dashboard-status-text').textContent = `กำลังโหลดข้อมูล... (${completedCount}/${users.length})`;
-
                 }
-
             }
-
 
             const workers = [];
-
             for (let i = 0; i < Math.min(dashboardBatchSize, users.length); i++) {
-
                 workers.push(worker());
-
             }
 
+            await Promise.all(workers);
 
-           await Promise.all(workers);
-
-            if (fetchId === currentDashboardFetchId && !signal.aborted) {
-
+            // เมื่อครบทั้งหมดแล้วตรวจสอบอีกครั้งว่า ID ยังเป็นตัวล่าสุดหรือไม่
+            if (fetchId === currentDashboardFetchId) {
                 document.getElementById('dashboard-status-text').textContent = `โหลดข้อมูลเสร็จสิ้น (${users.length} สาขา)`;
-
                 dashboardIsFetching = false;
-
             }
-
         }
-
-
-        // ==========================================
-        // MULTI-SELECT BRANCH DROPDOWN LOGIC
-        // ==========================================
-
-        function setupBranchDropdown() {
-
-            const container = document.getElementById('branch-checkboxes');
-
-            if (container.children.length === 0) {
-
-                allUsersList.forEach(user => {
-
-                    const label = document.createElement('label');
-
-                    label.className = 'flex items-center gap-2 py-1 px-1.5 hover:bg-slate-100 rounded-lg cursor-pointer text-xs font-semibold text-slate-700';
-
-                    
-                    const cb = document.createElement('input');
-
-                    cb.type = 'checkbox';
-
-                    cb.value = user;
-
-                    cb.className = 'rounded text-fuchsia-600 focus:ring-fuchsia-500 w-4 h-4 cursor-pointer';
-
-                    cb.checked = true;
-
-                    selectedBranches.add(user);
-
-
-                    cb.addEventListener('change', () => {
-
-                        if (cb.checked) {
-
-                            selectedBranches.add(user);
-
-                        } else {
-
-                            selectedBranches.delete(user);
-
-                        }
-
-                        updateBranchDropdownLabel();
-
-                        startDashboardLoad();
-
-                    });
-
-
-                    label.appendChild(cb);
-
-                    label.appendChild(document.createTextNode(user));
-
-                    container.appendChild(label);
-
-                });
-
-                updateBranchDropdownLabel();
-
-            }
-
-        }
-
-
-        function updateBranchDropdownLabel() {
-
-            const label = document.getElementById('branch-dropdown-label');
-
-            if (selectedBranches.size === 0) {
-
-                label.textContent = "ไม่ได้เลือกสาขาเลย";
-
-            } else if (selectedBranches.size === allUsersList.length) {
-
-                label.textContent = "เลือกทุกสาขา (" + allUsersList.length + ")";
-
-            } else {
-
-                label.textContent = `เลือกแล้ว (${selectedBranches.size} สาขา)`;
-
-            }
-
-       }
-
-
-        document.getElementById('branch-select-all').addEventListener('click', (e) => {
-
-            e.stopPropagation();
-
-            selectedBranches.clear();
-
-            const checkboxes = document.querySelectorAll('#branch-checkboxes input[type="checkbox"]');
-
-            checkboxes.forEach(cb => {
-
-                cb.checked = true;
-
-                selectedBranches.add(cb.value);
-
-            });
-
-            updateBranchDropdownLabel();
-
-            startDashboardLoad();
- 
-        });
-
- 
-       document.getElementById('branch-clear-all').addEventListener('click', (e) => {
-
-            e.stopPropagation();
-
-            selectedBranches.clear();
-
-            const checkboxes = document.querySelectorAll('#branch-checkboxes input[type="checkbox"]');
-
-            checkboxes.forEach(cb => {
-
-                cb.checked = false;
-
-            });
- 
-           updateBranchDropdownLabel();
-
-            startDashboardLoad();
- 
-        });
-
-
-        const dropdownBtn = document.getElementById('branch-dropdown-btn');
-
-        const dropdownMenu = document.getElementById('branch-dropdown-menu');
-
-        const dropdownArrow = document.getElementById('branch-arrow');
-
-
-        dropdownBtn.addEventListener('click', (e) => {
-
-            e.stopPropagation();
-
-            const isHidden = dropdownMenu.classList.contains('hidden');
-
-            if (isHidden) {
-
-                dropdownMenu.classList.remove('hidden');
-
-               dropdownArrow.classList.add('rotate-180');
-
-            } else {
-
-                dropdownMenu.classList.add('hidden');
-
-                dropdownArrow.classList.remove('rotate-180');
-
-            }
-
-        });
-
-
-        document.addEventListener('click', (e) => {
-
-            if (!document.getElementById('branch-select-container').contains(e.target)) {
-
-                dropdownMenu.classList.add('hidden');
-
-                dropdownArrow.classList.remove('rotate-180');
-
-            }
-
-        });
-
-
-        // ==========================================
-        // MULTI-SELECT DEVICE DROPDOWN LOGIC
-        // ==========================================
-
-        function setupDeviceDropdown() {
-
-            const container = document.getElementById('device-checkboxes');
-
-            if (container && container.children.length === 0) {
-
-                masterDevices.forEach(device => {
-
-                    const label = document.createElement('label');
-
-                    label.className = 'flex items-center gap-2 py-1 px-1.5 hover:bg-slate-100 rounded-md cursor-pointer text-xs font-semibold text-slate-700 whitespace-nowrap';
-
-                    
-                    const cb = document.createElement('input');
-
-                    cb.type = 'checkbox';
-
-                    cb.value = device;
-
-                    cb.className = 'rounded text-fuchsia-600 focus:ring-fuchsia-500 w-3.5 h-3.5 cursor-pointer';
-
-                    cb.checked = selectedDevices.has(device);
-
-
-                    cb.addEventListener('change', () => {
-
-                        if (cb.checked) {
- 
-                            selectedDevices.add(device);
-
-                        } else {
-
-                            selectedDevices.delete(device);
-
-                        }
-
-                        updateDeviceDropdownLabel();
-
-                        startDashboardLoad();
-
-                    });
-
-                    
-                    label.appendChild(cb);
-
-                    label.appendChild(document.createTextNode(device));
- 
-                   container.appendChild(label);
-
-                });
-
-                updateDeviceDropdownLabel();
-
-            }
-
-        }
-
-
-        function updateDeviceDropdownLabel() {
-
-            const label = document.getElementById('device-dropdown-label');
-
-            if (!label) return;
-
-            if (selectedDevices.size === 0) {
-
-                label.textContent = "ไม่ได้เลือกอุปกรณ์เลย";
-
-            } else if (selectedDevices.size === masterDevices.length) {
-
-                label.textContent = "เลือกทุกอุปกรณ์ (" + masterDevices.length + ")";
-
-            } else {
-
-                label.textContent = `เลือกแล้ว (${selectedDevices.size})`;
-
-            }
-
-        }
-
-
-        const devDropdownBtn = document.getElementById('device-dropdown-btn');
-
-        const devDropdownMenu = document.getElementById('device-dropdown-menu');
-
-        const devDropdownArrow = document.getElementById('device-arrow');
-
-
-        if (devDropdownBtn) {
-
-            devDropdownBtn.addEventListener('click', (e) => {
-
-                e.stopPropagation();
-
-                const isHidden = devDropdownMenu.classList.contains('hidden');
-
-                if (isHidden) {
-
-                    devDropdownMenu.classList.remove('hidden');
-
-                    devDropdownArrow.classList.add('rotate-180');
-
-                } else {
-
-                    devDropdownMenu.classList.add('hidden');
-
-                   devDropdownArrow.classList.remove('rotate-180');
-
-                }
-
-            });
-
-
-            document.getElementById('device-select-all').addEventListener('click', (e) => {
-
-                e.stopPropagation();
-
-                const checkboxes = document.querySelectorAll('#device-checkboxes input[type="checkbox"]');
-
-                checkboxes.forEach(cb => {
-
-                    cb.checked = true;
-
-                    selectedDevices.add(cb.value);
-
-                });
- 
-               updateDeviceDropdownLabel();
-
-                startDashboardLoad();
-
-            });
-
-
-            document.getElementById('device-clear-all').addEventListener('click', (e) => {
-
-                e.stopPropagation();
-
-                selectedDevices.clear();
-
-                const checkboxes = document.querySelectorAll('#device-checkboxes input[type="checkbox"]');
-
-                checkboxes.forEach(cb => {
-
-                    cb.checked = false;
-
-                });
-
-                updateDeviceDropdownLabel();
-
-                startDashboardLoad();
-
-            });
-
-
-            document.addEventListener('click', (e) => {
-
-                const devContainer = document.getElementById('device-select-container');
-
-                if (devContainer && !devContainer.contains(e.target)) {
-
-                    if (devDropdownMenu) devDropdownMenu.classList.add('hidden');
-
-                    if (devDropdownArrow) devDropdownArrow.classList.remove('rotate-180');
-
-                }
-
-            });
-
-        }
-
 
         window.showDashboardDetail = function(device, user, daysStr) {
-
             document.getElementById('dash-modal-title').textContent = `${device}`;
-
             document.getElementById('dash-modal-subtitle').textContent = `สาขา: ${user}`;
-
             const days = JSON.parse(daysStr);
-
             const container = document.getElementById('dash-modal-days-container');
-
             container.innerHTML = '';
-
+            
             if (days.length === 0) {
-
                 container.innerHTML = '<span class="text-sm text-slate-500 italic">ไม่พบวันที่บันทึกข้อมูล</span>';
-
             } else {
-
                 days.sort((a,b)=>a-b).forEach(d => {
-
                     container.insertAdjacentHTML('beforeend', `<span class="w-8 h-8 flex items-center justify-center bg-fuchsia-100 text-fuchsia-700 font-bold rounded-lg text-sm shadow-sm">${d}</span>`);
-
                 });
-
             }
-
             document.getElementById('dashboard-detail-modal').classList.remove('hidden');
         };
 
-
-        const statusFilterElement = document.getElementById('dashboard-filter-status');
-
-        if (statusFilterElement) {
-
-            statusFilterElement.addEventListener('change', () => {
-
-                applyDashboardFilters();
- 
-            });
-
-        }
-
-
         document.getElementById('dash-modal-close').addEventListener('click', () => {
-
             document.getElementById('dashboard-detail-modal').classList.add('hidden');
-
         });
-
 
         document.getElementById('dashboard-refresh-button').addEventListener('click', () => {
-
+            // ไม่ต้องสนใจว่าโหลดเสร็จหรือยัง ให้ทำการโหลดใหม่และยกเลิกของเก่าทันที
             startDashboardLoad();
-
         });
 
-
+        // ควบคุมการเปลี่ยนเดือนผ่าน Dropdown ที่เพิ่มเข้าไปใหม่
         document.getElementById('dashboard-month-select').addEventListener('change', () => {
-
             const m = document.getElementById('dashboard-month-select').value;
-
             const y = document.getElementById('dashboard-year-select').value;
-
             document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
-
             startDashboardLoad();
-
         });
-
 
         document.getElementById('dashboard-year-select').addEventListener('change', () => {
-
             const m = document.getElementById('dashboard-month-select').value;
-
             const y = document.getElementById('dashboard-year-select').value;
-
             document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
-
             startDashboardLoad();
-
         });
 
-
-        // ==========================================
-        // SMART SEARCH DEBOUNCE LOGIC
-        // ==========================================
-
-        let searchDebounceTimer = null;
-
-        function handleSearchInput() {
-
-            applyDashboardFilters();
-
-            clearTimeout(searchDebounceTimer);
-
-            searchDebounceTimer = setTimeout(() => {
-
-                startDashboardLoad();
- 
-            }, 600);
-
-        }
-
-
         function setupDashboardSearch() {
-
             const input = document.getElementById('dashboard-search-input');
-
-            if (!input) return;
-
-            input.removeEventListener('input', handleSearchInput);
- 
-            input.addEventListener('input', handleSearchInput);
-
-        }
-
-
-        // ==========================================
-        // FILTER FUNCTION
-        // ==========================================
-
-        function applyDashboardFilters() {
-
-            const searchInput = document.getElementById('dashboard-search-input');
-
-            const statusFilterElement = document.getElementById('dashboard-filter-status');
-
-            
-            if (!searchInput || !statusFilterElement) return;
-
-
-            const term = searchInput.value.toLowerCase().trim();
-
-            const statusFilter = statusFilterElement.value;
-
-            const rows = document.querySelectorAll('#dashboard-table-body tr');
-
-
-            rows.forEach(row => {
-
-                const user = row.dataset.user;
-
-                const userLower = user.toLowerCase();
-
-                
-                let matchSearch = userLower.includes(term);
-
-                let matchBranch = selectedBranches.has(user);
-
-                let matchStatus = false;
-
-
-                if (statusFilter === 'ALL' || selectedDevices.size === 0) {
-
-                    matchStatus = true;
-
-                } else {
-
-                    let hasComplete = false;
-
-                    let hasIncomplete = false;
-
-                    let hasLoading = false;
-
-                    let hasData = false;
-
-
-                    for (let device of selectedDevices) {
-
-                        const deviceIndex = masterDevices.indexOf(device);
-
-                        if (deviceIndex > -1) {
-
-                            const rowIndex = row.id.split('-')[2];
-
-                            const cell = document.getElementById(`dash-cell-${rowIndex}-${deviceIndex}`);
-
-                            
-                            if (cell) {
-
-                                const html = cell.innerHTML;
-
-                                if (html.includes('loader-sm')) {
- 
-                                   hasLoading = true;
-
-                                } else if (html.includes('bg-teal-100')) {
-
-                                    hasComplete = true;
-
-                                    hasData = true;
-                                } else if (html.includes('bg-amber-100')) {
-
-                                    hasIncomplete = true;
-
-                                    hasData = true;
-
-                                }
-
-                                
-                                if (statusFilter === 'COMPLETE' && hasIncomplete) break;
-
-                                if (statusFilter === 'INCOMPLETE' && hasIncomplete) break;
-
-                                if (statusFilter === 'NODATA' && hasData) break;
-
-                            }
-
-                        }
- 
-                   }
-
- 
-                   if (statusFilter === 'COMPLETE') {
-
-                        matchStatus = hasIncomplete ? false : (hasLoading ? true : hasComplete);
-
-                    } else if (statusFilter === 'INCOMPLETE') {
-
-                        matchStatus = hasIncomplete ? true : (hasLoading ? true : false);
-
-                    } else if (statusFilter === 'NODATA') {
-
-                        matchStatus = hasData ? false : true;
-
+            input.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const rows = document.querySelectorAll('#dashboard-table-body tr');
+                rows.forEach(row => {
+                    const user = row.dataset.user.toLowerCase();
+                    if (user.includes(term)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
                     }
-
-                }
-
-
-                if (matchSearch && matchBranch && matchStatus) {
-
-                    row.style.display = '';
-
-                } else {
-
-                    row.style.display = 'none';
-
-                }
-
+                });
             });
-
         }
-
-
 
         // --- Event Listeners Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
