@@ -1,4 +1,4 @@
-const CACHE_NAME = 'checklog-cache-v4.6';
+const CACHE_NAME = 'checklog-cache-v4.6.0';
 
 // ไฟล์ที่ต้องการแคชเก็บไว้เพื่อให้โหลดเร็วขึ้นหรือใช้งานตอนออฟไลน์ได้บางส่วน
 const ASSETS_TO_CACHE = [
