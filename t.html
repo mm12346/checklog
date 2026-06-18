@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Check Log</title>
+    <title>Check Log V4.5 - Integrated</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,11 +71,6 @@
             background-color: #a1a1aa; 
             border-radius: 4px;
         }
-        #daily-user-buttons-container::-webkit-scrollbar-thumb:hover,
-        #monthly-user-buttons-container::-webkit-scrollbar-thumb:hover,
-        #special-monthly-user-buttons-container::-webkit-scrollbar-thumb:hover {
-            background-color: #71717a; 
-        }
 
         body.overflow-hidden { overflow: hidden; }
         .loader-sm { width: 20px; height: 20px; }
@@ -83,7 +78,8 @@
 
         #main-menu,
         #user-manual-container header,
-        #dashboard-app-container header { 
+        #dashboard-app-container header,
+        #defect-summary-app-container header { 
             padding-top: var(--safe-area-inset-top);
         }
         
@@ -159,9 +155,7 @@
         }
         .preview-controls button:disabled { background-color: #999; cursor: not-allowed; }
         .preview-controls .print-btn { background-color: #4CAF50; color: white; }
-        .preview-controls .print-btn:hover:not(:disabled) { background-color: #45a049; }
         .preview-controls .close-btn { background-color: #f44336; color: white; }
-        .preview-controls .close-btn:hover { background-color: #e53935; }
         
         .monthly-detail-table { font-size: 8px; line-height: 1.1; table-layout: fixed; width: 100%; }
         .monthly-detail-table th, .monthly-detail-table td { padding: 1px 2px; word-wrap: break-word; }
@@ -172,51 +166,23 @@
         .mobile-detail-container { display: none; }
 
         /* Dashboard Specific Styles */
-        .dashboard-table-container {
-            scrollbar-width: thin;
-            scrollbar-color: #cbd5e1 #f8fafc;
-        }
-        .dashboard-table-container::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        .dashboard-table-container::-webkit-scrollbar-track {
-            background: #f8fafc;
-            border-radius: 4px;
-        }
-        .dashboard-table-container::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1;
-            border-radius: 4px;
-        }
-        .dashboard-table th {
-            position: sticky;
-            top: 0;
-            background-color: #f1f5f9;
-            z-index: 10;
-            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-        }
-        .dashboard-table td:first-child, .dashboard-table th:first-child {
-            position: sticky;
-            left: 0;
-            z-index: 20;
-        }
-        .dashboard-table td:first-child {
-            background-color: #ffffff;
-            box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1);
-        }
-        .dashboard-table th:first-child {
-            z-index: 30;
-        }
+        .dashboard-table-container { scrollbar-width: thin; scrollbar-color: #cbd5e1 #f8fafc; }
+        .dashboard-table-container::-webkit-scrollbar { width: 8px; height: 8px; }
+        .dashboard-table-container::-webkit-scrollbar-track { background: #f8fafc; border-radius: 4px; }
+        .dashboard-table-container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+        .dashboard-table th { position: sticky; top: 0; background-color: #f1f5f9; z-index: 10; box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+        .dashboard-table td:first-child, .dashboard-table th:first-child { position: sticky; left: 0; z-index: 20; }
+        .dashboard-table td:first-child { background-color: #ffffff; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1); }
+        .dashboard-table th:first-child { z-index: 30; }
 
-        /* Multi-select Dropdown CSS */
+        /* Defect Summary Specific Styles */
+        .defect-table-container { scrollbar-width: thin; scrollbar-color: #cbd5e1 #f8fafc; }
+        .defect-table-container::-webkit-scrollbar { width: 8px; height: 8px; }
+        .defect-table-container::-webkit-scrollbar-track { background: #f8fafc; border-radius: 4px; }
+        .defect-table-container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+        .defect-table th { position: sticky; top: 0; background-color: #fee2e2; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
-        .dropdown-menu {
-
-            max-height: 250px;
-
-            overflow-y: auto;
-
-        }
+        .dropdown-menu { max-height: 250px; overflow-y: auto; }
 
         @media (max-width: 767px) {
             .printable-table-container { display: none; }
@@ -225,12 +191,6 @@
                 background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 1rem; 
                 padding: 1rem; margin-bottom: 1.25rem; 
                 box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-                transition: transform 0.2s, box-shadow 0.2s;
-            }
-            .mobile-day-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
-            .mobile-day-card-header {
-                display: flex; flex-direction: column; align-items: flex-start; gap: 0.25rem; 
-                padding-bottom: 0.75rem; border-bottom: 1px solid #f1f5f9; margin-bottom: 1rem;
             }
              .mobile-check-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; }
             .mobile-check-item { background-color: #f8fafc; border-radius: 0.75rem; padding: 0.75rem; border: 1px solid #e2e8f0; }
@@ -245,9 +205,7 @@
         @media print {
             body > * { display: none !important; }
             #monthly-detail-page-container, #monthly-detail-page-content { display: block !important; }
-            #monthly-detail-page-container {
-                position: static !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 0 !important; border: none !important; box-shadow: none !important;
-            }
+            #monthly-detail-page-container { position: static !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 0 !important; border: none !important; box-shadow: none !important; }
             #monthly-detail-page-content { border: none !important; box-shadow: none !important; }
             main { padding: 0 !important; }
             .max-w-full { max-width: none !important; }
@@ -262,9 +220,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800">
 
-    <!-- Main Menu Page -->
     <div id="main-menu" class="relative flex flex-col items-center justify-center min-h-screen bg-slate-50 overflow-hidden p-4 sm:p-8">
-        <!-- Decorative Background Shapes -->
         <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse" style="animation-duration: 8s;"></div>
         <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-rose-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse" style="animation-duration: 10s; animation-delay: 2s;"></div>
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
@@ -278,7 +234,6 @@
         </div>
 
         <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 w-full max-w-5xl">
-            <!-- Menu Item 1: Daily Check -->
             <a href="#" id="menu-daily-check" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-indigo-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative w-20 h-20 bg-gradient-to-br from-indigo-100 to-white text-indigo-600 rounded-2xl shadow-inner border border-indigo-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
@@ -288,7 +243,6 @@
                 <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">สรุปสถานะการตรวจสอบรายวัน</p>
             </a>
             
-            <!-- Menu Item 2: Summary -->
             <a href="#" id="menu-summary" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-amber-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-amber-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative w-20 h-20 bg-gradient-to-br from-amber-100 to-white text-amber-600 rounded-2xl shadow-inner border border-amber-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
@@ -298,23 +252,17 @@
                 <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">สรุปสถานะการตรวจสอบรายเดือน</p>
             </a>
 
-            <!-- Menu Item 3: Special Monthly Check -->
             <a href="#" id="menu-special-monthly" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-rose-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-rose-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative w-20 h-20 bg-gradient-to-br from-rose-100 to-white text-rose-600 rounded-2xl shadow-inner border border-rose-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 drop-shadow-sm">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier"> 
-                            <path d="M12.8324 21.8013C15.9583 21.1747 20 18.926 20 13.1112C20 7.8196 16.1267 4.29593 13.3415 2.67685C12.7235 2.31757 12 2.79006 12 3.50492V5.3334C12 6.77526 11.3938 9.40711 9.70932 10.5018C8.84932 11.0607 7.92052 10.2242 7.816 9.20388L7.73017 8.36604C7.6304 7.39203 6.63841 6.80075 5.85996 7.3946C4.46147 8.46144 3 10.3296 3 13.1112C3 20.2223 8.28889 22.0001 10.9333 22.0001C11.0871 22.0001 11.2488 21.9955 11.4171 21.9858C10.1113 21.8742 8 21.064 8 18.4442C8 16.3949 9.49507 15.0085 10.631 14.3346C10.9365 14.1533 11.2941 14.3887 11.2941 14.7439V15.3331C11.2941 15.784 11.4685 16.4889 11.8836 16.9714C12.3534 17.5174 13.0429 16.9454 13.0985 16.2273C13.1161 16.0008 13.3439 15.8564 13.5401 15.9711C14.1814 16.3459 15 17.1465 15 18.4442C15 20.4922 13.871 21.4343 12.8324 21.8013Z" fill="currentColor"></path> 
-                        </g>
+                        <path d="M12.8324 21.8013C15.9583 21.1747 20 18.926 20 13.1112C20 7.8196 16.1267 4.29593 13.3415 2.67685C12.7235 2.31757 12 2.79006 12 3.50492V5.3334C12 6.77526 11.3938 9.40711 9.70932 10.5018C8.84932 11.0607 7.92052 10.2242 7.816 9.20388L7.73017 8.36604C7.6304 7.39203 6.63841 6.80075 5.85996 7.3946C4.46147 8.46144 3 10.3296 3 13.1112C3 20.2223 8.28889 22.0001 10.9333 22.0001C11.0871 22.0001 11.2488 21.9955 11.4171 21.9858C10.1113 21.8742 8 21.064 8 18.4442C8 16.3949 9.49507 15.0085 10.631 14.3346C10.9365 14.1533 11.2941 14.3887 11.2941 14.7439V15.3331C11.2941 15.784 11.4685 16.4889 11.8836 16.9714C12.3534 17.5174 13.0429 16.9454 13.0985 16.2273C13.1161 16.0008 13.3439 15.8564 13.5401 15.9711C14.1814 16.3459 15 17.1465 15 18.4442C15 20.4922 13.871 21.4343 12.8324 21.8013Z" fill="currentColor"></path> 
                     </svg>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-800 relative z-10 leading-tight">Month Check<br><span class="text-sm font-semibold text-rose-500 mt-2 block bg-white/60 py-1 px-3 rounded-full border border-rose-100">อุปกรณ์ดับเพลิง/ไฟฉุกเฉิน</span></h2>
             </a>
 
-            <!-- NEW: Menu Item 4: Dashboard -->
-            <a href="#" id="menu-dashboard" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-fuchsia-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden lg:col-start-1 lg:col-end-3 sm:col-span-2 md:col-span-1">
+            <a href="#" id="menu-dashboard" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-fuchsia-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-fuchsia-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative w-20 h-20 bg-gradient-to-br from-fuchsia-100 to-white text-fuchsia-600 rounded-2xl shadow-inner border border-fuchsia-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -323,11 +271,21 @@
                     </svg>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-800 relative z-10">Dashboard</h2>
-                <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">ภาพรวมข้อมูลทุกสาขา (ผู้ดูแลระบบ)</p>
+                <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">ภาพรวมข้อมูลทุกสาขา</p>
+            </a>
+            
+            <a href="#" id="menu-defect-summary" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-red-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-red-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative w-20 h-20 bg-gradient-to-br from-red-100 to-white text-red-600 rounded-2xl shadow-inner border border-red-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 relative z-10">สรุปอุปกรณ์ชำรุด</h2>
+                <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">สแกนหาอุปกรณ์ที่ชำรุดทุกสาขา</p>
             </a>
 
-            <!-- Menu Item 5: User Manual -->
-            <a href="#" id="menu-user-manual" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-emerald-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden sm:col-span-2 lg:col-span-1 md:col-span-1">
+            <a href="#" id="menu-user-manual" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-emerald-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-emerald-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative w-20 h-20 bg-gradient-to-br from-emerald-100 to-white text-emerald-600 rounded-2xl shadow-inner border border-emerald-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 drop-shadow-sm" viewBox="0 0 24 24" fill="currentColor">
@@ -337,342 +295,258 @@
                 <h2 class="text-2xl font-bold text-slate-800 relative z-10">คู่มือการใช้งาน</h2>
                 <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">วิดีโอสอนการใช้งานโปรแกรม</p>
             </a>
-<a href="#" id="menu-defect-summary" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-red-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-br from-red-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div class="relative w-20 h-20 bg-gradient-to-br from-red-100 to-white text-red-600 rounded-2xl shadow-inner border border-red-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                </div>
-                <h2 class="text-2xl font-bold text-slate-800 relative z-10">อุปกรณ์ชำรุด</h2>
-                <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">สรุปรายการอุปกรณ์ที่ชำรุด</p>
-            </a>
         </div>
         
         <div class="relative z-10 text-center mt-16 mb-4">
             <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 text-xs font-semibold text-slate-500 backdrop-blur-md border border-slate-200/60 shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-indigo-400"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.83-5.83M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
-                V 4.5 (เพิ่มตู้ดับเพลิง, ถังดับเพลิง, ไฟฉุกเฉิน, แดชบอร์ด)
+                V 4.5 (Integrated Defect Summary)
             </span>
         </div>
     </div>
 
-    <div id="dashboard-app-container" class="hidden min-h-screen bg-slate-50">
-
-        <header class="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
-
-            <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-
-              <div class="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-
+    <div id="defect-summary-app-container" class="hidden min-h-screen bg-slate-50 flex flex-col">
+        <header class="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-sm border-b border-red-200 shadow-sm">
+            <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="py-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+                    
                     <div class="flex items-center gap-3">
-
-                        <button id="dashboard-back-to-menu-button" title="กลับไปหน้าเมนูหลัก" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition">
-
+                        <button id="defect-back-to-menu-button" title="กลับไปหน้าหลัก" class="p-2 text-slate-500 hover:bg-red-50 hover:text-red-700 rounded-full transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m8-8l-8 8 8 8" /></svg>
-
                         </button>
-
                         <div class="flex items-center gap-2">
-
-                            <div class="p-1.5 bg-fuchsia-100 text-fuchsia-600 rounded-lg">
-
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
-
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
-
+                            <div class="p-1.5 bg-red-100 text-red-600 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                 </svg>
-
                             </div>
-
-                            <h1 class="text-xl font-bold text-slate-800">แดชบอร์ดภาพรวม</h1>
-
+                            <h1 class="text-xl font-bold text-slate-800">สรุปอุปกรณ์ชำรุด <span class="text-sm font-medium text-red-500 bg-red-50 px-2 py-0.5 rounded-full ml-2">Defect Report</span></h1>
                         </div>
-
                     </div>
 
+                    <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                        <div class="relative w-full sm:w-48" id="defect-branch-select-container">
+                            <button id="defect-branch-dropdown-btn" class="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl flex items-center justify-between text-sm text-slate-700 font-medium hover:bg-slate-200 transition shadow-sm">
+                                <span id="defect-branch-dropdown-label" class="truncate">กำลังโหลดสาขา...</span>
+                                <svg class="w-4 h-4 ml-2 shrink-0 transition-transform duration-200" id="defect-branch-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div id="defect-branch-dropdown-menu" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-3 dropdown-menu">
+                                <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
+                                    <button id="defect-branch-select-all" class="text-xs text-red-600 font-bold hover:underline">เลือกทั้งหมด</button>
+                                    <button id="defect-branch-clear-all" class="text-xs text-slate-500 font-bold hover:underline">ล้างทั้งหมด</button>
+                                </div>
+                                <div id="defect-branch-checkboxes" class="space-y-2 max-h-40 overflow-y-auto"></div>
+                            </div>
+                        </div>
+
+                        <div class="relative w-full sm:w-56" id="defect-device-select-container">
+                            <button id="defect-device-dropdown-btn" class="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl flex items-center justify-between text-sm text-slate-700 font-medium hover:bg-slate-200 transition shadow-sm">
+                                <span id="defect-device-dropdown-label" class="truncate">กำลังโหลดอุปกรณ์...</span>
+                                <svg class="w-4 h-4 ml-2 shrink-0 transition-transform duration-200" id="defect-device-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div id="defect-device-dropdown-menu" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-3 dropdown-menu min-w-max">
+                                <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
+                                    <button id="defect-device-select-all" class="text-xs text-red-600 font-bold hover:underline">เลือกทั้งหมด</button>
+                                    <button id="defect-device-clear-all" class="text-xs text-slate-500 font-bold hover:underline">ล้างทั้งหมด</button>
+                                </div>
+                                <div id="defect-device-checkboxes" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 flex-grow sm:w-auto">
+                            <input type="date" id="defect-filter-date" class="w-full sm:w-auto px-4 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-red-500 transition text-sm font-medium text-slate-700 cursor-pointer shadow-sm">
+                            <label class="flex items-center gap-2 cursor-pointer bg-slate-100 border border-slate-300 rounded-xl px-3 py-2 shadow-sm hover:bg-slate-200 transition">
+                                <input type="checkbox" id="defect-filter-all-month" class="rounded text-red-600 focus:ring-red-500 w-4 h-4 cursor-pointer transition">
+                                <span class="text-sm font-bold text-slate-700 whitespace-nowrap">ดูทั้งเดือน</span>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button id="defect-refresh-button" title="ค้นหาข้อมูลชำรุด" class="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded-xl shadow-sm transition flex items-center justify-center gap-2 font-semibold w-full sm:w-auto">
+                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                <span>ค้นหา</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto w-full flex-grow flex flex-col">
+            <div class="bg-white rounded-t-2xl shadow-sm border border-slate-200 border-b-0 p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div id="defect-loading-indicator" class="hidden loader-sm animate-spin rounded-full border-2 border-slate-300 border-t-red-600"></div>
+                    <p class="text-sm font-medium text-slate-600" id="defect-status-text">รอการกดค้นหาข้อมูล...</p>
+                </div>
+                <div class="text-sm font-semibold text-slate-700 bg-red-50 px-3 py-1.5 rounded-lg border border-red-100">
+                    พบรายการชำรุดรวม: <span id="defect-total" class="text-red-600 text-lg">0</span> รายการ
+                </div>
+            </div>
+
+            <div class="bg-white rounded-b-2xl shadow-lg border border-slate-200 overflow-hidden flex-grow relative min-h-[400px]">
+                <div class="defect-table-container overflow-auto absolute inset-0">
+                    <table class="defect-table w-full text-sm text-left whitespace-nowrap">
+                        <thead class="text-xs text-red-900 uppercase bg-red-100/80 border-b-2 border-red-200 shadow-sm">
+                            <tr>
+                                <th scope="col" class="px-6 py-4 font-bold tracking-wider w-24 text-center">วันที่ตรวจ</th>
+                                <th scope="col" class="px-6 py-4 font-bold tracking-wider w-32">สาขา</th>
+                                <th scope="col" class="px-6 py-4 font-bold tracking-wider w-48">อุปกรณ์</th>
+                                <th scope="col" class="px-6 py-4 font-bold tracking-wider w-32 text-center">หมายเลข</th>
+                                <th scope="col" class="px-6 py-4 font-bold tracking-wider">รายละเอียดข้อบกพร่อง / หมายเหตุ</th>
+                                <th scope="col" class="px-6 py-4 font-bold tracking-wider w-32">ผู้ตรวจสอบ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="defect-table-body" class="divide-y divide-slate-200 text-slate-700">
+                            <tr>
+                                <td colspan="6" class="px-6 py-12 text-center text-slate-500">
+                                    <svg class="w-16 h-16 mx-auto text-slate-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg>
+                                    กรุณากดปุ่ม <b>"ค้นหา"</b> เพื่อเริ่มสแกนหาอุปกรณ์ที่ชำรุดตามวันที่คุณระบุ
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="dashboard-app-container" class="hidden min-h-screen bg-slate-50">
+        <header class="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
+            <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <button id="dashboard-back-to-menu-button" title="กลับไปหน้าเมนูหลัก" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m8-8l-8 8 8 8" /></svg>
+                        </button>
+                        <div class="flex items-center gap-2">
+                            <div class="p-1.5 bg-fuchsia-100 text-fuchsia-600 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
+                                </svg>
+                            </div>
+                            <h1 class="text-xl font-bold text-slate-800">แดชบอร์ดภาพรวม</h1>
+                        </div>
+                    </div>
                     
                     <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-
                         <div class="relative w-full sm:w-44">
-
                             <input type="text" id="dashboard-search-input" placeholder="ค้นหาชื่อสาขา..." class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition text-sm">
-
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-3 top-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                         </div>
 
-
                         <div class="relative w-full sm:w-56" id="branch-select-container">
-
                             <button id="branch-dropdown-btn" class="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl flex items-center justify-between text-sm text-slate-700 font-medium hover:bg-slate-200 transition">
-
                                 <span id="branch-dropdown-label" class="truncate">กำลังโหลดสาขา...</span>
-
                                 <svg class="w-4 h-4 ml-2 shrink-0 transition-transform duration-200" id="branch-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-
                             </button>
-
                             <div id="branch-dropdown-menu" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-3 dropdown-menu">
-
                                 <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
-
                                     <button id="branch-select-all" class="text-xs text-fuchsia-600 font-bold hover:underline">เลือกทั้งหมด</button>
-
                                     <button id="branch-clear-all" class="text-xs text-slate-500 font-bold hover:underline">ล้างทั้งหมด</button>
-
                                 </div>
-
-                                <div id="branch-checkboxes" class="space-y-2 max-h-40 overflow-y-auto">
-
-                                    </div>
-
+                                <div id="branch-checkboxes" class="space-y-2 max-h-40 overflow-y-auto"></div>
                             </div>
-
                         </div>
-
                         
                         <div class="flex items-center gap-2 flex-grow sm:w-auto">
-
                             <select id="dashboard-month-select" class="w-full sm:w-auto px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 transition text-sm cursor-pointer outline-none font-medium text-slate-700 shadow-sm">
-
                                 <option value="01">มกราคม</option>
-
                                 <option value="02">กุมภาพันธ์</option>
-
                                 <option value="03">มีนาคม</option>
-
                                 <option value="04">เมษายน</option>
-
                                 <option value="05">พฤษภาคม</option>
-
                                 <option value="06">มิถุนายน</option>
-
                                 <option value="07">กรกฎาคม</option>
-
                                 <option value="08">สิงหาคม</option>
-
                                 <option value="09">กันยายน</option>
-
                                 <option value="10">ตุลาคม</option>
-
                                 <option value="11">พฤศจิกายน</option>
-
                                 <option value="12">ธันวาคม</option>
-
                             </select>
-
-                            <select id="dashboard-year-select" class="w-full sm:w-auto px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 transition text-sm cursor-pointer outline-none font-medium text-slate-700 shadow-sm">
-
-                                </select>
-
+                            <select id="dashboard-year-select" class="w-full sm:w-auto px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 transition text-sm cursor-pointer outline-none font-medium text-slate-700 shadow-sm"></select>
                             <input type="hidden" id="dashboard-month-picker">
-
                         </div>
-
 
                         <div class="flex items-center gap-2">
-
                             <button id="dashboard-refresh-button" title="โหลดข้อมูลใหม่" class="p-2 bg-fuchsia-600 text-white hover:bg-fuchsia-700 rounded-xl shadow-sm transition flex items-center justify-center">
-
                                 <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
-
                             </button>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </header>
 
-
         <main class="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto">
-
             <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden flex flex-col">
-
                 <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-
                     <div class="flex flex-col gap-2 w-full sm:w-auto">
-
                         <p class="text-sm font-medium text-slate-600" id="dashboard-status-text">กำลังรอโหลดข้อมูล...</p>
-
                         <div class="flex flex-wrap items-center gap-2 mt-1 w-full sm:w-auto">
-
                             <span class="text-xs font-semibold text-slate-500">ตัวกรอง:</span>
-
                             
                             <div class="relative w-48 sm:w-56" id="device-select-container">
-
                                 <button id="device-dropdown-btn" class="w-full px-2 py-1.5 bg-white border border-slate-300 rounded-lg flex items-center justify-between text-xs text-slate-700 font-medium hover:bg-slate-50 transition shadow-sm">
-
                                     <span id="device-dropdown-label" class="truncate">กำลังโหลดอุปกรณ์...</span>
-
                                     <svg class="w-4 h-4 ml-2 shrink-0 transition-transform duration-200" id="device-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-
                                 </button>
-
                                 <div id="device-dropdown-menu" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-xl z-50 p-2 dropdown-menu min-w-max">
-
                                     <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
-
                                         <button id="device-select-all" class="text-xs text-fuchsia-600 font-bold hover:underline">เลือกทั้งหมด</button>
-
                                         <button id="device-clear-all" class="text-xs text-slate-500 font-bold hover:underline">ล้างทั้งหมด</button>
-
                                     </div>
-
-                                    <div id="device-checkboxes" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-
-                                        </div>
-
+                                    <div id="device-checkboxes" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
                                 </div>
-
                             </div>
 
-
                             <select id="dashboard-filter-status" class="px-2 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-fuchsia-500 outline-none w-28 sm:w-32 text-slate-700 shadow-sm cursor-pointer transition">
-
                                 <option value="ALL">-- ทุกสถานะ --</option>
-
                                 <option value="COMPLETE">ครบ</option>
-
                                 <option value="INCOMPLETE">ยังไม่ครบ</option>
-
                                 <option value="NODATA">ไม่มีข้อมูล</option>
-
                             </select>
-
                         </div>
-
                     </div>
-
                     <div class="flex gap-4 text-xs font-semibold ml-auto sm:ml-0 mt-2 sm:mt-0">
-
                         <span class="flex items-center gap-1"><div class="w-3 h-3 bg-teal-100 rounded border border-teal-300"></div> ครบ</span>
-
                         <span class="flex items-center gap-1"><div class="w-3 h-3 bg-amber-100 rounded border border-amber-300"></div> ยังไม่ครบ</span>
-
                         <span class="flex items-center gap-1"><div class="w-3 h-3 bg-slate-100 rounded border border-slate-300"></div> ไม่มีข้อมูล</span>
-
                     </div>
-
                 </div>
-
                 
                 <div class="dashboard-table-container overflow-auto max-h-[70vh]">
-
                     <table class="dashboard-table w-full text-sm text-left whitespace-nowrap">
-
-                        <thead class="text-xs text-slate-700 uppercase bg-slate-100 border-b-2 border-slate-300" id="dashboard-table-head">
-
-                            </thead>
-
-                        <tbody id="dashboard-table-body" class="divide-y divide-slate-200 text-slate-700">
-
-                            </tbody>
-
+                        <thead class="text-xs text-slate-700 uppercase bg-slate-100 border-b-2 border-slate-300" id="dashboard-table-head"></thead>
+                        <tbody id="dashboard-table-body" class="divide-y divide-slate-200 text-slate-700"></tbody>
                     </table>
-
                 </div>
-
             </div>
-
         </main>
-
     </div>
-
-
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm flex flex-col transform transition-transform">
-
-            <div class="flex justify-between items-center p-5 border-b border-slate-100">
-
-                <div class="flex items-center gap-2 text-fuchsia-600">
-
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
-
-                    <h3 class="text-lg font-bold">ยืนยันตัวตน</h3>
-
-                </div>
-
-                <button id="password-modal-close" class="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition">
-
-                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-
-                </button>
-
-            </div>
-
-            <div class="p-6">
-
-                <p class="text-sm text-slate-500 mb-4 text-center">กรุณาใส่รหัสผ่านเพื่อเข้าสู่ระบบแดชบอร์ด</p>
-
-                <input type="password" id="dashboard-password-input" placeholder="รหัสผ่าน..." class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:outline-none transition text-center tracking-widest font-mono text-lg">
-
-                <p id="password-error-msg" class="text-red-500 text-xs text-center mt-2 hidden">รหัสผ่านไม่ถูกต้อง</p>
-
-            </div>
-
-            <div class="p-5 bg-slate-50 border-t border-slate-100 rounded-b-2xl">
-
-                <button id="password-submit-btn" class="w-full py-3 bg-fuchsia-600 text-white rounded-xl hover:bg-fuchsia-700 transition font-bold shadow-md hover:shadow-lg">เข้าสู่ระบบ</button>
-
-            </div>
-
-        </div>
-
-    </div>
-
 
     <div id="dashboard-detail-modal" class="hidden fixed inset-0 bg-black/60 z-[2000] flex items-center justify-center p-4 backdrop-blur-sm">
-
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col">
-
             <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50 rounded-t-2xl">
-
                 <div>
-
                     <h3 id="dash-modal-title" class="text-lg font-bold text-slate-800">รายละเอียด</h3>
-
                     <p id="dash-modal-subtitle" class="text-sm text-slate-500"></p>
-
                 </div>
-
                 <button id="dash-modal-close" class="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-full transition">
-
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-
                 </button>
-
             </div>
-
             <div class="p-6 max-h-[60vh] overflow-y-auto">
-
                 <div class="mb-4">
-
                     <p class="text-sm font-semibold text-slate-600 mb-2">วันที่พบการตรวจสอบข้อมูลในระบบ:</p>
-
-                    <div id="dash-modal-days-container" class="flex flex-wrap gap-2">
-
-                        </div>
-
+                    <div id="dash-modal-days-container" class="flex flex-wrap gap-2"></div>
                 </div>
-
                 <p class="text-xs text-slate-400 mt-4">* หมายเหตุ: แสดงเฉพาะวันที่พบร่องรอยการบันทึกข้อมูลในระบบ</p>
-
             </div>
-
         </div>
-
     </div>
 
-    <!-- Daily Check App Container -->
     <div id="daily-check-app-container" class="hidden">
-        <!-- Sidebar -->
         <aside id="daily-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
             <div class="flex items-center justify-center p-4 border-b border-slate-200">
                  <svg class="w-8 h-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Zm3.75 11.625a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg>
@@ -722,9 +596,7 @@
         </div>
     </div>
 
-    <!-- Monthly Summary Application Page -->
     <div id="monthly-summary-app-container" class="hidden">
-        <!-- Sidebar -->
         <aside id="monthly-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
             <div class="flex items-center justify-center p-4 border-b border-slate-200">
                  <svg class="w-8 h-8 text-amber-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
@@ -754,9 +626,6 @@
                             <button id="monthly-refresh-button" title="รีเฟรชข้อมูล" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed">
                                 <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
                             </button>
-                            <button id="monthly-export-excel-button" title="Export เป็น Excel" class="hidden text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -777,17 +646,11 @@
         </div>
     </div>
 
-    <!-- Special Monthly Summary Application Page (Fire/Emergency) -->
     <div id="special-monthly-summary-app-container" class="hidden">
-        <!-- Sidebar -->
         <aside id="special-monthly-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
             <div class="flex items-center justify-center p-4 border-b border-slate-200">
                  <svg class="w-8 h-8 text-rose-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                    <g id="SVGRepo_iconCarrier"> 
                         <path d="M12.8324 21.8013C15.9583 21.1747 20 18.926 20 13.1112C20 7.8196 16.1267 4.29593 13.3415 2.67685C12.7235 2.31757 12 2.79006 12 3.50492V5.3334C12 6.77526 11.3938 9.40711 9.70932 10.5018C8.84932 11.0607 7.92052 10.2242 7.816 9.20388L7.73017 8.36604C7.6304 7.39203 6.63841 6.80075 5.85996 7.3946C4.46147 8.46144 3 10.3296 3 13.1112C3 20.2223 8.28889 22.0001 10.9333 22.0001C11.0871 22.0001 11.2488 21.9955 11.4171 21.9858C10.1113 21.8742 8 21.064 8 18.4442C8 16.3949 9.49507 15.0085 10.631 14.3346C10.9365 14.1533 11.2941 14.3887 11.2941 14.7439V15.3331C11.2941 15.784 11.4685 16.4889 11.8836 16.9714C12.3534 17.5174 13.0429 16.9454 13.0985 16.2273C13.1161 16.0008 13.3439 15.8564 13.5401 15.9711C14.1814 16.3459 15 17.1465 15 18.4442C15 20.4922 13.871 21.4343 12.8324 21.8013Z" fill="currentColor"></path> 
-                    </g>
                  </svg>
                  <h1 class="text-xl font-bold text-slate-800 ml-2 text-center leading-tight">อุปกรณ์<br>ดับเพลิง</h1>
             </div>
@@ -815,9 +678,6 @@
                             <button id="special-monthly-refresh-button" title="รีเฟรชข้อมูล" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed">
                                 <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
                             </button>
-                            <button id="special-monthly-export-excel-button" title="Export เป็น Excel" class="hidden text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -838,7 +698,6 @@
         </div>
     </div>
 
-    <!-- Daily Detail Page -->
     <div id="daily-detail-page-container" class="hidden">
         <header class="sticky top-0 z-20 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -858,7 +717,6 @@
         </main>
     </div>
 
-    <!-- Monthly Detail Page -->
     <div id="monthly-detail-page-container" class="hidden">
         <header class="sticky top-0 z-20 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -869,9 +727,6 @@
                     <h1 id="monthly-detail-page-header" class="text-lg sm:text-xl font-bold text-slate-800 text-center flex-grow truncate">รายละเอียดข้อมูลรายเดือน</h1>
                     <div class="flex items-center gap-2">
                          <button id="monthly-detail-print-button" title="ดาวน์โหลด" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                        </button>
-                        <button id="monthly-detail-export-button" title="Export ตารางเป็น Excel" class="hidden text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                         </button>
                     </div>
@@ -885,7 +740,6 @@
         </main>
     </div>
 
-    <!-- User Manual Page -->
     <div id="user-manual-container" class="hidden">
         <header class="sticky top-0 z-20 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -905,7 +759,6 @@
         </main>
     </div>
 
-    <!-- Video Player Modal -->
     <div id="video-player-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
         <div class="bg-black rounded-lg shadow-2xl w-full max-w-4xl aspect-video relative">
             <button id="close-video-modal" class="absolute -top-3 -right-3 bg-white rounded-full p-1.5 text-slate-800 hover:bg-red-500 hover:text-white transition z-10 shadow-lg">
@@ -915,13 +768,11 @@
         </div>
     </div>
 
-    <!-- Full Screen Loader for Mobile Preview -->
     <div id="mobile-preview-loader" class="hidden fixed inset-0 bg-white/80 backdrop-blur-sm z-[2000] flex flex-col items-center justify-center">
         <div class="loader-lg mx-auto animate-spin rounded-full border-4 border-slate-200 border-t-amber-500"></div>
         <p class="mt-4 text-slate-700 font-semibold">กำลังเตรียมข้อมูลสำหรับแสดงตัวอย่าง...</p>
     </div>
 
-    <!-- Comment Modal -->
     <div id="comment-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col">
             <div class="flex justify-between items-center p-5 border-b border-slate-200">
@@ -941,101 +792,6 @@
         </div>
     </div>
 
-<div id="defect-summary-app-container" class="hidden min-h-screen flex-col bg-slate-50">
-        <header class="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-sm border-b border-red-200 shadow-sm">
-            <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="py-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-                    <div class="flex items-center gap-3">
-                        <button id="defect-back-to-menu-button" title="กลับไปหน้าหลัก" class="p-2 text-slate-500 hover:bg-red-50 hover:text-red-700 rounded-full transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m8-8l-8 8 8 8" /></svg>
-                        </button>
-                        <div class="flex items-center gap-2">
-                            <div class="p-1.5 bg-red-100 text-red-600 rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                            </div>
-                            <h1 class="text-xl font-bold text-slate-800">สรุปอุปกรณ์ชำรุด</h1>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-                        <div class="relative w-full sm:w-48" id="defect-branch-select-container">
-                            <button id="defect-branch-dropdown-btn" class="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl flex items-center justify-between text-sm text-slate-700 font-medium hover:bg-slate-200 transition shadow-sm">
-                                <span id="defect-branch-dropdown-label" class="truncate">กำลังโหลดสาขา...</span>
-                                <svg class="w-4 h-4 ml-2 shrink-0 transition-transform duration-200" id="defect-branch-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </button>
-                            <div id="defect-branch-dropdown-menu" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-3 dropdown-menu">
-                                <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
-                                    <button id="defect-branch-select-all" class="text-xs text-red-600 font-bold hover:underline">เลือกทั้งหมด</button>
-                                    <button id="defect-branch-clear-all" class="text-xs text-slate-500 font-bold hover:underline">ล้างทั้งหมด</button>
-                                </div>
-                                <div id="defect-branch-checkboxes" class="space-y-2 max-h-40 overflow-y-auto"></div>
-                            </div>
-                        </div>
-                        <div class="relative w-full sm:w-56" id="defect-device-select-container">
-                            <button id="defect-device-dropdown-btn" class="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl flex items-center justify-between text-sm text-slate-700 font-medium hover:bg-slate-200 transition shadow-sm">
-                                <span id="defect-device-dropdown-label" class="truncate">กำลังโหลดอุปกรณ์...</span>
-                                <svg class="w-4 h-4 ml-2 shrink-0 transition-transform duration-200" id="defect-device-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </button>
-                            <div id="defect-device-dropdown-menu" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-3 dropdown-menu min-w-max">
-                                <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
-                                    <button id="defect-device-select-all" class="text-xs text-red-600 font-bold hover:underline">เลือกทั้งหมด</button>
-                                    <button id="defect-device-clear-all" class="text-xs text-slate-500 font-bold hover:underline">ล้างทั้งหมด</button>
-                                </div>
-                                <div id="defect-device-checkboxes" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2 flex-grow sm:w-auto">
-                            <input type="date" id="defect-filter-date" class="w-full sm:w-auto px-4 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-red-500 transition text-sm font-medium text-slate-700 cursor-pointer shadow-sm">
-                            <label class="flex items-center gap-2 cursor-pointer bg-slate-100 border border-slate-300 rounded-xl px-3 py-2 shadow-sm hover:bg-slate-200 transition">
-                                <input type="checkbox" id="defect-filter-all-month" class="rounded text-red-600 focus:ring-red-500 w-4 h-4 cursor-pointer transition">
-                                <span class="text-sm font-bold text-slate-700 whitespace-nowrap">ดูทั้งเดือน</span>
-                            </label>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button id="defect-refresh-button" class="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded-xl shadow-sm transition flex items-center justify-center gap-2 font-semibold w-full sm:w-auto">
-                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                                <span>ค้นหา</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <main class="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto w-full flex-grow flex flex-col">
-            <div class="bg-white rounded-t-2xl shadow-sm border border-slate-200 border-b-0 p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div class="flex items-center gap-3">
-                    <div id="defect-loading-indicator" class="hidden loader-sm animate-spin rounded-full border-2 border-slate-300 border-t-red-600"></div>
-                    <p class="text-sm font-medium text-slate-600" id="defect-status-text">รอการกดค้นหาข้อมูล...</p>
-                </div>
-                <div class="text-sm font-semibold text-slate-700 bg-red-50 px-3 py-1.5 rounded-lg border border-red-100">
-                    พบรายการชำรุดรวม: <span id="defect-total-defects" class="text-red-600 text-lg">0</span> รายการ
-                </div>
-            </div>
-            <div class="bg-white rounded-b-2xl shadow-lg border border-slate-200 overflow-hidden flex-grow relative min-h-[400px]">
-                <div class="defect-table-container overflow-auto absolute inset-0">
-                    <table class="w-full text-sm text-left whitespace-nowrap">
-                        <thead class="text-xs text-red-900 uppercase bg-red-100/80 border-b-2 border-red-200 shadow-sm sticky top-0 z-10">
-                            <tr>
-                                <th scope="col" class="px-6 py-4 font-bold w-24 text-center">วันที่ตรวจ</th>
-                                <th scope="col" class="px-6 py-4 font-bold w-32">สาขา</th>
-                                <th scope="col" class="px-6 py-4 font-bold w-48">อุปกรณ์</th>
-                                <th scope="col" class="px-6 py-4 font-bold w-32 text-center">หมายเลข</th>
-                                <th scope="col" class="px-6 py-4 font-bold">รายละเอียดข้อบกพร่อง / หมายเหตุ</th>
-                                <th scope="col" class="px-6 py-4 font-bold w-32">ผู้ตรวจสอบ</th>
-                            </tr>
-                        </thead>
-                        <tbody id="defect-table-body" class="divide-y divide-slate-200 text-slate-700">
-                            <tr>
-                                <td colspan="6" class="px-6 py-12 text-center text-slate-500">
-                                    <svg class="w-16 h-16 mx-auto text-slate-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg>
-                                    กรุณากดปุ่ม <b>"ค้นหา"</b> เพื่อเริ่มสแกนหาอุปกรณ์ที่ชำรุดตามวันที่คุณระบุ
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
-    </div>
 
     <script>
         // --- Configuration ---
@@ -1076,6 +832,9 @@
         let currentEditingConfig = null;
         let currentEditingSource = null;
 
+        // Shared List
+        let allUsersList = [];
+
         // --- Helper Function: Get Column Index for 'Number' ---
         function getNumberColumnIndex(title) {
             if (!title) return 9; 
@@ -1090,7 +849,6 @@
         // --- Helper Function: Extract Number with Fallback ---
         function extractNumber(row, numberColIdx) {
             if (numberColIdx === 10) {
-                // หากให้ K เป็นหมายเลข แต่ผู้ใช้ยังไม่ได้ย้าย จะดึงค่าจาก J มาชดเชย
                 return String(row[10] || '').trim() || String(row[9] || '').trim();
             }
             return String(row[9] || '').trim();
@@ -1098,8 +856,7 @@
 
         // --- Helper Function: Get Data Start Index ---
         function getDataStartIndex(title, numberColIdx) {
-            let idx = (numberColIdx === 10) ? 11 : 10; // ปกติถ้าเลขอยู่ K(10) ข้อมูลจะเริ่ม L(11)
-            // ถ้าเป็นการ์ด Co2 ให้เริ่มที่คอลัมน์ M (Index 12)
+            let idx = (numberColIdx === 10) ? 11 : 10; 
             if (title && title.toLowerCase().replace(/\s+/g, '').includes('co2')) {
                 idx = 12; 
             }
@@ -1115,13 +872,11 @@
                 document.head.appendChild(styleEl);
             }
             if (lastViewBeforeMonthlyDetail === 'monthly-summary-app-container') {
-                // แนวนอน สำหรับ Month Check ปกติ
                 styleEl.textContent = `
                     @media print { @page { size: A4 landscape; margin: 0.5cm; } }
                     #print-preview-content .printable-table-container { width: 297mm; min-height: 210mm; }
                 `;
             } else {
-                // แนวตั้ง สำหรับ อุปกรณ์ดับเพลิง/ไฟฉุกเฉิน
                 styleEl.textContent = `
                     @media print { @page { size: A4 portrait; margin: 0.5cm; } }
                     #print-preview-content .printable-table-container { width: 210mm; min-height: 297mm; }
@@ -1139,7 +894,8 @@
                 document.getElementById('daily-detail-page-container'), 
                 document.getElementById('monthly-detail-page-container'), 
                 document.getElementById('user-manual-container'),
-                document.getElementById('dashboard-app-container') // เพิ่ม Dashboard
+                document.getElementById('dashboard-app-container'),
+                document.getElementById('defect-summary-app-container')
             ];
             views.forEach(view => {
                 if (view && view.id === viewToShow) {
@@ -1162,49 +918,13 @@
         function showDailyDetailPage() { showView('daily-detail-page-container'); }
         function showMonthlyDetailPage() { showView('monthly-detail-page-container'); }
         function showUserManual() { showView('user-manual-container'); }
-        function showDashboardApp() {
- 
-            showView('dashboard-app-container');
- 
-            
-            // เซ็ตค่าเดือน/ปี ปัจจุบันให้ Dashboard ทันทีที่เปิด
-
-            const today = new Date();
-
-            const yyyy = today.getFullYear();
-
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-
-            const mSelect = document.getElementById('dashboard-month-select');
-
-            const ySelect = document.getElementById('dashboard-year-select');
-
-            
-            if (ySelect.options.length === 0) {
-
-                for (let y = yyyy - 5; y <= yyyy + 5; y++) {
-
-                    const opt = document.createElement('option');
-
-                    opt.value = y;
-
-                    opt.text = y + 543;
-
-                    ySelect.appendChild(opt);
-
-                }
-
-            }
-
-            mSelect.value = mm;
-
-            ySelect.value = yyyy;
-
-            document.getElementById('dashboard-month-picker').value = `${yyyy}-${mm}`;
-
-            
-            startDashboardLoad(); // โหลดข้อมูลทันทีโดยไม่ต้องใส่รหัส
-
+        function showDashboardApp() { 
+            showView('dashboard-app-container'); 
+            startDashboardLoad(); // เข้าสู่ระบบและโหลดทันที (เอารหัสผ่านออกแล้ว)
+        }
+        function showDefectSummaryApp() {
+            showView('defect-summary-app-container');
+            initDefectPage();
         }
 
         // --- Sidebar Logic ---
@@ -1363,82 +1083,44 @@
         }
 
         // --- API Call Utility ---
-        // --- ระบบควบคุมการกดยกเลิกโหลดของเก่า เพื่อตอบสนองการสลับเปลี่ยนตัวกรองได้ทันที ---
-
         let currentAbortController = null;
 
-
         async function apiCall(action, payload = {}, scriptType = 'daily', abortSignal = null) {
-
             const isGet = action.startsWith('load') || action.startsWith('get') || action.startsWith('getDataLabelsForCard') || action === 'getAllUsers';
-
-            const options = {
- 
-                method: isGet ? 'GET' : 'POST',
- 
+            const options = { 
+                method: isGet ? 'GET' : 'POST', 
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-
                 signal: abortSignal 
             };
 
             const urls = scriptType === 'daily' ? [...SCRIPT_URLS] : [...MONTHLY_SCRIPT_URLS];
 
-            
-            // สุ่ม URL เพื่อกระจายโหลด (ของ Check log v4.5)
-
+            // สุ่ม URL เพื่อกระจายโหลด
             for (let i = urls.length - 1; i > 0; i--) {
-
                 const j = Math.floor(Math.random() * (i + 1));
-
                 [urls[i], urls[j]] = [urls[j], urls[i]];
- 
             }
 
-            
             for (const baseUrl of urls) {
-
                 const url = new URL(baseUrl);
-
                 if (isGet) {
-
                     Object.entries({ action, ...payload }).forEach(([key, value]) => url.searchParams.append(key, value));
-
                 } else {
-
                     options.body = JSON.stringify({ action, ...payload });
-
                 }
 
                 try {
-
                     const res = await fetch(url, options);
-
                     if (!res.ok) continue;
-
                     const result = await res.json();
-
                     if (result.error || result.success === false) continue;
-
                     return result;
-
                 } catch (error) {
- 
-                    // รองรับการ Abort จากแดชบอร์ด
-
-                    if (error.name === 'AbortError') {
-
-                        throw error;
- 
-                    }
-
+                    if (error.name === 'AbortError') { throw error; }
                     continue;
- 
                 }
-
             }
-
             throw new Error(`Failed to fetch data from API endpoints for action: ${action}.`);
-
         }
 
         // --- User Loading ---
@@ -1461,6 +1143,11 @@
                         localStorage.setItem('cached_user_list', JSON.stringify(users));
                         localStorage.setItem('cached_user_list_version', USER_LIST_VERSION);
                     }
+                }
+                
+                // เก็บลง Global หากยังไม่มี
+                if (allUsersList.length === 0) {
+                    allUsersList = users;
                 }
 
                 targetUserButtonsContainer.innerHTML = '';
@@ -1522,9 +1209,8 @@
                 const allConfigs = Array.isArray(result.config) ? result.config : [];
                 const specialKeywords = ['ตู้น้ำดับเพลิง', 'ไฟฉุกเฉิน', 'ถังดับเพลิงco2', 'ถังดับเพลิง', 'co2', 'เคมีแห้ง'];
                 
-                // กรองการ์ดกลุ่ม Special ออกจาก Daily Check
                 cardConfigurations = allConfigs.filter(config => {
-                    if (config.sheetId === 'N/A') return false; // ซ่อนการ์ดที่ sheetId เป็น N/A ทันที
+                    if (config.sheetId === 'N/A') return false; 
                     const normalizedTitle = config.title.toLowerCase().replace(/\s+/g, '');
                     const isSpecial = specialKeywords.some(kw => {
                         const normalizedKw = kw.toLowerCase().replace(/\s+/g, '');
@@ -1687,9 +1373,8 @@
                 const allConfigs = Array.isArray(result.config) ? result.config : [];
                 const specialKeywords = ['ตู้น้ำดับเพลิง', 'ไฟฉุกเฉิน', 'ถังดับเพลิงco2', 'ถังดับเพลิง', 'co2', 'เคมีแห้ง'];
                 
-                // กรองการ์ดกลุ่ม Special ออกจาก Month Check ปกติด้วย
                 cardConfigurations = allConfigs.filter(config => {
-                    if (config.sheetId === 'N/A') return false; // ซ่อนการ์ดที่ sheetId เป็น N/A ทันที
+                    if (config.sheetId === 'N/A') return false; 
                     const normalizedTitle = config.title.toLowerCase().replace(/\s+/g, '');
                     const isSpecial = specialKeywords.some(kw => {
                         const normalizedKw = kw.toLowerCase().replace(/\s+/g, '');
@@ -1903,7 +1588,7 @@
                 const allConfigs = Array.isArray(result.config) ? result.config : [];
                 const keywords = ['ตู้น้ำดับเพลิง', 'ไฟฉุกเฉิน', 'ถังดับเพลิงco2', 'ถังดับเพลิง', 'co2', 'เคมีแห้ง'];
                 specialCardConfigurations = allConfigs.filter(config => {
-                    if (config.sheetId === 'N/A') return false; // ซ่อนการ์ดที่ sheetId เป็น N/A ทันที
+                    if (config.sheetId === 'N/A') return false; 
                     const normalizedTitle = config.title.toLowerCase().replace(/\s+/g, '');
                     return keywords.some(kw => {
                         const normalizedKw = kw.toLowerCase().replace(/\s+/g, '');
@@ -2192,7 +1877,6 @@
             }
 
             try {
-                // ดึงข้อมูลทั้งชีตโดยไม่ต้องระบุวันที่ผ่าน API daily ที่มีอยู่แล้ว (เสถียรกว่าการยิง 12 Request)
                 const result = await apiCall('getSheetData', { sheetId: config.sheetId, sheetName: config.sheetName, date: '' }, 'daily');
                 
                 let allData = [];
@@ -2202,13 +1886,10 @@
                     allData = result.data;
                 }
 
-                // กรองเฉพาะข้อมูลในปีที่เลือก
                 const targetYear = parseInt(yearValue, 10);
                 const COL_YEAR_IDX = 3;
                 const filteredData = allData.filter(row => {
                     let rowYear = parseInt(row[COL_YEAR_IDX], 10);
-                    
-                    // ระบบดึงปีสำรองหากคอลัมน์ D ว่าง หรือถูกพิมพ์มาแบบอื่น
                     if (isNaN(rowYear) || !row[COL_YEAR_IDX]) {
                         const dateVal = row[1] || row[0]; 
                         if (dateVal instanceof Date) {
@@ -2278,11 +1959,9 @@
                     dataLabelsCache[cacheKey] = result.labels;
                     return result.labels;
                 } else {
-                    console.warn(`No specific labels found for card: ${cardTitle} or API call was unsuccessful. Result:`, result);
                     return [];
                 }
             } catch (error) {
-                console.error(`Error fetching data labels for card ${cardTitle}:`, error);
                 return [];
             }
         }
@@ -2316,9 +1995,7 @@
                                     year: 'numeric'
                                 });
                             }
-                        } catch (e) {
-                            console.error("Error parsing date string:", dataValue, e);
-                        }
+                        } catch (e) {}
                     }
 
                     let valueColorClass = 'text-slate-700';
@@ -2417,7 +2094,6 @@
             const numberColIdx = getNumberColumnIndex(config.title);
             const dataStartIndex = getDataStartIndex(config.title, numberColIdx);
 
-            // ระบบสร้างหัวข้ออัตโนมัติหากหาในชีต "ชื่อข้อมูล" ไม่เจอ
             if (allCustomLabels.length === 0 && dataRows.length > 0) {
                 const maxLen = Math.max(...dataRows.map(r => r.length));
                 for (let i = dataStartIndex; i < maxLen; i++) {
@@ -2469,7 +2145,6 @@
                         if (processedDays.has(day)) return; 
                         processedDays.add(day); 
                         
-                        // คอลัมน์ H (Index 7) คือ ชื่อผู้ตรวจสอบ
                         signatures[day] = (row[7] !== undefined && row[7] !== null && row[7] !== '') ? row[7] : '-';
                         if (defectDetailIndex !== -1) {
                             const note = row[dataStartIndex + defectDetailIndex] || '';
@@ -2567,7 +2242,6 @@
                 for (let day = 1; day <= daysInMonth; day++) {
                     const dayDataRows = dataByDay[day];
                     if (dayDataRows && dayDataRows.length > 0) {
-                        // คอลัมน์ H (Index 7) คือ ชื่อผู้ตรวจสอบ
                         const signature = (dayDataRows[0][7] !== undefined && dayDataRows[0][7] !== null && dayDataRows[0][7] !== '') ? dayDataRows[0][7] : '-';
                         const note = notes[day] || '';
                         mobileFinalHtml += `
@@ -2624,14 +2298,12 @@
             const dataStartIndex = getDataStartIndex(config.title, numberColIdx);
             const isEmergencyLight = config.title.toLowerCase().replace(/\s+/g, '').includes('ไฟฉุกเฉิน');
             const isFireHydrant = config.title.toLowerCase().replace(/\s+/g, '').includes('ตู้น้ำดับเพลิง');
-            // เพิ่มเงื่อนไขเช็คว่าเป็นถังดับเพลิงหรือไม่ เพื่อซ่อนคอลัมน์หมายเหตุ
             const hideRemarkCol = config.title.toLowerCase().replace(/\s+/g, '').includes('ถังดับเพลิง');
 
             if (isFireHydrant) {
                 hiddenLabels = hiddenLabels.filter(l => !["จุดตรวจที่ 1", "จุดตรวจที่1", "ข้อมูล 1"].includes(l));
             }
 
-            // ระบบสร้างหัวข้ออัตโนมัติหากหาในชีต "ชื่อข้อมูล" ไม่เจอ
             if (allCustomLabels.length === 0 && dataRows.length > 0) {
                 const maxLen = Math.max(...dataRows.map(r => r.length));
                 for (let i = dataStartIndex; i < maxLen; i++) {
@@ -2640,10 +2312,7 @@
             }
 
             const displayLabels = allCustomLabels.filter(label => !hiddenLabels.includes(label));
-            const defectDetailLabel = "รายละเอียดข้อบกพร่องที่พบ";
-            const defectDetailIndex = allCustomLabels.indexOf(defectDetailLabel);
-
-            // Group data by Item Number
+            
             const dataByNumber = dataRows.reduce((acc, row) => {
                 let number = extractNumber(row, numberColIdx);
                 if (!number) number = 'N/A';
@@ -2665,9 +2334,7 @@
                 let locationVal = '-';
                 let typeVal = '-';
 
-                // ค้นหาข้อมูลล่าสุดของแต่ละเดือน
                 rowsForThisGroup.forEach(row => {
-                    // อัปเดตข้อมูลสถานที่และขนาดเสมอ เพื่อให้แสดงข้อมูลที่มีการเปลี่ยนแปลงล่าสุด
                     if (isEmergencyLight || isFireHydrant) {
                         if (row[9] && String(row[9]).trim() !== '') locationVal = String(row[9]).trim();
                     } else {
@@ -2675,8 +2342,7 @@
                         if (row[9] && String(row[9]).trim() !== '') typeVal = String(row[9]).trim();
                     }
 
-                    let m = parseInt(row[2], 10); // month col
-                    // ระบบดึงเดือนสำรองหากมีการใส่เป็นชื่อเดือน หรือปล่อยว่าง
+                    let m = parseInt(row[2], 10); 
                     if (isNaN(m)) {
                         const mStr = String(row[2] || '').trim();
                         const thaiMonthMap = {"มกราคม": 1, "ม.ค.": 1, "กุมภาพันธ์": 2, "ก.พ.": 2, "มีนาคม": 3, "มี.ค.": 3, "เมษายน": 4, "เม.ย.": 4, "พฤษภาคม": 5, "พ.ค.": 5, "มิถุนายน": 6, "มิ.ย.": 6, "กรกฎาคม": 7, "ก.ค.": 7, "สิงหาคม": 8, "ส.ค.": 8, "กันยายน": 9, "ก.ย.": 9, "ตุลาคม": 10, "ต.ค.": 10, "พฤศจิกายน": 11, "พ.ย.": 11, "ธันวาคม": 12, "ธ.ค.": 12};
@@ -2693,11 +2359,8 @@
                         if (!dataByMonth[m]) {
                             dataByMonth[m] = row;
                         } else {
-                            // เช็ค Timestamp (row[0]) เพื่อเปรียบเทียบหาข้อมูลที่ใหม่ที่สุด
                             const existingDate = new Date(dataByMonth[m][0]);
                             const currentDate = new Date(row[0]);
-                            
-                            // ถ้าแปลงเวลาไม่ได้ (ไม่มี Timestamp) หรือข้อมูลปัจจุบันใหม่กว่า/เท่ากับ ให้ใช้ข้อมูลล่าสุด
                             if (isNaN(existingDate.getTime()) || isNaN(currentDate.getTime()) || currentDate >= existingDate) {
                                 dataByMonth[m] = row;
                             }
@@ -2707,7 +2370,6 @@
 
                 const pageBreakClass = tableIndex > 0 ? 'page-break' : '';
 
-                // ส่วนจัดการ Header ของรายละเอียด (แยกตามประเภทการ์ด)
                 let detailsHeaderHtml = '';
                 if (isEmergencyLight || isFireHydrant) {
                     detailsHeaderHtml = `
@@ -2736,31 +2398,21 @@
                 const headerBgClass = isEmergencyLight ? 'bg-yellow-300 text-slate-900' : 'bg-red-600 text-white';
                 const remarkHeaderHtml = isFireHydrant ? 'บันทึกสิ่ง<br>ผิดปกติ' : 'หมายเหตุ/<br>ข้อผิดพลาด';
 
-                // --- Desktop Table HTML (Based on provided template) ---
                 let tableHtml = `
                     <div class="printable-table-container p-2 sm:p-4 ${pageBreakClass}">
                         <div class="bg-white mx-auto p-4 sm:p-8 shadow-md border border-slate-200 text-black" style="max-width: 800px; font-family: 'Sarabun', sans-serif;">
-                            <!-- Header -->
                             <div class="${headerBgClass} text-center py-2 mb-6">
                                 <h1 class="text-xl sm:text-2xl font-bold tracking-wide">ใบตรวจเช็ค${config.title} สาขา ${activeUser || '-'}</h1>
                             </div>
-
-                            <!-- Details Section -->
                             <div class="mb-6 text-sm sm:text-base">
                                 <p class="font-bold mb-3">รายละเอียดของอุปกรณ์ :</p>
                                 ${detailsHeaderHtml}
                             </div>
-
-                            <!-- Instructions Section -->
                             <div class="mb-4 text-sm sm:text-base">
-                                <p class="mb-1">
-                                    <strong>ข้อปฏิบัติ :</strong> ให้ทำการตรวจสอบสภาพอุปกรณ์<span class="underline font-bold">ทุกเดือน</span>
-                                </p>
+                                <p class="mb-1"><strong>ข้อปฏิบัติ :</strong> ให้ทำการตรวจสอบสภาพอุปกรณ์<span class="underline font-bold">ทุกเดือน</span></p>
                                 <p class="mb-2">ลงบันทึกข้อมูลผู้ตรวจสอบให้ชัดเจน</p>
-                                
                                 <div class="flex flex-wrap items-center gap-4 sm:gap-6 mt-2">
                                     <span>บันทึกผลการตรวจสอบ</span>
-                                    
                                     <div class="flex items-center gap-2">
                                         <svg class="w-6 h-6 text-green-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
@@ -2768,7 +2420,6 @@
                                         </svg>
                                         <span>ปกติ / ผ่าน</span>
                                     </div>
-
                                     <div class="flex items-center gap-2">
                                         <svg class="w-6 h-6 text-red-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
@@ -2778,8 +2429,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Table Section -->
                             <div class="mt-6 overflow-x-auto">
                                 <table class="w-full text-center text-black border-collapse border border-black min-w-[600px]">
                                     <thead>
@@ -2812,17 +2461,13 @@
                         }
                         if (!isNaN(day)) dateStr = `${day.toString().padStart(2, '0')}/${m.toString().padStart(2, '0')}/${yearValue.toString().slice(-2)}`;
                         
-                        // คอลัมน์ H (Index 7) คือ ชื่อผู้ตรวจสอบ
                         signature = (row[7] !== undefined && row[7] !== null && row[7] !== '') ? row[7] : '-';
-
-                        // หมายเหตุ/ข้อผิดพลาด (ตู้น้ำดับเพลิงดึงคอลัมน์ R=17, อื่นๆ ดึงคอลัมน์ O=14)
                         remarkError = isFireHydrant ? (row[17] || '') : (row[14] || '');
 
                         tds = displayLabels.map((label) => {
                             let status = '';
                             
                             if (isFireHydrant) {
-                                // ล็อคคอลัมน์สำหรับตู้น้ำดับเพลิง
                                 const l = label.replace(/\s+/g, '');
                                 if (l.includes('จุดตรวจที่1') || l.includes('ข้อมูล1')) status = row[11] || '';
                                 else if (l.includes('จุดตรวจที่2') || l.includes('ข้อมูล2')) status = row[12] || '';
@@ -2834,7 +2479,6 @@
                                     status = row[dataStartIndex + labelIndex] || '';
                                 }
                             } else {
-                                // ดึงข้อมูลล็อคตามคอลัมน์ M, N, O, P สำหรับถังดับเพลิง
                                 if (label.includes('มาตรวัด')) {
                                     status = row[12] || '';
                                 } else if (label.includes('ซีล') || label.includes('ชีล') || label.includes('สลัก')) {
@@ -2850,7 +2494,6 @@
                             }
 
                             const s = String(status).toLowerCase();
-                            // แปลงสัญลักษณ์เพื่อความสวยงาม
                             if (s === 'ปกติ' || s === 'ผ่าน') return '<td class="border border-black p-1"><svg class="w-6 h-6 mx-auto text-green-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M8 12.5L10.5 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>';
                             if (s === 'ไม่ปกติ' || s === 'ไม่ผ่าน') return '<td class="border border-black p-1"><svg class="w-6 h-6 mx-auto text-red-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M9 9L15 15M15 9L9 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></td>';
                             return `<td class="border border-black p-1 text-sm">${status}</td>`;
@@ -2875,7 +2518,6 @@
                 const mobileHeaderBgClass = isEmergencyLight ? 'bg-yellow-300' : 'bg-white';
                 const mobileRemarkHeaderLabel = isFireHydrant ? 'บันทึกสิ่งผิดปกติ:' : 'หมายเหตุ/ข้อผิดพลาด:';
 
-                // --- Mobile View HTML ---
                 let mobileDetailsHeaderHtml = '';
                 if (isEmergencyLight || isFireHydrant) {
                     mobileDetailsHeaderHtml = `
@@ -2914,10 +2556,7 @@
                         }
                         const dateStr = `${isNaN(day) ? '-' : day} ${fullMonthNames[m-1]} ${buddhistYear}`;
                         
-                        // คอลัมน์ H (Index 7) คือ ชื่อผู้ตรวจสอบ
                         const signature = (row[7] !== undefined && row[7] !== null && row[7] !== '') ? row[7] : '-';
-                        
-                        // หมายเหตุ/ข้อผิดพลาด (ตู้น้ำดับเพลิงดึงคอลัมน์ R=17, อื่นๆ ดึงคอลัมน์ O=14)
                         const remarkError = isFireHydrant ? (row[17] || '') : (row[14] || '');
 
                         mobileFinalHtml += `
@@ -2939,7 +2578,6 @@
                             let status = '';
                             
                             if (isFireHydrant) {
-                                // ล็อคคอลัมน์สำหรับตู้น้ำดับเพลิง บน Mobile
                                 const l = label.replace(/\s+/g, '');
                                 if (l.includes('จุดตรวจที่1') || l.includes('ข้อมูล1')) status = row[11] || '';
                                 else if (l.includes('จุดตรวจที่2') || l.includes('ข้อมูล2')) status = row[12] || '';
@@ -2951,7 +2589,6 @@
                                     status = row[dataStartIndex + labelIndex] || '';
                                 }
                             } else {
-                                // ดึงข้อมูลล็อคตามคอลัมน์ M, N, O, P สำหรับ Mobile
                                 if (label.includes('มาตรวัด')) {
                                     status = row[12] || '';
                                 } else if (label.includes('ซีล') || label.includes('ชีล') || label.includes('สลัก')) {
@@ -2969,1371 +2606,4 @@
                             let statusHtml = '<span class="text-slate-400">-</span>';
                             const s = String(status).toLowerCase();
                             
-                            if (s === 'ปกติ' || s === 'ผ่าน') statusHtml = `<div class="flex items-center gap-1 text-green-600 font-bold"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.052-.143z" clip-rule="evenodd" /></svg> ปกติ</div>`;
-                            else if (s === 'ไม่ปกติ' || s === 'ไม่ผ่าน') statusHtml = `<div class="flex items-center gap-1 text-red-600 font-bold"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg> ไม่ปกติ</div>`;
-                            else if (status) statusHtml = `<div class="text-slate-800 font-medium">${status}</div>`;
-
-                            mobileFinalHtml += `
-                                <div class="bg-slate-50 rounded-lg p-2 border border-slate-100">
-                                    <p class="text-xs text-slate-500 mb-1">${label}</p>
-                                    ${statusHtml}
-                                </div>
-                            `;
-                        });
-
-                        mobileFinalHtml += `</div>`; 
-                        
-                        if (!hideRemarkCol && remarkError && remarkError !== '-') {
-                            mobileFinalHtml += `
-                                <div class="mt-3 pt-3 border-t border-slate-100">
-                                    <p class="text-xs font-semibold text-rose-700 mb-1">${mobileRemarkHeaderLabel}</p>
-                                    <p class="text-sm text-slate-700">${String(remarkError).replace(/\n/g, '<br>')}</p>
-                                </div>
-                            `;
-                        }
-                        mobileFinalHtml += `</div>`; 
-                    }
-                }
-                
-                if(!hasMobileData) {
-                     mobileFinalHtml += `<div class="text-center p-6 bg-slate-50 rounded-xl border border-slate-200 text-slate-500">ไม่มีประวัติการตรวจสอบในปีนี้</div>`;
-                }
-
-                mobileFinalHtml += `</div>`; 
-            });
-
-            monthlyDetailPageContent.innerHTML = finalHtml + mobileFinalHtml;
-        }
-
-        // --- Print Preview Logic ---
-        function showPrintPreview(isMonthlyDetail = false) {
-            const printPreviewModal = document.createElement('div');
-            printPreviewModal.id = 'print-preview-modal';
-            
-            const header = document.createElement('div');
-            header.id = 'print-preview-header';
-            
-            const title = document.createElement('h2');
-            title.className = 'text-lg sm:text-xl font-bold';
-            title.textContent = 'ตัวอย่างก่อนพิมพ์';
-            
-            const controls = document.createElement('div');
-            controls.className = 'preview-controls';
-            
-            const printBtn = document.createElement('button');
-            printBtn.className = 'print-btn';
-            printBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clip-rule="evenodd" /></svg> พิมพ์/บันทึก PDF';
-            printBtn.onclick = () => window.print();
-            
-            const closeBtn = document.createElement('button');
-            closeBtn.className = 'close-btn';
-            closeBtn.textContent = 'ปิด';
-            closeBtn.onclick = () => {
-                document.body.removeChild(printPreviewModal);
-                document.body.classList.remove('overflow-hidden');
-            };
-            
-            controls.appendChild(printBtn);
-            controls.appendChild(closeBtn);
-            header.appendChild(title);
-            header.appendChild(controls);
-            
-            const content = document.createElement('div');
-            content.id = 'print-preview-content';
-            
-            const sourceContent = document.getElementById('monthly-detail-page-content').cloneNode(true);
-            content.appendChild(sourceContent);
-            
-            printPreviewModal.appendChild(header);
-            printPreviewModal.appendChild(content);
-            
-            document.body.appendChild(printPreviewModal);
-            document.body.classList.add('overflow-hidden');
-        }
-
-        // --- Custom Message Alert ---
-        function showCustomMessage(title, message) {
-            const existingModal = document.getElementById('custom-message-modal');
-            if (existingModal) existingModal.remove();
-
-            const modalHtml = `
-                <div id="custom-message-modal" class="fixed inset-0 bg-black/60 z-[3000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
-                    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm flex flex-col transform transition-transform">
-                        <div class="p-6 text-center">
-                            <div class="w-16 h-16 mx-auto bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            </div>
-                            <h3 class="text-lg font-bold text-slate-800 mb-2">${title}</h3>
-                            <p class="text-sm text-slate-500">${message}</p>
-                        </div>
-                        <div class="p-4 bg-slate-50 border-t border-slate-100 rounded-b-2xl">
-                            <button id="custom-message-close" class="w-full py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition font-bold shadow-md">ตกลง</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-            document.body.classList.add('overflow-hidden');
-            
-            document.getElementById('custom-message-close').addEventListener('click', () => {
-                document.getElementById('custom-message-modal').remove();
-                if (!document.querySelector('.fixed.inset-0:not(.hidden):not(#custom-message-modal)')) {
-                    document.body.classList.remove('overflow-hidden');
-                }
-            });
-        }
-
-        // --- Utilities ---
-        function renderDisabledMessage(resultsEl, title, message) {
-            resultsEl.innerHTML = `<div class="bg-slate-100/50 border border-slate-200 text-slate-500 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">${title}</p><p class="text-sm break-words">${message}</p></div></div>`;
-        }
-        function renderInfoMessage(resultsEl, title, message) {
-            resultsEl.innerHTML = `<div class="bg-indigo-50 border border-indigo-100 text-indigo-700 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">${title}</p><p class="text-sm break-words">${message}</p></div></div>`;
-        }
-        function renderError(resultsEl, msg) {
-            resultsEl.innerHTML = `<div class="bg-red-50 border border-red-100 text-red-700 p-4 rounded-xl flex items-center space-x-4"><div class="flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg></div><div class="min-w-0"><p class="font-bold text-lg">ข้อผิดพลาด</p><p class="text-sm break-words">${msg}</p></div></div>`;
-        }
-
-        // --- Search Utilities ---
-        function setupSearch(inputId, containerId) {
-            const input = document.getElementById(inputId);
-            if (!input) return;
-            input.addEventListener('input', function(e) {
-                const searchTerm = e.target.value.toLowerCase();
-                const container = document.getElementById(containerId);
-                const buttons = container.querySelectorAll('button');
-                buttons.forEach(button => {
-                    const text = button.textContent.toLowerCase();
-                    if (text.includes(searchTerm)) {
-                        button.style.display = 'block';
-                    } else {
-                        button.style.display = 'none';
-                    }
-                });
-            });
-        }
-
-        // --- DASHBOARD LOGIC ---
-
-        let dashboardDataCache = {};
-
-        let dashboardIsFetching = false;
-
-        let currentDashboardFetchId = 0;
- 
-        let allUsersList = [];
-
-        let selectedBranches = new Set();
- // เก็บรายชื่อสาขาที่ต้องการกรอง
-
-        let usersFetchPromise = null;
-
-        
-        const dashboardBatchSize = 10;
-
-        const masterDevices = ["แก๊ส LPG", "สลิงผ้าแผนกเหล็ก", "เครนโครงสร้าง", "เครื่องตัดไฟเบอร์", "Stacker ไฟฟ้า", "รถเฮี้ยบ จัดส่ง", "รถจัดส่ง", "โฟล์คลิฟท์ประเภทเครื่องยนต์", "รถโฟล์คลิฟท์ไฟฟ้า", "รถสแตกเกอร์จัดส่ง", "สลิงผ้า รถจัดส่งติดเครน", "ตู้น้ำดับเพลิง", "ถังดับเพลิง", "ถังดับเพลิงCo2", "ไฟฉุกเฉิน"];
-
-        let selectedDevices = new Set(masterDevices); // เก็บรายชื่ออุปกรณ์ที่ต้องการกรอง
-
-
-            }
-
-
-            mSelect.value = mm;
-
-            ySelect.value = yyyy;
-
-            document.getElementById('dashboard-month-picker').value = `${yyyy}-${mm}`;
-
-        }
-
-        
-        document.getElementById('dashboard-back-to-menu-button').addEventListener('click', () => {
-
-            if (currentAbortController) { currentAbortController.abort(); }
-
-            showMainMenu();
-
-        });
-
-
-        // คืนค่ารายการสาขาที่กำลังเลือกกรองอยู่ ณ ขณะนี้ (รวมทั้งกล่องค้นหาข้อความด้วย)
-
-        function getFilteredUsers() {
-
-            const term = (document.getElementById('dashboard-search-input')?.value || '').toLowerCase().trim();
-
-            let filtered = allUsersList;
-
-            
-            if (selectedBranches.size > 0 && selectedBranches.size !== allUsersList.length) {
-
-                filtered = filtered.filter(user => selectedBranches.has(user));
-
-            }
-
-            if (term) {
-
-                filtered = filtered.filter(user => user.toLowerCase().includes(term));
-
-            }
-
-            return filtered;
-
-        }
-
-
-        async function startDashboardLoad() {
-
-            if (currentAbortController) {
-
-                currentAbortController.abort();
-
-            }
-
-            currentAbortController = new AbortController();
-
-            const signal = currentAbortController.signal;
-
-
-            currentDashboardFetchId++;
-
-            const fetchId = currentDashboardFetchId;
-
-
-            dashboardIsFetching = true;
-
-            document.getElementById('dashboard-status-text').textContent = 'กำลังเตรียมตาราง...';
-
-            const tbody = document.getElementById('dashboard-table-body');
-
-            tbody.innerHTML = '';
-
-            
-            try {
-
-                if (allUsersList.length === 0) {
-                    if (!usersFetchPromise) {
-
-                        const cachedUsers = localStorage.getItem('cached_user_list');
-
-                        if (cachedUsers) {
-
-                            allUsersList = JSON.parse(cachedUsers);
-
-                            usersFetchPromise = Promise.resolve(allUsersList);
-
-                        } else {
-
-                            usersFetchPromise = apiCall('getAllUsers', {}, 'daily', signal).then(res => {
-
-                                allUsersList = res.users || [];
-
-                                localStorage.setItem('cached_user_list', JSON.stringify(allUsersList));
-
-                                return allUsersList;
-
-                            });
-
-                        }
-
-                    }
-
-                    await usersFetchPromise;
-
-                }
-
-                
-                if (fetchId !== currentDashboardFetchId || signal.aborted) return;
-
-                
-                setupBranchDropdown();
-
-                setupDeviceDropdown();
-
-                const devicesToFetch = Array.from(selectedDevices);
-
-                
-                const usersToFetch = getFilteredUsers();
-
-                const usersToFetchSet = new Set(usersToFetch);
-
-
-                const thead = document.getElementById('dashboard-table-head');
-
-                let headerHtml = '<tr><th scope="col" class="px-6 py-3 border-r border-slate-300 w-48 sticky left-0 bg-slate-100 z-30">สาขา / อุปกรณ์</th>';
-
-                masterDevices.forEach((device) => {
-
-                    const isVisible = selectedDevices.has(device);
-
-                    const displayStyle = isVisible ? '' : 'style="display:none;"';
-
-                    headerHtml += `<th scope="col" class="px-6 py-3 border-r border-slate-300 text-center tracking-wider" ${displayStyle}>${device}</th>`;
-
-                });
-
-                headerHtml += '</tr>';
-
-                thead.innerHTML = headerHtml;
-
-
-                allUsersList.forEach((user, index) => {
-
-                    let rowHtml = `<tr id="dash-row-${index}" class="hover:bg-slate-50 transition-colors" data-user="${user}">`;
-
-                    rowHtml += `<td class="px-6 py-4 border-r border-slate-200 font-bold text-slate-900 sticky left-0 bg-white z-20 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">${user}</td>`;
-
-             
-                    const isTarget = usersToFetchSet.has(user);
-
-
-                    masterDevices.forEach((device, dIndex) => {
-
-                        const isVisible = selectedDevices.has(device);
-
-                        const displayStyle = isVisible ? '' : 'style="display:none;"';
-
-                        
-                        let cellContent = '';
-
-                        if (isTarget) {
-
-                            cellContent = `<div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-fuchsia-500"></div>`;
-
-                        } else {
-
-                            cellContent = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ข้ามการโหลด (ถูกกรองออก)"></div>`;
-
-                        }
-
-
-                        rowHtml += `<td id="dash-cell-${index}-${dIndex}" class="px-2 py-4 border-r border-slate-200 text-center align-middle" ${displayStyle}>${cellContent}</td>`;
-
-                    });
-
-                    rowHtml += '</tr>';
-
-                    tbody.insertAdjacentHTML('beforeend', rowHtml);
-
-                });
-
-
-                applyDashboardFilters();
- 
-                setupDashboardSearch();
-
-                
-                fetchDashboardInBatches(usersToFetch, devicesToFetch, document.getElementById('dashboard-month-picker').value, fetchId, signal);
-
-            } catch (err) {
-
-                if (err.name === 'AbortError') { return; }
-
-                if (fetchId === currentDashboardFetchId) {
-
-                    document.getElementById('dashboard-status-text').textContent = 'เกิดข้อผิดพลาด: ' + err.message;
-
-                }
-
-            }
-
-        }
-
-
-        async function fetchDashboardInBatches(users, devicesToFetch, monthYear, fetchId, signal) {
-
-            dashboardIsFetching = true;
-
-            let completedCount = 0;
-
-            if (fetchId !== currentDashboardFetchId || signal.aborted) return;
-
-
-            document.getElementById('dashboard-status-text').textContent = `กำลังโหลดข้อมูล... (0/${users.length})`;
-
-            const [year, month] = monthYear.split('-').map(Number);
-
-            const specialDevices = ['ตู้น้ำดับเพลิง', 'ถังดับเพลิง', 'ถังดับเพลิงCo2', 'ไฟฉุกเฉิน'];
-
-            
-            const queue = users.map(user => ({ user, index: allUsersList.indexOf(user) }));
-
-            async function worker() {
-
-                while (queue.length > 0) {
-
-                    if (fetchId !== currentDashboardFetchId || signal.aborted) return;
-
-                    const { user, index: rowIndex } = queue.shift();
-
-                    
-                    try {
-
-                        const settingsRes = await apiCall('loadSettings', { username: user }, 'daily', signal);
-
-                        if (fetchId !== currentDashboardFetchId || signal.aborted) return;
-
-
-                        const configs = Array.isArray(settingsRes.config) ? settingsRes.config : [];
-
-                        const deviceFetchPromises = devicesToFetch.map(async (deviceName) => {
-
-                            const dIndex = masterDevices.indexOf(deviceName);
-
-                            const cell = document.getElementById(`dash-cell-${rowIndex}-${dIndex}`);
-
-                            if (!cell) return;
-
-
-                            const config = configs.find(c => c.title === deviceName);
-
-                            const isSpecial = specialDevices.includes(deviceName);
-
-                            
-                            if (isSpecial && (year < 2026 || (year === 2026 && month < 5))) {
-
-                                cell.innerHTML = `<span class="text-xs text-slate-400 bg-slate-100 px-2 py-1 rounded border border-slate-200">เริ่มตรวจ พ.ค. 2026</span>`;
-
-                                return;
-
-                            }
-
-
-                            if (!config || config.sheetId === 'N/A' || config.sheetId === '') {
-
-                                cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่มีอุปกรณ์นี้"></div>`;
-
-                                return;
-
-                            }
-
-
-                            const targetCount = parseInt(config.targetCount) || 0;
-
-                            
-                            if (targetCount <= 0 && deviceName !== 'แก๊ส LPG') {
-
-                                cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่ได้กำหนดเป้าหมาย (ไม่มีอุปกรณ์)"></div>`;
-
-                                return;
-
-                            }
-
-
-                            try {
-
-                                const result = await apiCall('getMonthlySheetData', { sheetId: config.sheetId, sheetName: config.sheetName, year, month }, 'monthly', signal);
-
-                                if (fetchId !== currentDashboardFetchId || signal.aborted) return;
-
-
-                                const data = Array.isArray(result?.data) ? result.data : [];
-
-                                
-                                let checkedDays = [];
-
-                                let actualCount = 0;
-
-                                const numberColIdx = getNumberColumnIndex(config.title);
-
-                                
-                                if (data.length > 0) {
-
-                                    if (deviceName === 'แก๊ส LPG') {
-
-                                        const dailyNumbers = new Set();
-
-                                        data.forEach(row => {
-
-                                            let mValue = parseInt(row[2]);
-
-                                            if (mValue === month || isNaN(mValue)) {
-
-                                                const d = parseInt(row[1]);
-
-                                                if(!isNaN(d)) dailyNumbers.add(d);
-
-                                            }
-
-                                        });
-
-                                        checkedDays = Array.from(dailyNumbers);
-
-                                        actualCount = checkedDays.length;
- 
-                                    } else if (isSpecial) {
-
-                                        const checkedNumbers = new Set();
-
-                                        data.forEach(row => {
-
-                                            let mValue = parseInt(row[2]);
-
-                                            if (mValue === month || isNaN(mValue)) {
-
-                                                const num = extractNumber(row, numberColIdx);
-
-                                                if (num) checkedNumbers.add(num);
-
-                                                const d = parseInt(row[1]);
-
-                                                if(!isNaN(d) && !checkedDays.includes(d)) checkedDays.push(d);
-
-                                            }
-
-                                        });
-
-                                        actualCount = checkedNumbers.size;
- 
-                                    } else {
-
-                                        const dailyNumbers = {};
-
-                                        data.forEach(row => {
-
-                                            let mValue = parseInt(row[2]);
-
-                                            let yValue = parseInt(row[3]);
-
-                                            if (yValue > 2500) yValue -= 543;
-
-                                            if ((yValue === year && mValue === month) || isNaN(mValue)) {
-
-                                                const dayValue = parseInt(row[1]);
-
-                                                const num = extractNumber(row, numberColIdx);
-
-                                                if (!isNaN(dayValue) && num) {
-
-                                                    if (!dailyNumbers[dayValue]) dailyNumbers[dayValue] = new Set();
-                                                    dailyNumbers[dayValue].add(num);
-
-                                                }
-
-                                            }
-
-                                        });
-
-                                        Object.keys(dailyNumbers).forEach(day => {
-
-                                            if (dailyNumbers[day].size >= targetCount) {
-
-                                                checkedDays.push(parseInt(day));
-
-                                            }
-
-                                        });
-
-                                        actualCount = checkedDays.length;
-
-                                    }
-
-                                }
-
-
-                                let cellContent = '';
-
-                                const daysInMonth = new Date(year, month, 0).getDate();
-
-
-                                if (deviceName ==='แก๊ส LPG') {
-
-                                    if (actualCount > 0) {
-
-                                        cellContent = `<button class="px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-lg shadow-sm hover:bg-teal-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${daysInMonth}</button>`;
-
-                                    } else {
-
-                                        cellContent = `<button class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-lg shadow-sm hover:bg-amber-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[]')">${actualCount}/${daysInMonth}</button>`;
-
-                                    }
-
-                                } else if (isSpecial) {
-
-                                    if (actualCount >= targetCount && targetCount > 0) {
-
-                                        cellContent = `<button class="px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-lg shadow-sm hover:bg-teal-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${targetCount}</button>`;
-
-                                    } else {
-
-                                        cellContent = `<button class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-lg shadow-sm hover:bg-amber-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${targetCount}</button>`;
-
-                                    }
-
-                                } else {
-
-                                    if (actualCount >= daysInMonth && daysInMonth > 0) {
-                                        cellContent = `<button class="px-3 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded-lg shadow-sm hover:bg-teal-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${daysInMonth}</button>`;
-                                    } else {
-
-                                        cellContent = `<button class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-lg shadow-sm hover:bg-amber-200 transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${daysInMonth}</button>`;
-
-                                    }
-
-                                }
-
-                                cell.innerHTML = cellContent;
-
-                                applyDashboardFilters();
- 
-
-                            } catch (err) {
-
-                                if (err.name === 'AbortError') return;
-
-
-                               cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่สามารถดึงข้อมูลได้"></div>`;
-
-                                applyDashboardFilters();
-
-                            }
-
-                        });
-
-                        await Promise.all(deviceFetchPromises);
-
-
-                    } catch (e) {
-
-                        if (e.name === 'AbortError') return;
-
-                        devicesToFetch.forEach((deviceName) => {
-
-                            const dIndex = masterDevices.indexOf(deviceName);
-
-                            const cell = document.getElementById(`dash-cell-${rowIndex}-${dIndex}`);
-
-                            if (cell && cell.innerHTML.includes('loader-sm')) {
-
-                                cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่สามารถดึงข้อมูลได้"></div>`;
-
-                            }
-
-                        });
-
-                        applyDashboardFilters();
- 
-                    }
-
-                    
-                    if (fetchId !== currentDashboardFetchId || signal.aborted) return;
-
-                    completedCount++;
-
-                    document.getElementById('dashboard-status-text').textContent = `กำลังโหลดข้อมูล... (${completedCount}/${users.length})`;
-
-                }
-
-            }
-
-
-            const workers = [];
-
-            for (let i = 0; i < Math.min(dashboardBatchSize, users.length); i++) {
-
-                workers.push(worker());
-
-            }
-
-
-           await Promise.all(workers);
-
-            if (fetchId === currentDashboardFetchId && !signal.aborted) {
-
-                document.getElementById('dashboard-status-text').textContent = `โหลดข้อมูลเสร็จสิ้น (${users.length} สาขา)`;
-
-                dashboardIsFetching = false;
-
-            }
-
-        }
-
-
-        // ==========================================
-        // MULTI-SELECT BRANCH DROPDOWN LOGIC
-        // ==========================================
-
-        function setupBranchDropdown() {
-
-            const container = document.getElementById('branch-checkboxes');
-
-            if (container.children.length === 0) {
-
-                allUsersList.forEach(user => {
-
-                    const label = document.createElement('label');
-
-                    label.className = 'flex items-center gap-2 py-1 px-1.5 hover:bg-slate-100 rounded-lg cursor-pointer text-xs font-semibold text-slate-700';
-
-                    
-                    const cb = document.createElement('input');
-
-                    cb.type = 'checkbox';
-
-                    cb.value = user;
-
-                    cb.className = 'rounded text-fuchsia-600 focus:ring-fuchsia-500 w-4 h-4 cursor-pointer';
-
-                    cb.checked = true;
-
-                    selectedBranches.add(user);
-
-
-                    cb.addEventListener('change', () => {
-
-                        if (cb.checked) {
-
-                            selectedBranches.add(user);
-
-                        } else {
-
-                            selectedBranches.delete(user);
-
-                        }
-
-                        updateBranchDropdownLabel();
-
-                        startDashboardLoad();
-
-                    });
-
-
-                    label.appendChild(cb);
-
-                    label.appendChild(document.createTextNode(user));
-
-                    container.appendChild(label);
-
-                });
-
-                updateBranchDropdownLabel();
-
-            }
-
-        }
-
-
-        function updateBranchDropdownLabel() {
-
-            const label = document.getElementById('branch-dropdown-label');
-
-            if (selectedBranches.size === 0) {
-
-                label.textContent = "ไม่ได้เลือกสาขาเลย";
-
-            } else if (selectedBranches.size === allUsersList.length) {
-
-                label.textContent = "เลือกทุกสาขา (" + allUsersList.length + ")";
-
-            } else {
-
-                label.textContent = `เลือกแล้ว (${selectedBranches.size} สาขา)`;
-
-            }
-
-       }
-
-
-        document.getElementById('branch-select-all').addEventListener('click', (e) => {
-
-            e.stopPropagation();
-
-            selectedBranches.clear();
-
-            const checkboxes = document.querySelectorAll('#branch-checkboxes input[type="checkbox"]');
-
-            checkboxes.forEach(cb => {
-
-                cb.checked = true;
-
-                selectedBranches.add(cb.value);
-
-            });
-
-            updateBranchDropdownLabel();
-
-            startDashboardLoad();
- 
-        });
-
- 
-       document.getElementById('branch-clear-all').addEventListener('click', (e) => {
-
-            e.stopPropagation();
-
-            selectedBranches.clear();
-
-            const checkboxes = document.querySelectorAll('#branch-checkboxes input[type="checkbox"]');
-
-            checkboxes.forEach(cb => {
-
-                cb.checked = false;
-
-            });
- 
-           updateBranchDropdownLabel();
-
-            startDashboardLoad();
- 
-        });
-
-
-        const dropdownBtn = document.getElementById('branch-dropdown-btn');
-
-        const dropdownMenu = document.getElementById('branch-dropdown-menu');
-
-        const dropdownArrow = document.getElementById('branch-arrow');
-
-
-        dropdownBtn.addEventListener('click', (e) => {
-
-            e.stopPropagation();
-
-            const isHidden = dropdownMenu.classList.contains('hidden');
-
-            if (isHidden) {
-
-                dropdownMenu.classList.remove('hidden');
-
-               dropdownArrow.classList.add('rotate-180');
-
-            } else {
-
-                dropdownMenu.classList.add('hidden');
-
-                dropdownArrow.classList.remove('rotate-180');
-
-            }
-
-        });
-
-
-        document.addEventListener('click', (e) => {
-
-            if (!document.getElementById('branch-select-container').contains(e.target)) {
-
-                dropdownMenu.classList.add('hidden');
-
-                dropdownArrow.classList.remove('rotate-180');
-
-            }
-
-        });
-
-
-        // ==========================================
-        // MULTI-SELECT DEVICE DROPDOWN LOGIC
-        // ==========================================
-
-        function setupDeviceDropdown() {
-
-            const container = document.getElementById('device-checkboxes');
-
-            if (container && container.children.length === 0) {
-
-                masterDevices.forEach(device => {
-
-                    const label = document.createElement('label');
-
-                    label.className = 'flex items-center gap-2 py-1 px-1.5 hover:bg-slate-100 rounded-md cursor-pointer text-xs font-semibold text-slate-700 whitespace-nowrap';
-
-                    
-                    const cb = document.createElement('input');
-
-                    cb.type = 'checkbox';
-
-                    cb.value = device;
-
-                    cb.className = 'rounded text-fuchsia-600 focus:ring-fuchsia-500 w-3.5 h-3.5 cursor-pointer';
-
-                    cb.checked = selectedDevices.has(device);
-
-
-                    cb.addEventListener('change', () => {
-
-                        if (cb.checked) {
- 
-                            selectedDevices.add(device);
-
-                        } else {
-
-                            selectedDevices.delete(device);
-
-                        }
-
-                        updateDeviceDropdownLabel();
-
-                        startDashboardLoad();
-
-                    });
-
-                    
-                    label.appendChild(cb);
-
-                    label.appendChild(document.createTextNode(device));
- 
-                   container.appendChild(label);
-
-                });
-
-                updateDeviceDropdownLabel();
-
-            }
-
-        }
-
-
-        function updateDeviceDropdownLabel() {
-
-            const label = document.getElementById('device-dropdown-label');
-
-            if (!label) return;
-
-            if (selectedDevices.size === 0) {
-
-                label.textContent = "ไม่ได้เลือกอุปกรณ์เลย";
-
-            } else if (selectedDevices.size === masterDevices.length) {
-
-                label.textContent = "เลือกทุกอุปกรณ์ (" + masterDevices.length + ")";
-
-            } else {
-
-                label.textContent = `เลือกแล้ว (${selectedDevices.size})`;
-
-            }
-
-        }
-
-
-        const devDropdownBtn = document.getElementById('device-dropdown-btn');
-
-        const devDropdownMenu = document.getElementById('device-dropdown-menu');
-
-        const devDropdownArrow = document.getElementById('device-arrow');
-
-
-        if (devDropdownBtn) {
-
-            devDropdownBtn.addEventListener('click', (e) => {
-
-                e.stopPropagation();
-
-                const isHidden = devDropdownMenu.classList.contains('hidden');
-
-                if (isHidden) {
-
-                    devDropdownMenu.classList.remove('hidden');
-
-                    devDropdownArrow.classList.add('rotate-180');
-
-                } else {
-
-                    devDropdownMenu.classList.add('hidden');
-
-                   devDropdownArrow.classList.remove('rotate-180');
-
-                }
-
-            });
-
-
-            document.getElementById('device-select-all').addEventListener('click', (e) => {
-
-                e.stopPropagation();
-
-                const checkboxes = document.querySelectorAll('#device-checkboxes input[type="checkbox"]');
-
-                checkboxes.forEach(cb => {
-
-                    cb.checked = true;
-
-                    selectedDevices.add(cb.value);
-
-                });
- 
-               updateDeviceDropdownLabel();
-
-                startDashboardLoad();
-
-            });
-
-
-            document.getElementById('device-clear-all').addEventListener('click', (e) => {
-
-                e.stopPropagation();
-
-                selectedDevices.clear();
-
-                const checkboxes = document.querySelectorAll('#device-checkboxes input[type="checkbox"]');
-
-                checkboxes.forEach(cb => {
-
-                    cb.checked = false;
-
-                });
-
-                updateDeviceDropdownLabel();
-
-                startDashboardLoad();
-
-            });
-
-
-            document.addEventListener('click', (e) => {
-
-                const devContainer = document.getElementById('device-select-container');
-
-                if (devContainer && !devContainer.contains(e.target)) {
-
-                    if (devDropdownMenu) devDropdownMenu.classList.add('hidden');
-
-                    if (devDropdownArrow) devDropdownArrow.classList.remove('rotate-180');
-
-                }
-
-            });
-
-        }
-
-
-        window.showDashboardDetail = function(device, user, daysStr) {
-
-            document.getElementById('dash-modal-title').textContent = `${device}`;
-
-            document.getElementById('dash-modal-subtitle').textContent = `สาขา: ${user}`;
-
-            const days = JSON.parse(daysStr);
-
-            const container = document.getElementById('dash-modal-days-container');
-
-            container.innerHTML = '';
-
-            if (days.length === 0) {
-
-                container.innerHTML = '<span class="text-sm text-slate-500 italic">ไม่พบวันที่บันทึกข้อมูล</span>';
-
-            } else {
-
-                days.sort((a,b)=>a-b).forEach(d => {
-
-                    container.insertAdjacentHTML('beforeend', `<span class="w-8 h-8 flex items-center justify-center bg-fuchsia-100 text-fuchsia-700 font-bold rounded-lg text-sm shadow-sm">${d}</span>`);
-
-                });
-
-            }
-
-            document.getElementById('dashboard-detail-modal').classList.remove('hidden');
-        };
-
-
-        const statusFilterElement = document.getElementById('dashboard-filter-status');
-
-        if (statusFilterElement) {
-
-            statusFilterElement.addEventListener('change', () => {
-
-                applyDashboardFilters();
- 
-            });
-
-        }
-
-
-        document.getElementById('dash-modal-close').addEventListener('click', () => {
-
-            document.getElementById('dashboard-detail-modal').classList.add('hidden');
-
-        });
-
-
-        document.getElementById('dashboard-refresh-button').addEventListener('click', () => {
-
-            startDashboardLoad();
-
-        });
-
-
-        document.getElementById('dashboard-month-select').addEventListener('change', () => {
-
-            const m = document.getElementById('dashboard-month-select').value;
-
-            const y = document.getElementById('dashboard-year-select').value;
-
-            document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
-
-            startDashboardLoad();
-
-        });
-
-
-        document.getElementById('dashboard-year-select').addEventListener('change', () => {
-
-            const m = document.getElementById('dashboard-month-select').value;
-
-            const y = document.getElementById('dashboard-year-select').value;
-
-            document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
-
-            startDashboardLoad();
-
-        });
-
-
-        // ==========================================
-        // SMART SEARCH DEBOUNCE LOGIC
-        // ==========================================
-
-        let searchDebounceTimer = null;
-
-        function handleSearchInput() {
-
-            applyDashboardFilters();
-
-            clearTimeout(searchDebounceTimer);
-
-            searchDebounceTimer = setTimeout(() => {
-
-                startDashboardLoad();
- 
-            }, 600);
-
-        }
-
-
-        function setupDashboardSearch() {
-
-            const input = document.getElementById('dashboard-search-input');
-
-            if (!input) return;
-
-            input.removeEventListener('input', handleSearchInput);
- 
-            input.addEventListener('input', handleSearchInput);
-
-        }
-
-
-        // ==========================================
-        // FILTER FUNCTION
-        // ==========================================
-
-        function applyDashboardFilters() {
-
-            const searchInput = document.getElementById('dashboard-search-input');
-
-            const statusFilterElement = document.getElementById('dashboard-filter-status');
-
-            
-            if (!searchInput || !statusFilterElement) return;
-
-
-            const term = searchInput.value.toLowerCase().trim();
-
-            const statusFilter = statusFilterElement.value;
-
-            const rows = document.querySelectorAll('#dashboard-table-body tr');
-
-
-            rows.forEach(row => {
-
-                const user = row.dataset.user;
-
-                const userLower = user.toLowerCase();
-
-                
-                let matchSearch = userLower.includes(term);
-
-                let matchBranch = selectedBranches.has(user);
-
-                let matchStatus = false;
-
-
-                if (statusFilter === 'ALL' || selectedDevices.size === 0) {
-
-                    matchStatus = true;
-
-                } else {
-
-                    let hasComplete = false;
-
-                    let hasIncomplete = false;
-
-                    let hasLoading = false;
-
-                    let hasData = false;
-
-
-                    for (let device of selectedDevices) {
-
-                        const deviceIndex = masterDevices.indexOf(device);
-
-                        if (deviceIndex > -1) {
-
-                            const rowIndex = row.id.split('-')[2];
-
-                            const cell = document.getElementById(`dash-cell-${rowIndex}-${deviceIndex}`);
-
-                            
-                            if (cell) {
-
-                                const html = cell.innerHTML;
-
-                                if (html.includes('loader-sm')) {
- 
-                                   hasLoading = true;
-
-                                } else if (html.includes('bg-teal-100')) {
-
-                                    hasComplete = true;
-
-                                    hasData = true;
-                                } else if (html.includes('bg-amber-100')) {
-
-                                    hasIncomplete = true;
-
-                                    hasData = true;
-
-                                }
-
-                                
-                                if (statusFilter === 'COMPLETE' && hasIncomplete) break;
-
-                                if (statusFilter === 'INCOMPLETE' && hasIncomplete) break;
-
-                                if (statusFilter === 'NODATA' && hasData) break;
-
-                            }
-
-                        }
- 
-                   }
-
- 
-                   if (statusFilter === 'COMPLETE') {
-
-                        matchStatus = hasIncomplete ? false : (hasLoading ? true : hasComplete);
-
-                    } else if (statusFilter === 'INCOMPLETE') {
-
-                        matchStatus = hasIncomplete ? true : (hasLoading ? true : false);
-
-                    } else if (statusFilter === 'NODATA') {
-
-                        matchStatus = hasData ? false : true;
-
-                    }
-
-                }
-
-
-                if (matchSearch && matchBranch && matchStatus) {
-
-                    row.style.display = '';
-
-                } else {
-
-                    row.style.display = 'none';
-
-                }
-
-            });
-
-        }
-
-
-
-        // --- Event Listeners Initialization ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const dd = String(today.getDate()).padStart(2, '0');
-            const todayStr = `${yyyy}-${mm}-${dd}`;
-            const thisMonthStr = `${yyyy}-${mm}`;
-
-            document.getElementById('daily-global-check-date').value = todayStr;
-            document.getElementById('monthly-global-check-month').value = thisMonthStr;
-            document.getElementById('special-monthly-global-check-month').value = thisMonthStr;
-
-            document.getElementById('menu-daily-check').addEventListener('click', (e) => { e.preventDefault(); showDailyApp(); loadAllUsers(document.getElementById('daily-user-buttons-container'), 'last_selected_daily_user', displayDailyUserCards); });
-            document.getElementById('menu-summary').addEventListener('click', (e) => { e.preventDefault(); showMonthlyApp(); loadAllUsers(document.getElementById('monthly-user-buttons-container'), 'last_selected_monthly_user', displayMonthlyUserCards); });
-            document.getElementById('menu-special-monthly').addEventListener('click', (e) => { e.preventDefault(); showSpecialMonthlyApp(); loadAllUsers(document.getElementById('special-monthly-user-buttons-container'), 'last_selected_special_monthly_user', displaySpecialMonthlyUserCards); });
-            document.getElementById('menu-dashboard').addEventListener('click', (e) => { e.preventDefault(); showDashboardApp(); });
-            document.getElementById('menu-user-manual').addEventListener('click', (e) => { e.preventDefault(); showUserManual(); populateVideoList(); });
-
-            document.getElementById('daily-back-to-menu-button').addEventListener('click', showMainMenu);
-            document.getElementById('monthly-back-to-menu-button').addEventListener('click', showMainMenu);
-            document.getElementById('special-monthly-back-to-menu-button').addEventListener('click', showMainMenu);
-            document.getElementById('manual-back-to-menu-button').addEventListener('click', showMainMenu);
-            document.getElementById('dashboard-back-to-menu-button').addEventListener('click', showMainMenu);
-            document.getElementById('detail-page-back-button').addEventListener('click', showDailyApp);
-            
-            document.getElementById('monthly-detail-page-back-button').addEventListener('click', () => {
-                showView(lastViewBeforeMonthlyDetail);
-            });
-
-            document.getElementById('monthly-detail-print-button').addEventListener('click', () => {
-                showPrintPreview(true);
-            });
-
-            document.getElementById('daily-sidebar-toggle').addEventListener('click', openDailySidebar);
-            document.getElementById('daily-sidebar-overlay').addEventListener('click', closeDailySidebar);
-
-            document.getElementById('monthly-sidebar-toggle').addEventListener('click', openMonthlySidebar);
-            document.getElementById('monthly-sidebar-overlay').addEventListener('click', closeMonthlySidebar);
-
-            document.getElementById('special-monthly-sidebar-toggle').addEventListener('click', openSpecialMonthlySidebar);
-            document.getElementById('special-monthly-sidebar-overlay').addEventListener('click', closeSpecialMonthlySidebar);
-
-            document.getElementById('close-video-modal').addEventListener('click', closeVideoPlayer);
-            document.getElementById('video-player-modal').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('video-player-modal')) closeVideoPlayer();
-            });
-
-            document.getElementById('comment-modal-close').addEventListener('click', closeCommentModal);
-            document.getElementById('comment-modal-cancel').addEventListener('click', closeCommentModal);
-            document.getElementById('comment-modal-save').addEventListener('click', () => {
-                const newComment = document.getElementById('comment-modal-textarea').value;
-                if (currentEditingConfig) updateCardComment(currentEditingConfig, newComment);
-            });
-
-            document.getElementById('daily-global-check-date').addEventListener('change', refreshDailyCurrentView);
-            document.getElementById('daily-refresh-button').addEventListener('click', refreshDailyCurrentView);
-            
-            document.getElementById('monthly-global-check-month').addEventListener('change', refreshMonthlyCurrentView);
-            document.getElementById('monthly-refresh-button').addEventListener('click', refreshMonthlyCurrentView);
-
-            document.getElementById('special-monthly-global-check-month').addEventListener('change', refreshSpecialMonthlyCurrentView);
-            document.getElementById('special-monthly-refresh-button').addEventListener('click', refreshSpecialMonthlyCurrentView);
-
-            setupSearch('daily-user-search-input', 'daily-user-buttons-container');
-            setupSearch('monthly-user-search-input', 'monthly-user-buttons-container');
-            setupSearch('special-monthly-user-search-input', 'special-monthly-user-buttons-container');
-            
-            // Export Buttons Logic
-            const exportMonthlyDetailBtn = document.getElementById('monthly-detail-export-button');
-            if (exportMonthlyDetailBtn) {
-                exportMonthlyDetailBtn.addEventListener('click', () => {
-                    // Logic for export if implemented
-                    showCustomMessage('แจ้งเตือน', 'ฟังก์ชันนี้กำลังอยู่ระหว่างการพัฒนา');
-                });
-            }
-        });
-
-        // --- Service Worker Registration ---
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then((registration) => {
-                        console.log('Service Worker ลงทะเบียนสำเร็จ: Scope คือ', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.error('Service Worker ลงทะเบียนไม่สำเร็จ:', error);
-                    });
-            });
-        }
-    </script>
-</body>
-</html>
+                            if (s === 'ปกติ' || s === 'ผ่าน') statusHtml = `<div class="flex items-center gap-1 text-green-600 font-bold"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.052-.143z" clip-rule="evenodd" /></
