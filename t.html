@@ -1127,7 +1127,7 @@
                 document.getElementById('daily-detail-page-container'), 
                 document.getElementById('monthly-detail-page-container'), 
                 document.getElementById('user-manual-container'),
-                document.getElementById('dashboard-app-container') // เพิ่ม Dashboard
+                document.getElementById('dashboard-app-container'), // เพิ่ม Dashboard
 		document.getElementById('defect-summary-app-container') // เพิ่มบรรทัดนี้
             ];
             views.forEach(view => {
@@ -1154,13 +1154,11 @@
         function showDashboardApp() { 
             showView('dashboard-app-container'); 
             initDashboard(); // เรียกเริ่มโหลดข้อมูล Dashboard ทันที
-	function showDefectApp() {
- 
-            showView('defect-summary-app-container');
- 
-            initDefectPage();
- 
         }
+
+        function showDefectApp() {
+            showView('defect-summary-app-container');
+            initDefectPage();
         }
 
         // --- Sidebar Logic ---
