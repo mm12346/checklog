@@ -277,8 +277,7 @@
             <p class="text-slate-600 mt-4 sm:text-lg font-medium max-w-lg mx-auto leading-relaxed">ระบบติดตามการตรวจสอบอุปกรณ์ก่อนเริ่มงาน</p>
         </div>
 
-        <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 w-full max-w-5xl">
-            <!-- Menu Item 1: Daily Check -->
+	<div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 w-full max-w-5xl">
             <a href="#" id="menu-daily-check" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-indigo-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative w-20 h-20 bg-gradient-to-br from-indigo-100 to-white text-indigo-600 rounded-2xl shadow-inner border border-indigo-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
@@ -288,7 +287,6 @@
                 <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">สรุปสถานะการตรวจสอบรายวัน</p>
             </a>
             
-            <!-- Menu Item 2: Summary -->
             <a href="#" id="menu-summary" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-amber-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-amber-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative w-20 h-20 bg-gradient-to-br from-amber-100 to-white text-amber-600 rounded-2xl shadow-inner border border-amber-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
@@ -298,23 +296,15 @@
                 <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">สรุปสถานะการตรวจสอบรายเดือน</p>
             </a>
 
-            <!-- Menu Item 3: Special Monthly Check -->
             <a href="#" id="menu-special-monthly" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-rose-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-rose-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative w-20 h-20 bg-gradient-to-br from-rose-100 to-white text-rose-600 rounded-2xl shadow-inner border border-rose-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 drop-shadow-sm">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier"> 
-                            <path d="M12.8324 21.8013C15.9583 21.1747 20 18.926 20 13.1112C20 7.8196 16.1267 4.29593 13.3415 2.67685C12.7235 2.31757 12 2.79006 12 3.50492V5.3334C12 6.77526 11.3938 9.40711 9.70932 10.5018C8.84932 11.0607 7.92052 10.2242 7.816 9.20388L7.73017 8.36604C7.6304 7.39203 6.63841 6.80075 5.85996 7.3946C4.46147 8.46144 3 10.3296 3 13.1112C3 20.2223 8.28889 22.0001 10.9333 22.0001C11.0871 22.0001 11.2488 21.9955 11.4171 21.9858C10.1113 21.8742 8 21.064 8 18.4442C8 16.3949 9.49507 15.0085 10.631 14.3346C10.9365 14.1533 11.2941 14.3887 11.2941 14.7439V15.3331C11.2941 15.784 11.4685 16.4889 11.8836 16.9714C12.3534 17.5174 13.0429 16.9454 13.0985 16.2273C13.1161 16.0008 13.3439 15.8564 13.5401 15.9711C14.1814 16.3459 15 17.1465 15 18.4442C15 20.4922 13.871 21.4343 12.8324 21.8013Z" fill="currentColor"></path> 
-                        </g>
-                    </svg>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 drop-shadow-sm"><path d="M12.8324 21.8013C15.9583 21.1747 20 18.926 20 13.1112C20 7.8196 16.1267 4.29593 13.3415 2.67685C12.7235 2.31757 12 2.79006 12 3.50492V5.3334C12 6.77526 11.3938 9.40711 9.70932 10.5018C8.84932 11.0607 7.92052 10.2242 7.816 9.20388L7.73017 8.36604C7.6304 7.39203 6.63841 6.80075 5.85996 7.3946C4.46147 8.46144 3 10.3296 3 13.1112C3 20.2223 8.28889 22.0001 10.9333 22.0001C11.0871 22.0001 11.2488 21.9955 11.4171 21.9858C10.1113 21.8742 8 21.064 8 18.4442C8 16.3949 9.49507 15.0085 10.631 14.3346C10.9365 14.1533 11.2941 14.3887 11.2941 14.7439V15.3331C11.2941 15.784 11.4685 16.4889 11.8836 16.9714C12.3534 17.5174 13.0429 16.9454 13.0985 16.2273C13.1161 16.0008 13.3439 15.8564 13.5401 15.9711C14.1814 16.3459 15 17.1465 15 18.4442C15 20.4922 13.871 21.4343 12.8324 21.8013Z" fill="currentColor"></path></svg>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-800 relative z-10 leading-tight">Month Check<br><span class="text-sm font-semibold text-rose-500 mt-2 block bg-white/60 py-1 px-3 rounded-full border border-rose-100">อุปกรณ์ดับเพลิง/ไฟฉุกเฉิน</span></h2>
             </a>
 
-            <!-- NEW: Menu Item 4: Dashboard -->
-            <a href="#" id="menu-dashboard" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-fuchsia-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden lg:col-start-1 lg:col-end-3 sm:col-span-2 md:col-span-1">
+            <a href="#" id="menu-dashboard" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-fuchsia-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-fuchsia-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative w-20 h-20 bg-gradient-to-br from-fuchsia-100 to-white text-fuchsia-600 rounded-2xl shadow-inner border border-fuchsia-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -323,31 +313,36 @@
                     </svg>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-800 relative z-10">Dashboard</h2>
-                <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">ภาพรวมข้อมูลทุกสาขา (ผู้ดูแลระบบ)</p>
+                <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">ภาพรวมข้อมูลทุกสาขา</p>
+            </a>
+            
+            <a href="#" id="menu-defect" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-red-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-red-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="relative w-20 h-20 bg-gradient-to-br from-red-100 to-white text-red-600 rounded-2xl shadow-inner border border-red-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 drop-shadow-sm" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 relative z-10">อุปกรณ์ชำรุด</h2>
+                <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">สรุปรายงานอุปกรณ์ที่พบปัญหา</p>
             </a>
 
-            <!-- Menu Item 5: User Manual -->
-            <a href="#" id="menu-user-manual" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-emerald-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden sm:col-span-2 lg:col-span-1 md:col-span-1">
+            <a href="#" id="menu-user-manual" class="group bg-white/80 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-emerald-200 hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-emerald-50/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div class="relative w-20 h-20 bg-gradient-to-br from-emerald-100 to-white text-emerald-600 rounded-2xl shadow-inner border border-emerald-50 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 drop-shadow-sm" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 drop-shadow-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-800 relative z-10">คู่มือการใช้งาน</h2>
                 <p class="text-sm text-slate-500 mt-2 relative z-10 font-medium">วิดีโอสอนการใช้งานโปรแกรม</p>
             </a>
         </div>
-        
-        <div class="relative z-10 text-center mt-16 mb-4">
+
             <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 text-xs font-semibold text-slate-500 backdrop-blur-md border border-slate-200/60 shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-indigo-400"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.83-5.83M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>
-                V 4.5 (เพิ่มตู้ดับเพลิง, ถังดับเพลิง, ไฟฉุกเฉิน, แดชบอร์ด)
+                V 4.7 (เพิ่มตู้ดับเพลิง, ถังดับเพลิง, ไฟฉุกเฉิน, แดชบอร์ด, อุปกรณ์ชำรุด)
             </span>
         </div>
     </div>
 
-    <div id="dashboard-app-container" class="hidden min-h-screen bg-slate-50">
+    <div id="dashboard-app-container" class="hidden min-h-screen bg-slate-50 flex flex-col">
 
         <header class="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
 
@@ -481,9 +476,9 @@
         </header>
 
 
-        <main class="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto">
+        <main class="p-2 sm:p-4 w-full max-w-full mx-auto flex-grow flex flex-col">
 
-            <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden flex flex-col">
+            <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden flex flex-col flex-grow min-h-[500px]">
 
                 <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
 
@@ -554,7 +549,7 @@
                 </div>
 
                 
-                <div class="dashboard-table-container overflow-auto max-h-[70vh]">
+                <div class="dashboard-table-container overflow-auto flex-grow h-0">
 
                     <table class="dashboard-table w-full text-sm text-left whitespace-nowrap">
 
@@ -577,7 +572,7 @@
     </div>
 
 
-    <div id="password-modal" class="hidden fixed inset-0 bg-black/60 z-[2000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+<div id="password-modal" class="hidden fixed inset-0 bg-black/60 z-[2000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
 
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm flex flex-col transform transition-transform">
 
@@ -877,6 +872,102 @@
         </main>
     </div>
 
+<div id="defect-summary-app-container" class="hidden min-h-screen bg-slate-50 flex flex-col">
+        <header class="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-sm border-b border-red-200 shadow-sm">
+            <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="py-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <button id="defect-back-to-menu" title="กลับไปหน้าหลัก" class="p-2 text-slate-500 hover:bg-red-50 hover:text-red-700 rounded-full transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m8-8l-8 8 8 8" /></svg>
+                        </button>
+                        <div class="flex items-center gap-2">
+                            <div class="p-1.5 bg-red-100 text-red-600 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                            </div>
+                            <h1 class="text-xl font-bold text-slate-800">สรุปอุปกรณ์ชำรุด <span class="text-sm font-medium text-red-500 bg-red-50 px-2 py-0.5 rounded-full ml-2">Defect Report</span></h1>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                        <div class="relative w-full sm:w-48" id="defect-branch-select-container">
+                            <button id="defect-branch-dropdown-btn" class="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl flex items-center justify-between text-sm text-slate-700 font-medium hover:bg-slate-200 transition shadow-sm">
+                                <span id="defect-branch-dropdown-label" class="truncate">กำลังโหลดสาขา...</span>
+                                <svg class="w-4 h-4 ml-2 shrink-0 transition-transform duration-200" id="defect-branch-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div id="defect-branch-dropdown-menu" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-3 dropdown-menu">
+                                <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
+                                    <button id="defect-branch-select-all" class="text-xs text-red-600 font-bold hover:underline">เลือกทั้งหมด</button>
+                                    <button id="defect-branch-clear-all" class="text-xs text-slate-500 font-bold hover:underline">ล้างทั้งหมด</button>
+                                </div>
+                                <div id="defect-branch-checkboxes" class="space-y-2 max-h-40 overflow-y-auto"></div>
+                            </div>
+                        </div>
+                        <div class="relative w-full sm:w-56" id="defect-device-select-container">
+                            <button id="defect-device-dropdown-btn" class="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl flex items-center justify-between text-sm text-slate-700 font-medium hover:bg-slate-200 transition shadow-sm">
+                                <span id="defect-device-dropdown-label" class="truncate">กำลังโหลดอุปกรณ์...</span>
+                                <svg class="w-4 h-4 ml-2 shrink-0 transition-transform duration-200" id="defect-device-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div id="defect-device-dropdown-menu" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-3 dropdown-menu min-w-max">
+                                <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
+                                    <button id="defect-device-select-all" class="text-xs text-red-600 font-bold hover:underline">เลือกทั้งหมด</button>
+                                    <button id="defect-device-clear-all" class="text-xs text-slate-500 font-bold hover:underline">ล้างทั้งหมด</button>
+                                </div>
+                                <div id="defect-device-checkboxes" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 flex-grow sm:w-auto">
+                            <input type="date" id="defect-filter-date" class="w-full sm:w-auto px-4 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-red-500 transition text-sm font-medium text-slate-700 cursor-pointer shadow-sm">
+                            <label class="flex items-center gap-2 cursor-pointer bg-slate-100 border border-slate-300 rounded-xl px-3 py-2 shadow-sm hover:bg-slate-200 transition">
+                                <input type="checkbox" id="defect-filter-all-month" class="rounded text-red-600 focus:ring-red-500 w-4 h-4 cursor-pointer transition">
+                                <span class="text-sm font-bold text-slate-700 whitespace-nowrap">ดูทั้งเดือน</span>
+                            </label>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button id="defect-refresh-button" title="ค้นหาข้อมูลชำรุด" class="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded-xl shadow-sm transition flex items-center justify-center gap-2 font-semibold w-full sm:w-auto">
+                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                <span>ค้นหา</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="p-2 sm:p-4 w-full max-w-full mx-auto flex-grow flex flex-col">
+            <div class="bg-white rounded-t-2xl shadow-sm border border-slate-200 border-b-0 p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div id="defect-loading-indicator" class="hidden loader-sm animate-spin rounded-full border-2 border-slate-300 border-t-red-600"></div>
+                    <p class="text-sm font-medium text-slate-600" id="defect-status-text">รอการกดค้นหาข้อมูล...</p>
+                </div>
+                <div class="text-sm font-semibold text-slate-700 bg-red-50 px-3 py-1.5 rounded-lg border border-red-100">
+                    พบรายการชำรุดรวม: <span id="defect-total-defects" class="text-red-600 text-lg">0</span> รายการ
+                </div>
+            </div>
+            <div class="bg-white rounded-b-2xl shadow-lg border border-slate-200 overflow-hidden flex-grow relative min-h-[400px]">
+                <div class="dashboard-table-container overflow-auto absolute inset-0">
+                    <table class="dashboard-table w-full text-sm text-left whitespace-nowrap">
+                        <thead class="text-xs text-red-900 uppercase bg-red-100/80 border-b-2 border-red-200 shadow-sm">
+                            <tr>
+                                <th scope="col" class="px-6 py-4 font-bold tracking-wider w-24 text-center">วันที่ตรวจ</th>
+                                <th scope="col" class="px-6 py-4 font-bold tracking-wider w-32">สาขา</th>
+                                <th scope="col" class="px-6 py-4 font-bold tracking-wider w-48">อุปกรณ์</th>
+                                <th scope="col" class="px-6 py-4 font-bold tracking-wider w-32 text-center">หมายเลข</th>
+                                <th scope="col" class="px-6 py-4 font-bold tracking-wider">รายละเอียดข้อบกพร่อง / หมายเหตุ</th>
+                                <th scope="col" class="px-6 py-4 font-bold tracking-wider w-32">ผู้ตรวจสอบ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="defect-table-body" class="divide-y divide-slate-200 text-slate-700">
+                            <tr>
+                                <td colspan="6" class="px-6 py-12 text-center text-slate-500">
+                                    <svg class="w-16 h-16 mx-auto text-slate-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path></svg>
+                                    กรุณากดปุ่ม <b>"ค้นหา"</b> เพื่อเริ่มสแกนหาอุปกรณ์ที่ชำรุดตามวันที่คุณระบุ
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
     <!-- User Manual Page -->
     <div id="user-manual-container" class="hidden">
         <header class="sticky top-0 z-20 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200">
@@ -1036,7 +1127,8 @@
                 document.getElementById('daily-detail-page-container'), 
                 document.getElementById('monthly-detail-page-container'), 
                 document.getElementById('user-manual-container'),
-                document.getElementById('dashboard-app-container') // เพิ่ม Dashboard
+                document.getElementById('dashboard-app-container'), // เพิ่ม Dashboard
+		document.getElementById('defect-summary-app-container') // เพิ่มบรรทัดนี้
             ];
             views.forEach(view => {
                 if (view && view.id === viewToShow) {
@@ -1062,6 +1154,11 @@
         function showDashboardApp() { 
             showView('dashboard-app-container'); 
             initDashboard(); // เรียกเริ่มโหลดข้อมูล Dashboard ทันที
+        }
+
+        function showDefectApp() {
+            showView('defect-summary-app-container');
+            initDefectPage();
         }
 
         // --- Sidebar Logic ---
@@ -2993,98 +3090,36 @@
         let selectedDevices = new Set(masterDevices); // เก็บรายชื่ออุปกรณ์ที่ต้องการกรอง
 
         
-        function initDashboard() {
-
-            const pwdInput = document.getElementById('dashboard-password-input');
-
-            const err = document.getElementById('password-error-msg');
-
-            pwdInput.value = '';
-
-            err.classList.add('hidden');
-
-            document.getElementById('password-modal').classList.remove('hidden');
-
-            document.body.classList.add('overflow-hidden');
-
-            
+function initDashboard() {
             const today = new Date();
-
             const yyyy = today.getFullYear();
-
             const mm = String(today.getMonth() + 1).padStart(2, '0');
-
             
             const mSelect = document.getElementById('dashboard-month-select');
-
             const ySelect = document.getElementById('dashboard-year-select');
-
+            
             if (ySelect.options.length === 0) {
-
                 for (let y = yyyy - 5; y <= yyyy + 5; y++) {
-
                     const opt = document.createElement('option');
-
                     opt.value = y;
-
                     opt.text = y + 543;
- 
                     ySelect.appendChild(opt);
-
                 }
-
             }
-
 
             mSelect.value = mm;
-
             ySelect.value = yyyy;
-
             document.getElementById('dashboard-month-picker').value = `${yyyy}-${mm}`;
-
+            
+            // โหลดแดชบอร์ดทันที ไม่ต้องถามรหัสผ่าน
+            startDashboardLoad();
         }
 
-
-        document.getElementById('password-submit-btn').addEventListener('click', () => {
-
-            if (document.getElementById('dashboard-password-input').value === 'GBH') {
-
-                document.getElementById('password-modal').classList.add('hidden');
-
-                document.body.classList.remove('overflow-hidden');
-
-                startDashboardLoad();
-
-            } else {
-
-                document.getElementById('password-error-msg').classList.remove('hidden');
-
-            }
-
-        });
-
-        
-        // แก้ไขปุ่มปิด/กลับหน้าหลัก ให้ลิงก์กลับไปที่ showMainMenu() อย่างถูกต้อง
-
-        document.getElementById('password-modal-close').addEventListener('click', () => {
-
-            document.getElementById('password-modal').classList.add('hidden');
-
-            document.body.classList.remove('overflow-hidden');
-
-            showMainMenu();
-
-        });
-
-        
         document.getElementById('dashboard-back-to-menu-button').addEventListener('click', () => {
-
             if (currentAbortController) { currentAbortController.abort(); }
-
             showMainMenu();
-
         });
-
+     
 
         // คืนค่ารายการสาขาที่กำลังเลือกกรองอยู่ ณ ขณะนี้ (รวมทั้งกล่องค้นหาข้อความด้วย)
 
@@ -4237,6 +4272,78 @@
             document.getElementById('special-monthly-global-check-month').addEventListener('change', refreshSpecialMonthlyCurrentView);
             document.getElementById('special-monthly-refresh-button').addEventListener('click', refreshSpecialMonthlyCurrentView);
 
+// Event เชื่อมปุ่มหน้าหลัก
+            document.getElementById('menu-defect').addEventListener('click', (e) => { e.preventDefault(); showDefectApp(); });
+            document.getElementById('defect-back-to-menu').addEventListener('click', showMainMenu);
+
+            // Event ของหน้ารายงานชำรุด
+            document.getElementById('defect-refresh-button').addEventListener('click', startDefectScan);
+            document.getElementById('defect-filter-date').addEventListener('change', triggerDefectAutoScan);
+            document.getElementById('defect-filter-all-month').addEventListener('change', triggerDefectAutoScan);
+
+            // Dropdown สาขาของหน้าชำรุด
+            document.getElementById('defect-branch-dropdown-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('defect-branch-dropdown-menu').classList.toggle('hidden');
+                document.getElementById('defect-branch-arrow').classList.toggle('rotate-180');
+                document.getElementById('defect-device-dropdown-menu').classList.add('hidden');
+                document.getElementById('defect-device-arrow').classList.remove('rotate-180');
+            });
+
+            // Dropdown อุปกรณ์ของหน้าชำรุด
+            document.getElementById('defect-device-dropdown-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('defect-device-dropdown-menu').classList.toggle('hidden');
+                document.getElementById('defect-device-arrow').classList.toggle('rotate-180');
+                document.getElementById('defect-branch-dropdown-menu').classList.add('hidden');
+                document.getElementById('defect-branch-arrow').classList.remove('rotate-180');
+            });
+
+            document.getElementById('defect-branch-select-all').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('#defect-branch-checkboxes input').forEach(cb => cb.checked = true);
+                defectSelectedBranches = new Set(allUsersList);
+                updateDefectBranchLabel();
+                triggerDefectAutoScan();
+            });
+
+            document.getElementById('defect-branch-clear-all').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('#defect-branch-checkboxes input').forEach(cb => cb.checked = false);
+                defectSelectedBranches.clear();
+                updateDefectBranchLabel();
+                triggerDefectAutoScan();
+            });
+
+            document.getElementById('defect-device-select-all').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('#defect-device-checkboxes input').forEach(cb => cb.checked = true);
+                defectSelectedDevices = new Set(masterDevices);
+                updateDefectDeviceLabel();
+                triggerDefectAutoScan();
+            });
+
+            document.getElementById('defect-device-clear-all').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('#defect-device-checkboxes input').forEach(cb => cb.checked = false);
+                defectSelectedDevices.clear();
+                updateDefectDeviceLabel();
+                triggerDefectAutoScan();
+            });
+
+            document.addEventListener('click', (e) => {
+                const branchCont = document.getElementById('defect-branch-select-container');
+                const deviceCont = document.getElementById('defect-device-select-container');
+                if (branchCont && !branchCont.contains(e.target)) {
+                    document.getElementById('defect-branch-dropdown-menu')?.classList.add('hidden');
+                    document.getElementById('defect-branch-arrow')?.classList.remove('rotate-180');
+                }
+                if (deviceCont && !deviceCont.contains(e.target)) {
+                    document.getElementById('defect-device-dropdown-menu')?.classList.add('hidden');
+                    document.getElementById('defect-device-arrow')?.classList.remove('rotate-180');
+                }
+            });
+
             setupSearch('daily-user-search-input', 'daily-user-buttons-container');
             setupSearch('monthly-user-search-input', 'monthly-user-buttons-container');
             setupSearch('special-monthly-user-search-input', 'special-monthly-user-buttons-container');
@@ -4250,7 +4357,292 @@
                 });
             }
         });
+// ==========================================
+        // DEFECT SUMMARY LOGIC (อุปกรณ์ชำรุด)
+        // ==========================================
+        let defectSelectedBranches = new Set();
+        let defectSelectedDevices = new Set(masterDevices);
+        let defectAbortController = null;
+        let defectFoundCount = 0;
+        let defectScanTimeout = null;
 
+        async function initDefectPage() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            document.getElementById('defect-filter-date').value = `${yyyy}-${mm}-${dd}`;
+
+            document.getElementById('defect-branch-dropdown-label').textContent = "กำลังโหลดสาขา...";
+            
+            // ใช้รายชื่อสาขาจากที่ Dashboard โหลดไว้แล้ว
+            if (allUsersList.length === 0) {
+                const cachedUsers = localStorage.getItem('cached_user_list');
+                if (cachedUsers) allUsersList = JSON.parse(cachedUsers);
+                else {
+                    const res = await apiCall('getAllUsers', {}, 'daily');
+                    allUsersList = res.users || [];
+                }
+            }
+            
+            setupDefectBranchDropdown();
+            setupDefectDeviceDropdown();
+            triggerDefectAutoScan();
+        }
+
+        function setupDefectBranchDropdown() {
+            const container = document.getElementById('defect-branch-checkboxes');
+            container.innerHTML = '';
+            defectSelectedBranches.clear();
+
+            allUsersList.forEach(user => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center gap-2 py-1 px-1.5 hover:bg-slate-100 rounded-lg cursor-pointer text-xs font-semibold text-slate-700';
+                
+                const cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.value = user;
+                cb.className = 'rounded text-red-600 focus:ring-red-500 w-4 h-4 cursor-pointer';
+                cb.checked = true;
+                defectSelectedBranches.add(user);
+
+                cb.addEventListener('change', () => {
+                    if (cb.checked) defectSelectedBranches.add(user);
+                    else defectSelectedBranches.delete(user);
+                    updateDefectBranchLabel();
+                    triggerDefectAutoScan();
+                });
+
+                label.appendChild(cb);
+                label.appendChild(document.createTextNode(user));
+                container.appendChild(label);
+            });
+            updateDefectBranchLabel();
+        }
+
+        function updateDefectBranchLabel() {
+            const label = document.getElementById('defect-branch-dropdown-label');
+            if (defectSelectedBranches.size === 0) label.textContent = "ไม่ได้เลือกสาขา";
+            else if (defectSelectedBranches.size === allUsersList.length) label.textContent = `เลือกทุกสาขา (${allUsersList.length})`;
+            else label.textContent = `เลือกแล้ว (${defectSelectedBranches.size} สาขา)`;
+        }
+
+        function setupDefectDeviceDropdown() {
+            const container = document.getElementById('defect-device-checkboxes');
+            container.innerHTML = '';
+            defectSelectedDevices.clear();
+
+            masterDevices.forEach(device => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center gap-2 py-1 px-1.5 hover:bg-slate-100 rounded-lg cursor-pointer text-xs font-semibold text-slate-700';
+                
+                const cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.value = device;
+                cb.className = 'rounded text-red-600 focus:ring-red-500 w-4 h-4 cursor-pointer';
+                cb.checked = true;
+                defectSelectedDevices.add(device);
+
+                cb.addEventListener('change', () => {
+                    if (cb.checked) defectSelectedDevices.add(device);
+                    else defectSelectedDevices.delete(device);
+                    updateDefectDeviceLabel();
+                    triggerDefectAutoScan();
+                });
+
+                label.appendChild(cb);
+                label.appendChild(document.createTextNode(device)); 
+                container.appendChild(label);
+            });
+            updateDefectDeviceLabel();
+        }
+
+        function updateDefectDeviceLabel() {
+            const label = document.getElementById('defect-device-dropdown-label');
+            if (defectSelectedDevices.size === 0) label.textContent = "ไม่ได้เลือกอุปกรณ์";
+            else if (defectSelectedDevices.size === masterDevices.length) label.textContent = `ทุกอุปกรณ์ (${masterDevices.length})`;
+            else label.textContent = `เลือกแล้ว (${defectSelectedDevices.size})`;
+        }
+
+        function triggerDefectAutoScan() {
+            if (defectScanTimeout) clearTimeout(defectScanTimeout);
+            defectScanTimeout = setTimeout(() => {
+                startDefectScan();
+            }, 500);
+        }
+
+        async function startDefectScan() {
+            const tbody = document.getElementById('defect-table-body');
+            const statusText = document.getElementById('defect-status-text');
+            const loader = document.getElementById('defect-loading-indicator');
+
+            if (defectSelectedBranches.size === 0 || defectSelectedDevices.size === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-orange-500 font-medium">กรุณาเลือก "สาขา" และ "อุปกรณ์" อย่างน้อย 1 รายการเพื่อดูข้อมูล</td></tr>`;
+                document.getElementById('defect-total-defects').textContent = "0";
+                statusText.textContent = "รอการเลือกตัวกรอง...";
+                if (defectAbortController) defectAbortController.abort();
+                loader.classList.add('hidden');
+                return;
+            }
+            
+            const dateValue = document.getElementById('defect-filter-date').value;
+            if (!dateValue) return;
+
+            const isAllMonth = document.getElementById('defect-filter-all-month').checked;
+
+            if (defectAbortController) defectAbortController.abort();
+            defectAbortController = new AbortController();
+            const signal = defectAbortController.signal;
+
+            const [targetYearStr, targetMonthStr, targetDayStr] = dateValue.split('-');
+            const targetYear = parseInt(targetYearStr);
+            const targetMonth = parseInt(targetMonthStr);
+            const targetDay = parseInt(targetDayStr);
+            
+            const branchesToScan = Array.from(defectSelectedBranches);
+            
+            tbody.innerHTML = '';
+            defectFoundCount = 0;
+            document.getElementById('defect-total-defects').textContent = "0";
+            
+            loader.classList.remove('hidden');
+            document.getElementById('defect-refresh-button').disabled = true;
+
+            let completedBranches = 0;
+            const BATCH_SIZE = 5; 
+            const queue = [...branchesToScan];
+
+            async function worker() {
+                while (queue.length > 0) {
+                    if (signal.aborted) return;
+                    const user = queue.shift();
+                    
+                    try {
+                        const settingsRes = await apiCall('loadSettings', { username: user }, 'daily', signal);
+                        const configs = Array.isArray(settingsRes.config) ? settingsRes.config : [];
+
+                        const equipmentPromises = configs.map(async (config) => {
+                            if (!defectSelectedDevices.has(config.title) || config.sheetId === 'N/A' || !config.sheetId) return;
+                            
+                            try {
+                                const result = await apiCall('getMonthlySheetData', { sheetId: config.sheetId, sheetName: config.sheetName, year: targetYear, month: targetMonth }, 'monthly', signal);
+                                const data = Array.isArray(result?.data) ? result.data : [];
+                                const labels = await fetchDataLabelsForCard(config.title); // ใช้ function ที่มีอยู่แล้วใน V4.5
+                                
+                                const numberColIdx = getNumberColumnIndex(config.title);
+                                const dataStartIndex = getDataStartIndex(config.title, numberColIdx);
+                                const processedDefectNumbers = new Set();
+
+                                data.forEach(row => {
+                                    let rowYear = parseInt(row[3]);
+                                    if (rowYear > 2500) rowYear -= 543;
+                                    let rowMonth = parseInt(row[2]);
+                                    let rowDay = parseInt(row[1]);
+
+                                    if(isNaN(rowMonth) && row[0]) {
+                                        const d = new Date(row[0]);
+                                        if(!isNaN(d.getTime())){
+                                            rowDay = d.getDate();
+                                            rowMonth = d.getMonth() + 1;
+                                            rowYear = d.getFullYear();
+                                        }
+                                    }
+
+                                    const isMatchDate = isAllMonth 
+                                        ? (rowYear === targetYear && rowMonth === targetMonth)
+                                        : (rowYear === targetYear && rowMonth === targetMonth && rowDay === targetDay);
+
+                                    if (isMatchDate) {
+                                        let isDefect = false;
+                                        let defectDetails = [];
+                                        
+                                        for(let i = dataStartIndex; i < row.length; i++) {
+                                            const val = String(row[i]).trim();
+                                            const valLower = val.toLowerCase();
+                                            if(valLower === 'ไม่ปกติ' || valLower === 'ไม่ผ่าน' || valLower === 'ชำรุด') {
+                                                isDefect = true;
+                                                const labelName = labels[i - dataStartIndex] || `จุดตรวจที่ ${i - dataStartIndex + 1}`;
+                                                defectDetails.push(`<span class="font-semibold text-slate-700">${labelName}:</span> <span class="text-red-600 font-bold">${val}</span>`);
+                                            }
+                                        }
+
+                                        let remarkIdx = 14;
+                                        const deviceName = config.title.trim();
+                                        if (['สลิงผ้าแผนกเหล็ก', 'แก๊ส LPG', 'สลิงผ้า รถจัดส่งติดเครน'].includes(deviceName)) remarkIdx = 19;
+                                        else if (deviceName === 'เครนโครงสร้าง') remarkIdx = 27;
+                                        else if (['เครื่องตัดไฟเบอร์', 'ตู้น้ำดับเพลิง', 'ถังดับเพลิงCo2'].includes(deviceName)) remarkIdx = 18;
+                                        else if (deviceName === 'รถเฮี้ยบ จัดส่ง' || deviceName === 'รถเฮี๊ยบ') remarkIdx = 34;
+                                        else if (['Stacker ไฟฟ้า', 'โฟล์คลิฟท์ประเภทเครื่องยนต์'].includes(deviceName)) remarkIdx = 26;
+                                        else if (['รถจัดส่ง', 'รถสแตกเกอร์จัดส่ง'].includes(deviceName)) remarkIdx = 29;
+                                        else if (deviceName === 'รถโฟล์คลิฟท์ไฟฟ้า') remarkIdx = 25;
+                                        else if (deviceName === 'ไฟฉุกเฉิน' || deviceName === 'ถังดับเพลิง') remarkIdx = 14;
+
+                                        let remark = String(row[remarkIdx] || '').trim();
+                                        if (remark === 'ปกติ' || remark === '-') remark = '';
+
+                                        if (isDefect) {
+                                            const number = extractNumber(row, numberColIdx) || 'ไม่ระบุ';
+                                            const dateStr = `${rowDay.toString().padStart(2,'0')}/${targetMonth.toString().padStart(2,'0')}/${(targetYear+543).toString().slice(-2)}`;
+                                            const defectKey = number + '_' + dateStr;
+                                            
+                                            if (processedDefectNumbers.has(defectKey)) return; 
+                                            processedDefectNumbers.add(defectKey); 
+
+                                            let detailText = '<ul class="list-none space-y-1.5 mt-2">';
+                                            defectDetails.forEach(detail => {
+                                                detailText += `<li class="flex items-start gap-1.5 text-sm"><svg class="w-4 h-4 text-red-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg><span>${detail}</span></li>`;
+                                            });
+                                            detailText += '</ul>';
+
+                                            if (remark) {
+                                                detailText += `<div class="mt-2.5 p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-600"><span class="font-bold text-slate-700">หมายเหตุ:</span> ${remark}</div>`;
+                                            }
+
+                                            const tr = document.createElement('tr');
+                                            tr.className = 'hover:bg-red-50/50 transition-colors border-b border-slate-100';
+                                            tr.innerHTML = `
+                                                <td class="px-6 py-4 whitespace-nowrap text-center text-slate-500">${dateStr}</td>
+                                                <td class="px-6 py-4 whitespace-nowrap font-bold text-slate-800">${user}</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-slate-700">${config.title}</td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-center"><span class="bg-red-100 text-red-800 font-bold px-2.5 py-1 rounded-md border border-red-200">${number}</span></td>
+                                                <td class="px-6 py-4 whitespace-normal min-w-[250px]">
+                                                    <span class="inline-flex items-center gap-1 text-xs font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded border border-red-200 mb-1">
+                                                        <svg class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94l-1.72-1.72z" clip-rule="evenodd" /></svg> สถานะ: ไม่ปกติ
+                                                    </span><br>${detailText}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-slate-600">${row[7] || '-'}</td>
+                                            `;
+                                            tbody.appendChild(tr);
+                                            defectFoundCount++;
+                                            document.getElementById('defect-total-defects').textContent = defectFoundCount;
+                                        }
+                                    }
+                                });
+                            } catch(e) {}
+                        });
+                        await Promise.all(equipmentPromises);
+                    } catch (e) { if (e.name === 'AbortError') return; }
+                    
+                    if (signal.aborted) return;
+                    completedBranches++;
+                    statusText.textContent = `กำลังสแกน... สำเร็จแล้ว ${completedBranches} จาก ${branchesToScan.length} สาขา`;
+                }
+            }
+
+            const workers = [];
+            for (let i = 0; i < Math.min(BATCH_SIZE, queue.length); i++) workers.push(worker());
+            await Promise.all(workers);
+
+            if (!signal.aborted) {
+                statusText.textContent = `ค้นหาเสร็จสิ้น (สแกนครบ ${branchesToScan.length} สาขา)`;
+                loader.classList.add('hidden');
+                document.getElementById('defect-refresh-button').disabled = false;
+                
+                if (defectFoundCount === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-green-600 bg-green-50/50"><svg class="w-16 h-16 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-lg font-bold">ยอดเยี่ยม!</span><br>ไม่พบอุปกรณ์ชำรุดในสาขา เครื่องมือ และวันที่ที่คุณเลือก</td></tr>`;
+                }
+            }
+        }
         // --- Service Worker Registration ---
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -4266,5 +4658,3 @@
     </script>
 </body>
 </html>
-
-
