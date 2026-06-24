@@ -2915,7 +2915,7 @@
         }
 
         // --- DASHBOARD LOGIC ---
-let dashboardDataCache = {};
+	let dashboardDataCache = {};
         let dashboardIsFetching = false;
         let currentDashboardFetchId = 0;
         let allUsersList = [];
@@ -2934,7 +2934,7 @@ let dashboardDataCache = {};
             
             // เตรียม Dropdown วันที่
             const dSelect = document.getElementById('dashboard-day-select');
-            if (dSelect.options.length <= 1) {
+            if (dSelect && dSelect.options.length <= 1) {
                 for (let i = 1; i <= 31; i++) {
                     const opt = document.createElement('option');
                     opt.value = i;
@@ -2946,7 +2946,7 @@ let dashboardDataCache = {};
             const mSelect = document.getElementById('dashboard-month-select');
             const ySelect = document.getElementById('dashboard-year-select');
             
-            if (ySelect.options.length === 0) {
+            if (ySelect && ySelect.options.length === 0) {
                 for (let y = yyyy - 5; y <= yyyy + 5; y++) {
                     const opt = document.createElement('option');
                     opt.value = y;
@@ -2955,15 +2955,17 @@ let dashboardDataCache = {};
                 }
             }
 
-            mSelect.value = mm;
-            ySelect.value = yyyy;
-            document.getElementById('dashboard-month-picker').value = `${yyyy}-${mm}`;
+            if(mSelect) mSelect.value = mm;
+            if(ySelect) ySelect.value = yyyy;
+            const monthPicker = document.getElementById('dashboard-month-picker');
+            if(monthPicker) monthPicker.value = `${yyyy}-${mm}`;
             
             startDashboardLoad();
         }
 
         function getFilteredUsers() {
-            const term = (document.getElementById('dashboard-search-input')?.value || '').toLowerCase().trim();
+            const searchInput = document.getElementById('dashboard-search-input');
+            const term = (searchInput ? searchInput.value : '').toLowerCase().trim();
             let filtered = allUsersList;
             
             if (selectedBranches.size > 0 && selectedBranches.size !== allUsersList.length) {
@@ -2986,9 +2988,11 @@ let dashboardDataCache = {};
             const fetchId = currentDashboardFetchId;
             dashboardIsFetching = true;
 
-            document.getElementById('dashboard-status-text').textContent = 'กำลังเตรียมตาราง...';
+            const statusText = document.getElementById('dashboard-status-text');
+            if(statusText) statusText.textContent = 'กำลังเตรียมตาราง...';
+            
             const tbody = document.getElementById('dashboard-table-body');
-            tbody.innerHTML = '';
+            if(tbody) tbody.innerHTML = '';
             
             try {
                 if (allUsersList.length === 0) {
@@ -3017,49 +3021,58 @@ let dashboardDataCache = {};
                 const usersToFetchSet = new Set(usersToFetch);
 
                 const thead = document.getElementById('dashboard-table-head');
-                let headerHtml = '<tr><th scope="col" class="px-6 py-3 border-r border-slate-300 w-48 sticky left-0 bg-slate-100 z-30">สาขา / อุปกรณ์</th>';
+                if(thead) {
+                    let headerHtml = '<tr><th scope="col" class="px-6 py-3 border-r border-slate-300 w-48 sticky left-0 bg-slate-100 z-30">สาขา / อุปกรณ์</th>';
 
-                masterDevices.forEach((device) => {
-                    const isVisible = selectedDevices.has(device);
-                    const displayStyle = isVisible ? '' : 'style="display:none;"';
-                    headerHtml += `<th scope="col" class="px-6 py-3 border-r border-slate-300 text-center tracking-wider" ${displayStyle}>${device}</th>`;
-                });
-                headerHtml += '</tr>';
-                thead.innerHTML = headerHtml;
-
-                allUsersList.forEach((user, index) => {
-                    let rowHtml = `<tr id="dash-row-${index}" class="hover:bg-slate-50 transition-colors" data-user="${user}">`;
-                    rowHtml += `<td class="px-6 py-4 border-r border-slate-200 font-bold text-slate-900 sticky left-0 bg-white z-20 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">${user}</td>`;
-             
-                    const isTarget = usersToFetchSet.has(user);
-
-                    masterDevices.forEach((device, dIndex) => {
+                    masterDevices.forEach((device) => {
                         const isVisible = selectedDevices.has(device);
                         const displayStyle = isVisible ? '' : 'style="display:none;"';
-                        
-                        let cellContent = '';
-                        if (isTarget) {
-                            cellContent = `<div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-fuchsia-500"></div>`;
-                        } else {
-                            cellContent = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ข้ามการโหลด (ถูกกรองออก)"></div>`;
-                        }
-
-                        rowHtml += `<td id="dash-cell-${index}-${dIndex}" class="px-2 py-4 border-r border-slate-200 text-center align-middle" ${displayStyle}>${cellContent}</td>`;
+                        headerHtml += `<th scope="col" class="px-6 py-3 border-r border-slate-300 text-center tracking-wider" ${displayStyle}>${device}</th>`;
                     });
-                    rowHtml += '</tr>';
-                    tbody.insertAdjacentHTML('beforeend', rowHtml);
-                });
+                    headerHtml += '</tr>';
+                    thead.innerHTML = headerHtml;
+                }
+
+                if(tbody) {
+                    allUsersList.forEach((user, index) => {
+                        let rowHtml = `<tr id="dash-row-${index}" class="hover:bg-slate-50 transition-colors" data-user="${user}">`;
+                        rowHtml += `<td class="px-6 py-4 border-r border-slate-200 font-bold text-slate-900 sticky left-0 bg-white z-20 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">${user}</td>`;
+                 
+                        const isTarget = usersToFetchSet.has(user);
+
+                        masterDevices.forEach((device, dIndex) => {
+                            const isVisible = selectedDevices.has(device);
+                            const displayStyle = isVisible ? '' : 'style="display:none;"';
+                            
+                            let cellContent = '';
+                            if (isTarget) {
+                                cellContent = `<div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-fuchsia-500"></div>`;
+                            } else {
+                                cellContent = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ข้ามการโหลด (ถูกกรองออก)"></div>`;
+                            }
+
+                            rowHtml += `<td id="dash-cell-${index}-${dIndex}" class="px-2 py-4 border-r border-slate-200 text-center align-middle" ${displayStyle}>${cellContent}</td>`;
+                        });
+                        rowHtml += '</tr>';
+                        tbody.insertAdjacentHTML('beforeend', rowHtml);
+                    });
+                }
 
                 applyDashboardFilters();
                 setupDashboardSearch();
                 
-                const filterDay = document.getElementById('dashboard-day-select').value;
-                fetchDashboardInBatches(usersToFetch, devicesToFetch, document.getElementById('dashboard-month-picker').value, filterDay, fetchId, signal);
+                const filterDaySelect = document.getElementById('dashboard-day-select');
+                const filterDay = filterDaySelect ? filterDaySelect.value : 'ALL';
+                const monthPicker = document.getElementById('dashboard-month-picker');
+                const monthYear = monthPicker ? monthPicker.value : '';
+                
+                fetchDashboardInBatches(usersToFetch, devicesToFetch, monthYear, filterDay, fetchId, signal);
 
             } catch (err) {
                 if (err.name === 'AbortError') { return; }
-                if (fetchId === currentDashboardFetchId) {
-                    document.getElementById('dashboard-status-text').textContent = 'เกิดข้อผิดพลาด: ' + err.message;
+                const statusText = document.getElementById('dashboard-status-text');
+                if (fetchId === currentDashboardFetchId && statusText) {
+                    statusText.textContent = 'เกิดข้อผิดพลาด: ' + err.message;
                 }
             }
         }
@@ -3069,7 +3082,9 @@ let dashboardDataCache = {};
             let completedCount = 0;
             if (fetchId !== currentDashboardFetchId || signal.aborted) return;
 
-            document.getElementById('dashboard-status-text').textContent = `กำลังโหลดข้อมูล... (0/${users.length})`;
+            const statusText = document.getElementById('dashboard-status-text');
+            if(statusText) statusText.textContent = `กำลังโหลดข้อมูล... (0/${users.length})`;
+            
             const [year, month] = monthYear.split('-').map(Number);
             const specialDevices = ['ตู้น้ำดับเพลิง', 'ถังดับเพลิง', 'ถังดับเพลิงCo2', 'ไฟฉุกเฉิน'];
             
@@ -3230,7 +3245,8 @@ let dashboardDataCache = {};
                     
                     if (fetchId !== currentDashboardFetchId || signal.aborted) return;
                     completedCount++;
-                    document.getElementById('dashboard-status-text').textContent = `กำลังโหลดข้อมูล... (${completedCount}/${users.length})`;
+                    const stText = document.getElementById('dashboard-status-text');
+                    if(stText) stText.textContent = `กำลังโหลดข้อมูล... (${completedCount}/${users.length})`;
                 }
             }
 
@@ -3242,14 +3258,15 @@ let dashboardDataCache = {};
             await Promise.all(workers);
 
             if (fetchId === currentDashboardFetchId && !signal.aborted) {
-                document.getElementById('dashboard-status-text').textContent = `โหลดข้อมูลเสร็จสิ้น (${users.length} สาขา)`;
+                const finalStatus = document.getElementById('dashboard-status-text');
+                if(finalStatus) finalStatus.textContent = `โหลดข้อมูลเสร็จสิ้น (${users.length} สาขา)`;
                 dashboardIsFetching = false;
             }
         }
 
         function setupBranchDropdown() {
             const container = document.getElementById('branch-checkboxes');
-            if (container.children.length === 0) {
+            if (container && container.children.length === 0) {
                 allUsersList.forEach(user => {
                     const label = document.createElement('label');
                     label.className = 'flex items-center gap-2 py-1 px-1.5 hover:bg-slate-100 rounded-lg cursor-pointer text-xs font-semibold text-slate-700';
@@ -3278,6 +3295,7 @@ let dashboardDataCache = {};
 
         function updateBranchDropdownLabel() {
             const label = document.getElementById('branch-dropdown-label');
+            if(!label) return;
             if (selectedBranches.size === 0) {
                 label.textContent = "ไม่ได้เลือกสาขาเลย";
             } else if (selectedBranches.size === allUsersList.length) {
@@ -3355,6 +3373,7 @@ let dashboardDataCache = {};
 
             rows.forEach(row => {
                 const user = row.dataset.user;
+                if(!user) return;
                 const userLower = user.toLowerCase();
                 
                 let matchSearch = userLower.includes(term);
@@ -3412,158 +3431,166 @@ let dashboardDataCache = {};
         }
 
         window.showDashboardDetail = function(device, user, daysStr) {
-            document.getElementById('dash-modal-title').textContent = `${device}`;
-            document.getElementById('dash-modal-subtitle').textContent = `สาขา: ${user}`;
+            const titleEl = document.getElementById('dash-modal-title');
+            if(titleEl) titleEl.textContent = `${device}`;
+            
+            const subtitleEl = document.getElementById('dash-modal-subtitle');
+            if(subtitleEl) subtitleEl.textContent = `สาขา: ${user}`;
+            
             const days = JSON.parse(daysStr);
             const container = document.getElementById('dash-modal-days-container');
-            container.innerHTML = '';
-            
-            if (days.length === 0) {
-                container.innerHTML = '<span class="text-sm text-slate-500 italic">ไม่พบวันที่บันทึกข้อมูล</span>';
-            } else {
-                days.sort((a,b)=>a-b).forEach(d => {
-                    container.insertAdjacentHTML('beforeend', `<span class="w-8 h-8 flex items-center justify-center bg-fuchsia-100 text-fuchsia-700 font-bold rounded-lg text-sm shadow-sm">${d}</span>`);
-                });
+            if(container) {
+                container.innerHTML = '';
+                if (days.length === 0) {
+                    container.innerHTML = '<span class="text-sm text-slate-500 italic">ไม่พบวันที่บันทึกข้อมูล</span>';
+                } else {
+                    days.sort((a,b)=>a-b).forEach(d => {
+                        container.insertAdjacentHTML('beforeend', `<span class="w-8 h-8 flex items-center justify-center bg-fuchsia-100 text-fuchsia-700 font-bold rounded-lg text-sm shadow-sm">${d}</span>`);
+                    });
+                }
             }
-            document.getElementById('dashboard-detail-modal').classList.remove('hidden');
+            const modal = document.getElementById('dashboard-detail-modal');
+            if(modal) modal.classList.remove('hidden');
         };
 
-        // --- เพิ่ม Event Listeners ในระบบแดชบอร์ดเข้ากับ DOMContentLoaded ของ V 4.7 ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const dashCloseBtn = document.getElementById('dash-modal-close');
-            if(dashCloseBtn) {
-                dashCloseBtn.addEventListener('click', () => {
-                    document.getElementById('dashboard-detail-modal').classList.add('hidden');
-                });
-            }
-
-            const dashRefreshBtn = document.getElementById('dashboard-refresh-button');
-            if(dashRefreshBtn) {
-                dashRefreshBtn.addEventListener('click', () => {
-                    startDashboardLoad();
-                });
-            }
-
-            const daySelect = document.getElementById('dashboard-day-select');
-            if(daySelect) {
-                daySelect.addEventListener('change', () => {
-                    startDashboardLoad();
-                });
-            }
-
-            const monthSelect = document.getElementById('dashboard-month-select');
-            if(monthSelect) {
-                monthSelect.addEventListener('change', () => {
-                    const m = document.getElementById('dashboard-month-select').value;
-                    const y = document.getElementById('dashboard-year-select').value;
-                    document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
-                    startDashboardLoad();
-                });
-            }
-
-            const yearSelect = document.getElementById('dashboard-year-select');
-            if(yearSelect) {
-                yearSelect.addEventListener('change', () => {
-                    const m = document.getElementById('dashboard-month-select').value;
-                    const y = document.getElementById('dashboard-year-select').value;
-                    document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
-                    startDashboardLoad();
-                });
-            }
-
-            const filterStatus = document.getElementById('dashboard-filter-status');
-            if(filterStatus) {
-                filterStatus.addEventListener('change', () => {
-                    applyDashboardFilters();
-                });
-            }
-
-            const branchDropdownBtn = document.getElementById('branch-dropdown-btn');
-            const branchDropdownMenu = document.getElementById('branch-dropdown-menu');
-            const branchDropdownArrow = document.getElementById('branch-arrow');
-
-            if(branchDropdownBtn) {
-                branchDropdownBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    branchDropdownMenu.classList.toggle('hidden');
-                    branchDropdownArrow.classList.toggle('rotate-180');
-                });
-            }
-
-            const branchSelectAllBtn = document.getElementById('branch-select-all');
-            if(branchSelectAllBtn) {
-                branchSelectAllBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    selectedBranches.clear();
-                    document.querySelectorAll('#branch-checkboxes input[type="checkbox"]').forEach(cb => {
-                        cb.checked = true;
-                        selectedBranches.add(cb.value);
-                    });
-                    updateBranchDropdownLabel();
-                    startDashboardLoad();
-                });
-            }
-
-            const branchClearAllBtn = document.getElementById('branch-clear-all');
-            if(branchClearAllBtn) {
-                branchClearAllBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    selectedBranches.clear();
-                    document.querySelectorAll('#branch-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
-                    updateBranchDropdownLabel();
-                    startDashboardLoad();
-                });
-            }
-
-            const devDropdownBtn = document.getElementById('device-dropdown-btn');
-            const devDropdownMenu = document.getElementById('device-dropdown-menu');
-            const devDropdownArrow = document.getElementById('device-arrow');
-
-            if(devDropdownBtn) {
-                devDropdownBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    devDropdownMenu.classList.toggle('hidden');
-                    devDropdownArrow.classList.toggle('rotate-180');
-                });
-            }
-
-            const devSelectAllBtn = document.getElementById('device-select-all');
-            if(devSelectAllBtn) {
-                devSelectAllBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    document.querySelectorAll('#device-checkboxes input[type="checkbox"]').forEach(cb => {
-                        cb.checked = true;
-                        selectedDevices.add(cb.value);
-                    });
-                    updateDeviceDropdownLabel();
-                    startDashboardLoad();
-                });
-            }
-
-            const devClearAllBtn = document.getElementById('device-clear-all');
-            if(devClearAllBtn) {
-                devClearAllBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    selectedDevices.clear();
-                    document.querySelectorAll('#device-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
-                    updateDeviceDropdownLabel();
-                    startDashboardLoad();
-                });
-            }
-
-            document.addEventListener('click', (e) => {
-                const branchCont = document.getElementById('branch-select-container');
-                if (branchCont && !branchCont.contains(e.target)) {
-                    if(branchDropdownMenu) branchDropdownMenu.classList.add('hidden');
-                    if(branchDropdownArrow) branchDropdownArrow.classList.remove('rotate-180');
-                }
-
-                const devCont = document.getElementById('device-select-container');
-                if (devCont && !devCont.contains(e.target)) {
-                    if(devDropdownMenu) devDropdownMenu.classList.add('hidden');
-                    if(devDropdownArrow) devDropdownArrow.classList.remove('rotate-180');
-                }
+        // --- เชื่อมต่อ Event Listener โดยตรง (ไม่ครอบ DOMContentLoaded ซ้ำ) ---
+        
+        const dashCloseBtn = document.getElementById('dash-modal-close');
+        if(dashCloseBtn) {
+            dashCloseBtn.addEventListener('click', () => {
+                const modal = document.getElementById('dashboard-detail-modal');
+                if(modal) modal.classList.add('hidden');
             });
+        }
+
+        const dashRefreshBtn = document.getElementById('dashboard-refresh-button');
+        if(dashRefreshBtn) {
+            dashRefreshBtn.addEventListener('click', () => {
+                startDashboardLoad();
+            });
+        }
+
+        const daySelect = document.getElementById('dashboard-day-select');
+        if(daySelect) {
+            daySelect.addEventListener('change', () => {
+                startDashboardLoad();
+            });
+        }
+
+        const monthSelect = document.getElementById('dashboard-month-select');
+        if(monthSelect) {
+            monthSelect.addEventListener('change', () => {
+                const m = document.getElementById('dashboard-month-select').value;
+                const y = document.getElementById('dashboard-year-select').value;
+                const p = document.getElementById('dashboard-month-picker');
+                if(p) p.value = `${y}-${m}`;
+                startDashboardLoad();
+            });
+        }
+
+        const yearSelect = document.getElementById('dashboard-year-select');
+        if(yearSelect) {
+            yearSelect.addEventListener('change', () => {
+                const m = document.getElementById('dashboard-month-select').value;
+                const y = document.getElementById('dashboard-year-select').value;
+                const p = document.getElementById('dashboard-month-picker');
+                if(p) p.value = `${y}-${m}`;
+                startDashboardLoad();
+            });
+        }
+
+        const filterStatus = document.getElementById('dashboard-filter-status');
+        if(filterStatus) {
+            filterStatus.addEventListener('change', () => {
+                applyDashboardFilters();
+            });
+        }
+
+        const branchDropdownBtn = document.getElementById('branch-dropdown-btn');
+        const branchDropdownMenu = document.getElementById('branch-dropdown-menu');
+        const branchDropdownArrow = document.getElementById('branch-arrow');
+
+        if(branchDropdownBtn) {
+            branchDropdownBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if(branchDropdownMenu) branchDropdownMenu.classList.toggle('hidden');
+                if(branchDropdownArrow) branchDropdownArrow.classList.toggle('rotate-180');
+            });
+        }
+
+        const branchSelectAllBtn = document.getElementById('branch-select-all');
+        if(branchSelectAllBtn) {
+            branchSelectAllBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedBranches.clear();
+                document.querySelectorAll('#branch-checkboxes input[type="checkbox"]').forEach(cb => {
+                    cb.checked = true;
+                    selectedBranches.add(cb.value);
+                });
+                updateBranchDropdownLabel();
+                startDashboardLoad();
+            });
+        }
+
+        const branchClearAllBtn = document.getElementById('branch-clear-all');
+        if(branchClearAllBtn) {
+            branchClearAllBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedBranches.clear();
+                document.querySelectorAll('#branch-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+                updateBranchDropdownLabel();
+                startDashboardLoad();
+            });
+        }
+
+        const devDropdownBtn = document.getElementById('device-dropdown-btn');
+        const devDropdownMenu = document.getElementById('device-dropdown-menu');
+        const devDropdownArrow = document.getElementById('device-arrow');
+
+        if(devDropdownBtn) {
+            devDropdownBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if(devDropdownMenu) devDropdownMenu.classList.toggle('hidden');
+                if(devDropdownArrow) devDropdownArrow.classList.toggle('rotate-180');
+            });
+        }
+
+        const devSelectAllBtn = document.getElementById('device-select-all');
+        if(devSelectAllBtn) {
+            devSelectAllBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('#device-checkboxes input[type="checkbox"]').forEach(cb => {
+                    cb.checked = true;
+                    selectedDevices.add(cb.value);
+                });
+                updateDeviceDropdownLabel();
+                startDashboardLoad();
+            });
+        }
+
+        const devClearAllBtn = document.getElementById('device-clear-all');
+        if(devClearAllBtn) {
+            devClearAllBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedDevices.clear();
+                document.querySelectorAll('#device-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+                updateDeviceDropdownLabel();
+                startDashboardLoad();
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            const branchCont = document.getElementById('branch-select-container');
+            if (branchCont && !branchCont.contains(e.target)) {
+                if(branchDropdownMenu) branchDropdownMenu.classList.add('hidden');
+                if(branchDropdownArrow) branchDropdownArrow.classList.remove('rotate-180');
+            }
+
+            const devCont = document.getElementById('device-select-container');
+            if (devCont && !devCont.contains(e.target)) {
+                if(devDropdownMenu) devDropdownMenu.classList.add('hidden');
+                if(devDropdownArrow) devDropdownArrow.classList.remove('rotate-180');
+            }
         });
 
 // ==========================================
