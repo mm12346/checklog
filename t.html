@@ -342,21 +342,18 @@
         </div>
     </div>
 
-<!-- Dashboard App Container -->
-    <div id="dashboard-app-container" class="hidden min-h-screen bg-slate-50 flex flex-col">
-
+<div id="dashboard-app-container" class="hidden min-h-screen bg-slate-50 flex flex-col">
         <header class="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
             <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
               <div class="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
 
-                    <!-- Title & Back Button -->
                     <div class="flex items-center gap-3">
                         <button id="dashboard-back-to-menu-button" title="กลับไปหน้าเมนูหลัก" class="p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 rounded-full transition">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m8-8l-8 8 8 8" /></svg>
                         </button>
                         <div class="flex items-center gap-2">
                             <div class="p-1.5 bg-fuchsia-100 text-fuchsia-600 rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
                                 </svg>
@@ -365,33 +362,27 @@
                         </div>
                     </div>
 
-                    <!-- Filters & Controls -->
                     <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-
-                        <!-- Search -->
-                        <div class="relative w-full sm:w-44">
-                            <input type="text" id="dashboard-search-input" placeholder="ค้นหาชื่อสาขา..." class="w-full pl-9 pr-4 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition text-sm">
+                        <div class="relative w-full sm:w-44 border border-slate-300 rounded-xl">
+                            <input type="text" id="dashboard-search-input" placeholder="ค้นหาชื่อสาขา..." class="w-full pl-9 pr-4 py-2 bg-slate-100 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition text-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-3 top-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                         </div>
 
-                        <!-- Branch Filter -->
                         <div class="relative w-full sm:w-56" id="branch-select-container">
                             <button id="branch-dropdown-btn" class="w-full px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl flex items-center justify-between text-sm text-slate-700 font-medium hover:bg-slate-200 transition">
-                                <span id="branch-dropdown-label" class="truncate">กำลังโหลดสาขา...</span>
+                                 <span id="branch-dropdown-label" class="truncate">กำลังโหลดสาขา...</span>
                                 <svg class="w-4 h-4 ml-2 shrink-0 transition-transform duration-200" id="branch-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
                             <div id="branch-dropdown-menu" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-3 dropdown-menu">
                                 <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
-                                    <button id="branch-select-all" class="text-xs text-fuchsia-600 font-bold hover:underline">เลือกทั้งหมด</button>
+                                   <button id="branch-select-all" class="text-xs text-fuchsia-600 font-bold hover:underline">เลือกทั้งหมด</button>
                                     <button id="branch-clear-all" class="text-xs text-slate-500 font-bold hover:underline">ล้างทั้งหมด</button>
                                 </div>
-                                <div id="branch-checkboxes" class="space-y-2 max-h-40 overflow-y-auto"></div>
+                                 <div id="branch-checkboxes" class="space-y-2 max-h-40 overflow-y-auto"></div>
                             </div>
                         </div>
 
-                        <!-- Date Filter -->
                         <div class="flex items-center gap-2 flex-grow sm:w-auto overflow-x-auto">
-                            <!-- Dropdown เลือกวันที่ -->
                             <select id="dashboard-day-select" class="w-full sm:w-auto px-3 py-2 bg-slate-100 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 transition text-sm cursor-pointer outline-none font-medium text-slate-700 shadow-sm">
                                 <option value="ALL">-- ดูทั้งเดือน --</option>
                             </select>
@@ -415,7 +406,6 @@
                             <input type="hidden" id="dashboard-month-picker">
                         </div>
 
-                        <!-- Refresh Button -->
                         <div class="flex items-center gap-2">
                             <button id="dashboard-refresh-button" title="โหลดข้อมูลใหม่" class="p-2 bg-fuchsia-600 text-white hover:bg-fuchsia-700 rounded-xl shadow-sm transition flex items-center justify-center">
                                 <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
@@ -429,15 +419,11 @@
         <main class="p-2 sm:p-4 w-full max-w-full mx-auto flex-grow flex flex-col">
             <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden flex flex-col flex-grow min-h-[500px]">
                 
-                <!-- Table Controls & Filters -->
                 <div class="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div class="flex flex-col gap-2 w-full sm:w-auto">
+                  <div class="flex flex-col gap-2 w-full sm:w-auto">
                         <p class="text-sm font-medium text-slate-600" id="dashboard-status-text">กำลังรอโหลดข้อมูล...</p>
-                        
                         <div class="flex flex-wrap items-center gap-2 mt-1 w-full sm:w-auto">
                             <span class="text-xs font-semibold text-slate-500">ตัวกรองตาราง:</span>
-                            
-                            <!-- Device Filter -->
                             <div class="relative w-48 sm:w-56" id="device-select-container">
                                 <button id="device-dropdown-btn" class="w-full px-2 py-1.5 bg-white border border-slate-300 rounded-lg flex items-center justify-between text-xs text-slate-700 font-medium hover:bg-slate-50 transition shadow-sm">
                                     <span id="device-dropdown-label" class="truncate">กำลังโหลดอุปกรณ์...</span>
@@ -450,9 +436,8 @@
                                     </div>
                                     <div id="device-checkboxes" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
                                 </div>
-                            </div>
+                           </div>
 
-                            <!-- Status Filter -->
                             <select id="dashboard-filter-status" class="px-2 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-medium focus:ring-2 focus:ring-fuchsia-500 outline-none w-28 sm:w-32 text-slate-700 shadow-sm cursor-pointer transition">
                                 <option value="ALL">-- ทุกสถานะ --</option>
                                 <option value="COMPLETE">ครบ</option>
@@ -462,7 +447,6 @@
                         </div>
                     </div>
 
-                    <!-- Legend -->
                     <div class="flex gap-4 text-xs font-semibold ml-auto sm:ml-0 mt-2 sm:mt-0">
                         <span class="flex items-center gap-1"><div class="w-3 h-3 bg-teal-100 rounded border border-teal-300"></div> ครบ</span>
                         <span class="flex items-center gap-1"><div class="w-3 h-3 bg-amber-100 rounded border border-amber-300"></div> ยังไม่ครบ</span>
@@ -470,7 +454,6 @@
                     </div>
                 </div>
                 
-                <!-- Table Area -->
                 <div class="dashboard-table-container overflow-auto flex-grow h-0 relative">
                     <table class="dashboard-table w-full text-sm text-left whitespace-nowrap">
                         <thead class="text-xs text-slate-700 uppercase bg-slate-100 border-b-2 border-slate-300" id="dashboard-table-head"></thead>
@@ -482,26 +465,89 @@
         </main>
     </div>
 
-    <!-- Detail Modal -->
-    <div id="dashboard-detail-modal" class="hidden fixed inset-0 bg-black/60 z-[2000] flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col">
-            <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50 rounded-t-2xl">
-                <div>
-                    <h3 id="dash-modal-title" class="text-lg font-bold text-slate-800">รายละเอียด</h3>
-                    <p id="dash-modal-subtitle" class="text-sm text-slate-500"></p>
+<div id="password-modal" class="hidden fixed inset-0 bg-black/60 z-[2000] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm flex flex-col transform transition-transform">
+
+            <div class="flex justify-between items-center p-5 border-b border-slate-100">
+
+                <div class="flex items-center gap-2 text-fuchsia-600">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+
+                    <h3 class="text-lg font-bold">ยืนยันตัวตน</h3>
+
                 </div>
-                <button id="dash-modal-close" class="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-full transition">
+
+                <button id="password-modal-close" class="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition">
+
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+
                 </button>
+
             </div>
-            <div class="p-6 max-h-[60vh] overflow-y-auto">
-                <div class="mb-4">
-                    <p class="text-sm font-semibold text-slate-600 mb-2">วันที่พบการตรวจสอบข้อมูลในระบบ:</p>
-                    <div id="dash-modal-days-container" class="flex flex-wrap gap-2"></div>
-                </div>
-                <p class="text-xs text-slate-400 mt-4">* หมายเหตุ: แสดงเฉพาะวันที่พบร่องรอยการบันทึกข้อมูลในระบบ</p>
+
+            <div class="p-6">
+
+                <p class="text-sm text-slate-500 mb-4 text-center">กรุณาใส่รหัสผ่านเพื่อเข้าสู่ระบบแดชบอร์ด</p>
+
+                <input type="password" id="dashboard-password-input" placeholder="รหัสผ่าน..." class="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:outline-none transition text-center tracking-widest font-mono text-lg">
+
+                <p id="password-error-msg" class="text-red-500 text-xs text-center mt-2 hidden">รหัสผ่านไม่ถูกต้อง</p>
+
             </div>
+
+            <div class="p-5 bg-slate-50 border-t border-slate-100 rounded-b-2xl">
+
+                <button id="password-submit-btn" class="w-full py-3 bg-fuchsia-600 text-white rounded-xl hover:bg-fuchsia-700 transition font-bold shadow-md hover:shadow-lg">เข้าสู่ระบบ</button>
+
+            </div>
+
         </div>
+
+    </div>
+
+
+    <div id="dashboard-detail-modal" class="hidden fixed inset-0 bg-black/60 z-[2000] flex items-center justify-center p-4 backdrop-blur-sm">
+
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md flex flex-col">
+
+            <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50 rounded-t-2xl">
+
+                <div>
+
+                    <h3 id="dash-modal-title" class="text-lg font-bold text-slate-800">รายละเอียด</h3>
+
+                    <p id="dash-modal-subtitle" class="text-sm text-slate-500"></p>
+
+                </div>
+
+                <button id="dash-modal-close" class="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-full transition">
+
+                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+
+                </button>
+
+            </div>
+
+            <div class="p-6 max-h-[60vh] overflow-y-auto">
+
+                <div class="mb-4">
+
+                    <p class="text-sm font-semibold text-slate-600 mb-2">วันที่พบการตรวจสอบข้อมูลในระบบ:</p>
+
+                    <div id="dash-modal-days-container" class="flex flex-wrap gap-2">
+
+                        </div>
+
+                </div>
+
+                <p class="text-xs text-slate-400 mt-4">* หมายเหตุ: แสดงเฉพาะวันที่พบร่องรอยการบันทึกข้อมูลในระบบ</p>
+
+            </div>
+
+        </div>
+
     </div>
 
     <!-- Daily Check App Container -->
@@ -2914,8 +2960,11 @@
             });
         }
 
-        // --- DASHBOARD LOGIC ---
-	let dashboardDataCache = {};
+// ==========================================
+        // DASHBOARD LOGIC
+        // ==========================================
+
+        let dashboardDataCache = {};
         let dashboardIsFetching = false;
         let currentDashboardFetchId = 0;
         let allUsersList = [];
@@ -2931,10 +2980,9 @@
             const today = new Date();
             const yyyy = today.getFullYear();
             const mm = String(today.getMonth() + 1).padStart(2, '0');
-            
             // เตรียม Dropdown วันที่
             const dSelect = document.getElementById('dashboard-day-select');
-            if (dSelect && dSelect.options.length <= 1) {
+            if (dSelect.options.length <= 1) {
                 for (let i = 1; i <= 31; i++) {
                     const opt = document.createElement('option');
                     opt.value = i;
@@ -2946,7 +2994,7 @@
             const mSelect = document.getElementById('dashboard-month-select');
             const ySelect = document.getElementById('dashboard-year-select');
             
-            if (ySelect && ySelect.options.length === 0) {
+            if (ySelect.options.length === 0) {
                 for (let y = yyyy - 5; y <= yyyy + 5; y++) {
                     const opt = document.createElement('option');
                     opt.value = y;
@@ -2955,17 +3003,15 @@
                 }
             }
 
-            if(mSelect) mSelect.value = mm;
-            if(ySelect) ySelect.value = yyyy;
-            const monthPicker = document.getElementById('dashboard-month-picker');
-            if(monthPicker) monthPicker.value = `${yyyy}-${mm}`;
+            mSelect.value = mm;
+            ySelect.value = yyyy;
+            document.getElementById('dashboard-month-picker').value = `${yyyy}-${mm}`;
             
             startDashboardLoad();
         }
 
         function getFilteredUsers() {
-            const searchInput = document.getElementById('dashboard-search-input');
-            const term = (searchInput ? searchInput.value : '').toLowerCase().trim();
+            const term = (document.getElementById('dashboard-search-input')?.value || '').toLowerCase().trim();
             let filtered = allUsersList;
             
             if (selectedBranches.size > 0 && selectedBranches.size !== allUsersList.length) {
@@ -2983,17 +3029,13 @@
             }
             currentAbortController = new AbortController();
             const signal = currentAbortController.signal;
-
             currentDashboardFetchId++;
             const fetchId = currentDashboardFetchId;
             dashboardIsFetching = true;
 
-            const statusText = document.getElementById('dashboard-status-text');
-            if(statusText) statusText.textContent = 'กำลังเตรียมตาราง...';
-            
+            document.getElementById('dashboard-status-text').textContent = 'กำลังเตรียมตาราง...';
             const tbody = document.getElementById('dashboard-table-body');
-            if(tbody) tbody.innerHTML = '';
-            
+            tbody.innerHTML = '';
             try {
                 if (allUsersList.length === 0) {
                     if (!usersFetchPromise) {
@@ -3013,7 +3055,6 @@
                 }
                 
                 if (fetchId !== currentDashboardFetchId || signal.aborted) return;
-                
                 setupBranchDropdown();
                 setupDeviceDropdown();
                 const devicesToFetch = Array.from(selectedDevices);
@@ -3021,58 +3062,47 @@
                 const usersToFetchSet = new Set(usersToFetch);
 
                 const thead = document.getElementById('dashboard-table-head');
-                if(thead) {
-                    let headerHtml = '<tr><th scope="col" class="px-6 py-3 border-r border-slate-300 w-48 sticky left-0 bg-slate-100 z-30">สาขา / อุปกรณ์</th>';
+                let headerHtml = '<tr><th scope="col" class="px-6 py-3 border-r border-slate-300 w-48 sticky left-0 bg-slate-100 z-30">สาขา / อุปกรณ์</th>';
+                masterDevices.forEach((device) => {
+                    const isVisible = selectedDevices.has(device);
+                    const displayStyle = isVisible ? '' : 'style="display:none;"';
+                    headerHtml += `<th scope="col" class="px-6 py-3 border-r border-slate-300 text-center tracking-wider" ${displayStyle}>${device}</th>`;
+                });
+                headerHtml += '</tr>';
+                thead.innerHTML = headerHtml;
 
-                    masterDevices.forEach((device) => {
+                allUsersList.forEach((user, index) => {
+                    let rowHtml = `<tr id="dash-row-${index}" class="hover:bg-slate-50 transition-colors" data-user="${user}">`;
+                    rowHtml += `<td class="px-6 py-4 border-r border-slate-200 font-bold text-slate-900 sticky left-0 bg-white z-20 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">${user}</td>`;
+             
+                    const isTarget = usersToFetchSet.has(user);
+
+                    masterDevices.forEach((device, dIndex) => {
                         const isVisible = selectedDevices.has(device);
                         const displayStyle = isVisible ? '' : 'style="display:none;"';
-                        headerHtml += `<th scope="col" class="px-6 py-3 border-r border-slate-300 text-center tracking-wider" ${displayStyle}>${device}</th>`;
+             
+                        let cellContent = '';
+                        if (isTarget) {
+                            cellContent = `<div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-fuchsia-500"></div>`;
+                        } else {
+                            cellContent = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ข้ามการโหลด (ถูกกรองออก)"></div>`;
+                        }
+
+                        rowHtml += `<td id="dash-cell-${index}-${dIndex}" class="px-2 py-4 border-r border-slate-200 text-center align-middle" ${displayStyle}>${cellContent}</td>`;
                     });
-                    headerHtml += '</tr>';
-                    thead.innerHTML = headerHtml;
-                }
-
-                if(tbody) {
-                    allUsersList.forEach((user, index) => {
-                        let rowHtml = `<tr id="dash-row-${index}" class="hover:bg-slate-50 transition-colors" data-user="${user}">`;
-                        rowHtml += `<td class="px-6 py-4 border-r border-slate-200 font-bold text-slate-900 sticky left-0 bg-white z-20 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">${user}</td>`;
-                 
-                        const isTarget = usersToFetchSet.has(user);
-
-                        masterDevices.forEach((device, dIndex) => {
-                            const isVisible = selectedDevices.has(device);
-                            const displayStyle = isVisible ? '' : 'style="display:none;"';
-                            
-                            let cellContent = '';
-                            if (isTarget) {
-                                cellContent = `<div class="loader-sm mx-auto animate-spin rounded-full border-2 border-slate-300 border-t-fuchsia-500"></div>`;
-                            } else {
-                                cellContent = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ข้ามการโหลด (ถูกกรองออก)"></div>`;
-                            }
-
-                            rowHtml += `<td id="dash-cell-${index}-${dIndex}" class="px-2 py-4 border-r border-slate-200 text-center align-middle" ${displayStyle}>${cellContent}</td>`;
-                        });
-                        rowHtml += '</tr>';
-                        tbody.insertAdjacentHTML('beforeend', rowHtml);
-                    });
-                }
+                    rowHtml += '</tr>';
+                    tbody.insertAdjacentHTML('beforeend', rowHtml);
+                });
 
                 applyDashboardFilters();
                 setupDashboardSearch();
                 
-                const filterDaySelect = document.getElementById('dashboard-day-select');
-                const filterDay = filterDaySelect ? filterDaySelect.value : 'ALL';
-                const monthPicker = document.getElementById('dashboard-month-picker');
-                const monthYear = monthPicker ? monthPicker.value : '';
-                
-                fetchDashboardInBatches(usersToFetch, devicesToFetch, monthYear, filterDay, fetchId, signal);
-
+                const filterDay = document.getElementById('dashboard-day-select').value;
+                fetchDashboardInBatches(usersToFetch, devicesToFetch, document.getElementById('dashboard-month-picker').value, filterDay, fetchId, signal);
             } catch (err) {
                 if (err.name === 'AbortError') { return; }
-                const statusText = document.getElementById('dashboard-status-text');
-                if (fetchId === currentDashboardFetchId && statusText) {
-                    statusText.textContent = 'เกิดข้อผิดพลาด: ' + err.message;
+                if (fetchId === currentDashboardFetchId) {
+                    document.getElementById('dashboard-status-text').textContent = 'เกิดข้อผิดพลาด: ' + err.message;
                 }
             }
         }
@@ -3082,17 +3112,14 @@
             let completedCount = 0;
             if (fetchId !== currentDashboardFetchId || signal.aborted) return;
 
-            const statusText = document.getElementById('dashboard-status-text');
-            if(statusText) statusText.textContent = `กำลังโหลดข้อมูล... (0/${users.length})`;
-            
+            document.getElementById('dashboard-status-text').textContent = `กำลังโหลดข้อมูล... (0/${users.length})`;
             const [year, month] = monthYear.split('-').map(Number);
             const specialDevices = ['ตู้น้ำดับเพลิง', 'ถังดับเพลิง', 'ถังดับเพลิงCo2', 'ไฟฉุกเฉิน'];
             
             const isAllMonth = filterDay === 'ALL';
             const targetDay = parseInt(filterDay);
-
             const queue = users.map(user => ({ user, index: allUsersList.indexOf(user) }));
-
+            
             async function worker() {
                 while (queue.length > 0) {
                     if (fetchId !== currentDashboardFetchId || signal.aborted) return;
@@ -3103,7 +3130,6 @@
                         if (fetchId !== currentDashboardFetchId || signal.aborted) return;
 
                         const configs = Array.isArray(settingsRes.config) ? settingsRes.config : [];
-
                         const deviceFetchPromises = devicesToFetch.map(async (deviceName) => {
                             const dIndex = masterDevices.indexOf(deviceName);
                             const cell = document.getElementById(`dash-cell-${rowIndex}-${dIndex}`);
@@ -3145,9 +3171,7 @@
                                             let mValue = parseInt(row[2]);
                                             if (mValue === month || isNaN(mValue)) {
                                                 const d = parseInt(row[1]);
-                                                if(!isNaN(d)) {
-                                                    dailyNumbers.add(d);
-                                                }
+                                                if(!isNaN(d)) dailyNumbers.add(d);
                                             }
                                         });
                                         checkedDays = Array.from(dailyNumbers);
@@ -3197,38 +3221,38 @@
                                 }
 
                                 let cellContent = '';
-                                let displayTarget = isAllMonth ? daysInMonth : targetCount;
+                                let displayTarget = 0;
+                                let isComplete = false;
                                 
                                 if (deviceName === 'แก๊ส LPG') {
-                                    if (actualCount > 0) {
-                                        const btnClass = 'bg-teal-100 text-teal-800 hover:bg-teal-200';
-                                        cellContent = `<button class="px-3 py-1 ${btnClass} text-xs font-bold rounded-lg shadow-sm transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${daysInMonth}</button>`;
-                                    } else {
-                                        const btnClass = 'bg-amber-100 text-amber-800 hover:bg-amber-200';
-                                        cellContent = `<button class="px-3 py-1 ${btnClass} text-xs font-bold rounded-lg shadow-sm transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[]')">${actualCount}/${daysInMonth}</button>`;
-                                    }
+                                    displayTarget = daysInMonth;
+                                    isComplete = actualCount > 0;
+                                } else if (isSpecial) {
+                                    displayTarget = targetCount;
+                                    isComplete = actualCount >= targetCount && targetCount > 0;
                                 } else {
-                                    if (isSpecial) {
+                                    if (isAllMonth) {
+                                        displayTarget = daysInMonth;
+                                        isComplete = actualCount >= daysInMonth && daysInMonth > 0;
+                                    } else {
                                         displayTarget = targetCount;
+                                        isComplete = actualCount >= targetCount && targetCount > 0;
                                     }
-                                    const isComplete = actualCount >= displayTarget && displayTarget > 0;
-                                    const btnClass = isComplete 
-                                        ? 'bg-teal-100 text-teal-800 hover:bg-teal-200' 
-                                        : 'bg-amber-100 text-amber-800 hover:bg-amber-200';
-
-                                    cellContent = `<button class="px-3 py-1 ${btnClass} text-xs font-bold rounded-lg shadow-sm transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${displayTarget}</button>`;
                                 }
+
+                                const btnClass = isComplete 
+                                    ? 'bg-teal-100 text-teal-800 hover:bg-teal-200' 
+                                    : 'bg-amber-100 text-amber-800 hover:bg-amber-200';
+                                cellContent = `<button class="px-3 py-1 ${btnClass} text-xs font-bold rounded-lg shadow-sm transition" onclick="showDashboardDetail('${deviceName}', '${user}', '[${checkedDays.join(', ')}]')">${actualCount}/${displayTarget}</button>`;
 
                                 cell.innerHTML = cellContent;
                                 applyDashboardFilters();
-
                             } catch (err) {
                                 if (err.name === 'AbortError') return;
                                 cell.innerHTML = `<div class="w-2 h-2 mx-auto rounded-full bg-slate-200" title="ไม่สามารถดึงข้อมูลได้"></div>`;
                                 applyDashboardFilters();
                             }
                         });
-
                         await Promise.all(deviceFetchPromises);
 
                     } catch (e) {
@@ -3245,8 +3269,7 @@
                     
                     if (fetchId !== currentDashboardFetchId || signal.aborted) return;
                     completedCount++;
-                    const stText = document.getElementById('dashboard-status-text');
-                    if(stText) stText.textContent = `กำลังโหลดข้อมูล... (${completedCount}/${users.length})`;
+                    document.getElementById('dashboard-status-text').textContent = `กำลังโหลดข้อมูล... (${completedCount}/${users.length})`;
                 }
             }
 
@@ -3256,17 +3279,16 @@
             }
 
             await Promise.all(workers);
-
             if (fetchId === currentDashboardFetchId && !signal.aborted) {
-                const finalStatus = document.getElementById('dashboard-status-text');
-                if(finalStatus) finalStatus.textContent = `โหลดข้อมูลเสร็จสิ้น (${users.length} สาขา)`;
+                document.getElementById('dashboard-status-text').textContent = `โหลดข้อมูลเสร็จสิ้น (${users.length} สาขา)`;
                 dashboardIsFetching = false;
             }
         }
 
+        // --- MULTI-SELECT BRANCH DROPDOWN LOGIC ---
         function setupBranchDropdown() {
             const container = document.getElementById('branch-checkboxes');
-            if (container && container.children.length === 0) {
+            if (container.children.length === 0) {
                 allUsersList.forEach(user => {
                     const label = document.createElement('label');
                     label.className = 'flex items-center gap-2 py-1 px-1.5 hover:bg-slate-100 rounded-lg cursor-pointer text-xs font-semibold text-slate-700';
@@ -3295,7 +3317,6 @@
 
         function updateBranchDropdownLabel() {
             const label = document.getElementById('branch-dropdown-label');
-            if(!label) return;
             if (selectedBranches.size === 0) {
                 label.textContent = "ไม่ได้เลือกสาขาเลย";
             } else if (selectedBranches.size === allUsersList.length) {
@@ -3305,6 +3326,7 @@
             }
        }
 
+        // --- MULTI-SELECT DEVICE DROPDOWN LOGIC ---
         function setupDeviceDropdown() {
             const container = document.getElementById('device-checkboxes');
             if (container && container.children.length === 0) {
@@ -3324,7 +3346,7 @@
                         updateDeviceDropdownLabel();
                         startDashboardLoad();
                     });
-                    
+
                     label.appendChild(cb);
                     label.appendChild(document.createTextNode(device));
                     container.appendChild(label);
@@ -3345,6 +3367,7 @@
             }
         }
 
+        // --- SMART SEARCH DEBOUNCE LOGIC ---
         let searchDebounceTimer = null;
         function handleSearchInput() {
             applyDashboardFilters();
@@ -3361,6 +3384,7 @@
             input.addEventListener('input', handleSearchInput);
         }
 
+        // --- FILTER FUNCTION ---
         function applyDashboardFilters() {
             const searchInput = document.getElementById('dashboard-search-input');
             const statusFilterElement = document.getElementById('dashboard-filter-status');
@@ -3373,11 +3397,11 @@
 
             rows.forEach(row => {
                 const user = row.dataset.user;
-                if(!user) return;
                 const userLower = user.toLowerCase();
                 
                 let matchSearch = userLower.includes(term);
                 let matchBranch = selectedBranches.has(user);
+ 
                 let matchStatus = false;
 
                 if (statusFilter === 'ALL' || selectedDevices.size === 0) {
@@ -3430,169 +3454,206 @@
             });
         }
 
+// --- Dashboard Event Listeners ---
         window.showDashboardDetail = function(device, user, daysStr) {
-            const titleEl = document.getElementById('dash-modal-title');
-            if(titleEl) titleEl.textContent = `${device}`;
-            
-            const subtitleEl = document.getElementById('dash-modal-subtitle');
-            if(subtitleEl) subtitleEl.textContent = `สาขา: ${user}`;
-            
+            document.getElementById('dash-modal-title').textContent = `${device}`;
+            document.getElementById('dash-modal-subtitle').textContent = `สาขา: ${user}`;
             const days = JSON.parse(daysStr);
             const container = document.getElementById('dash-modal-days-container');
-            if(container) {
-                container.innerHTML = '';
-                if (days.length === 0) {
-                    container.innerHTML = '<span class="text-sm text-slate-500 italic">ไม่พบวันที่บันทึกข้อมูล</span>';
-                } else {
-                    days.sort((a,b)=>a-b).forEach(d => {
-                        container.insertAdjacentHTML('beforeend', `<span class="w-8 h-8 flex items-center justify-center bg-fuchsia-100 text-fuchsia-700 font-bold rounded-lg text-sm shadow-sm">${d}</span>`);
-                    });
-                }
+            container.innerHTML = '';
+            if (days.length === 0) {
+                container.innerHTML = '<span class="text-sm text-slate-500 italic">ไม่พบวันที่บันทึกข้อมูล</span>';
+            } else {
+                days.sort((a,b)=>a-b).forEach(d => {
+                    container.insertAdjacentHTML('beforeend', `<span class="w-8 h-8 flex items-center justify-center bg-fuchsia-100 text-fuchsia-700 font-bold rounded-lg text-sm shadow-sm">${d}</span>`);
+                });
             }
-            const modal = document.getElementById('dashboard-detail-modal');
-            if(modal) modal.classList.remove('hidden');
+            document.getElementById('dashboard-detail-modal').classList.remove('hidden');
         };
 
-        // --- เชื่อมต่อ Event Listener โดยตรง (ไม่ครอบ DOMContentLoaded ซ้ำ) ---
-        
-        const dashCloseBtn = document.getElementById('dash-modal-close');
-        if(dashCloseBtn) {
-            dashCloseBtn.addEventListener('click', () => {
-                const modal = document.getElementById('dashboard-detail-modal');
-                if(modal) modal.classList.add('hidden');
-            });
-        }
-
-        const dashRefreshBtn = document.getElementById('dashboard-refresh-button');
-        if(dashRefreshBtn) {
-            dashRefreshBtn.addEventListener('click', () => {
-                startDashboardLoad();
-            });
-        }
-
-        const daySelect = document.getElementById('dashboard-day-select');
-        if(daySelect) {
-            daySelect.addEventListener('change', () => {
-                startDashboardLoad();
-            });
-        }
-
-        const monthSelect = document.getElementById('dashboard-month-select');
-        if(monthSelect) {
-            monthSelect.addEventListener('change', () => {
-                const m = document.getElementById('dashboard-month-select').value;
-                const y = document.getElementById('dashboard-year-select').value;
-                const p = document.getElementById('dashboard-month-picker');
-                if(p) p.value = `${y}-${m}`;
-                startDashboardLoad();
-            });
-        }
-
-        const yearSelect = document.getElementById('dashboard-year-select');
-        if(yearSelect) {
-            yearSelect.addEventListener('change', () => {
-                const m = document.getElementById('dashboard-month-select').value;
-                const y = document.getElementById('dashboard-year-select').value;
-                const p = document.getElementById('dashboard-month-picker');
-                if(p) p.value = `${y}-${m}`;
-                startDashboardLoad();
-            });
-        }
-
-        const filterStatus = document.getElementById('dashboard-filter-status');
-        if(filterStatus) {
-            filterStatus.addEventListener('change', () => {
+        const statusFilterElement = document.getElementById('dashboard-filter-status');
+        if (statusFilterElement) {
+            statusFilterElement.addEventListener('change', () => {
                 applyDashboardFilters();
             });
         }
 
-        const branchDropdownBtn = document.getElementById('branch-dropdown-btn');
-        const branchDropdownMenu = document.getElementById('branch-dropdown-menu');
-        const branchDropdownArrow = document.getElementById('branch-arrow');
-
-        if(branchDropdownBtn) {
-            branchDropdownBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if(branchDropdownMenu) branchDropdownMenu.classList.toggle('hidden');
-                if(branchDropdownArrow) branchDropdownArrow.classList.toggle('rotate-180');
-            });
-        }
-
-        const branchSelectAllBtn = document.getElementById('branch-select-all');
-        if(branchSelectAllBtn) {
-            branchSelectAllBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                selectedBranches.clear();
-                document.querySelectorAll('#branch-checkboxes input[type="checkbox"]').forEach(cb => {
-                    cb.checked = true;
-                    selectedBranches.add(cb.value);
-                });
-                updateBranchDropdownLabel();
-                startDashboardLoad();
-            });
-        }
-
-        const branchClearAllBtn = document.getElementById('branch-clear-all');
-        if(branchClearAllBtn) {
-            branchClearAllBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                selectedBranches.clear();
-                document.querySelectorAll('#branch-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
-                updateBranchDropdownLabel();
-                startDashboardLoad();
-            });
-        }
-
-        const devDropdownBtn = document.getElementById('device-dropdown-btn');
-        const devDropdownMenu = document.getElementById('device-dropdown-menu');
-        const devDropdownArrow = document.getElementById('device-arrow');
-
-        if(devDropdownBtn) {
-            devDropdownBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if(devDropdownMenu) devDropdownMenu.classList.toggle('hidden');
-                if(devDropdownArrow) devDropdownArrow.classList.toggle('rotate-180');
-            });
-        }
-
-        const devSelectAllBtn = document.getElementById('device-select-all');
-        if(devSelectAllBtn) {
-            devSelectAllBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                document.querySelectorAll('#device-checkboxes input[type="checkbox"]').forEach(cb => {
-                    cb.checked = true;
-                    selectedDevices.add(cb.value);
-                });
-                updateDeviceDropdownLabel();
-                startDashboardLoad();
-            });
-        }
-
-        const devClearAllBtn = document.getElementById('device-clear-all');
-        if(devClearAllBtn) {
-            devClearAllBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                selectedDevices.clear();
-                document.querySelectorAll('#device-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
-                updateDeviceDropdownLabel();
-                startDashboardLoad();
-            });
-        }
-
-        document.addEventListener('click', (e) => {
-            const branchCont = document.getElementById('branch-select-container');
-            if (branchCont && !branchCont.contains(e.target)) {
-                if(branchDropdownMenu) branchDropdownMenu.classList.add('hidden');
-                if(branchDropdownArrow) branchDropdownArrow.classList.remove('rotate-180');
-            }
-
-            const devCont = document.getElementById('device-select-container');
-            if (devCont && !devCont.contains(e.target)) {
-                if(devDropdownMenu) devDropdownMenu.classList.add('hidden');
-                if(devDropdownArrow) devDropdownArrow.classList.remove('rotate-180');
-            }
+        document.getElementById('dash-modal-close').addEventListener('click', () => {
+            document.getElementById('dashboard-detail-modal').classList.add('hidden');
         });
 
+        document.getElementById('dashboard-refresh-button').addEventListener('click', () => {
+            startDashboardLoad();
+        });
+
+        // --- เพิ่ม Event ของวันที่ตรงนี้ ---
+        document.getElementById('dashboard-day-select').addEventListener('change', () => {
+            startDashboardLoad();
+        });
+
+        document.getElementById('dashboard-month-select').addEventListener('change', () => {
+            const m = document.getElementById('dashboard-month-select').value;
+            const y = document.getElementById('dashboard-year-select').value;
+            document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
+            startDashboardLoad();
+        });
+
+        document.getElementById('dashboard-year-select').addEventListener('change', () => {
+            const m = document.getElementById('dashboard-month-select').value;
+            const y = document.getElementById('dashboard-year-select').value;
+            document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
+            startDashboardLoad();
+        });
+
+        // --- Event Listeners Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            const todayStr = `${yyyy}-${mm}-${dd}`;
+            const thisMonthStr = `${yyyy}-${mm}`;
+
+            document.getElementById('daily-global-check-date').value = todayStr;
+            document.getElementById('monthly-global-check-month').value = thisMonthStr;
+            document.getElementById('special-monthly-global-check-month').value = thisMonthStr;
+
+            document.getElementById('menu-daily-check').addEventListener('click', (e) => { e.preventDefault(); showDailyApp(); loadAllUsers(document.getElementById('daily-user-buttons-container'), 'last_selected_daily_user', displayDailyUserCards); });
+            document.getElementById('menu-summary').addEventListener('click', (e) => { e.preventDefault(); showMonthlyApp(); loadAllUsers(document.getElementById('monthly-user-buttons-container'), 'last_selected_monthly_user', displayMonthlyUserCards); });
+            document.getElementById('menu-special-monthly').addEventListener('click', (e) => { e.preventDefault(); showSpecialMonthlyApp(); loadAllUsers(document.getElementById('special-monthly-user-buttons-container'), 'last_selected_special_monthly_user', displaySpecialMonthlyUserCards); });
+            document.getElementById('menu-dashboard').addEventListener('click', (e) => { e.preventDefault(); showDashboardApp(); });
+            document.getElementById('menu-user-manual').addEventListener('click', (e) => { e.preventDefault(); showUserManual(); populateVideoList(); });
+
+            document.getElementById('daily-back-to-menu-button').addEventListener('click', showMainMenu);
+            document.getElementById('monthly-back-to-menu-button').addEventListener('click', showMainMenu);
+            document.getElementById('special-monthly-back-to-menu-button').addEventListener('click', showMainMenu);
+            document.getElementById('manual-back-to-menu-button').addEventListener('click', showMainMenu);
+            document.getElementById('dashboard-back-to-menu-button').addEventListener('click', showMainMenu);
+            document.getElementById('detail-page-back-button').addEventListener('click', showDailyApp);
+            
+            document.getElementById('monthly-detail-page-back-button').addEventListener('click', () => {
+                showView(lastViewBeforeMonthlyDetail);
+            });
+
+            document.getElementById('monthly-detail-print-button').addEventListener('click', () => {
+                showPrintPreview(true);
+            });
+
+            document.getElementById('daily-sidebar-toggle').addEventListener('click', openDailySidebar);
+            document.getElementById('daily-sidebar-overlay').addEventListener('click', closeDailySidebar);
+
+            document.getElementById('monthly-sidebar-toggle').addEventListener('click', openMonthlySidebar);
+            document.getElementById('monthly-sidebar-overlay').addEventListener('click', closeMonthlySidebar);
+
+            document.getElementById('special-monthly-sidebar-toggle').addEventListener('click', openSpecialMonthlySidebar);
+            document.getElementById('special-monthly-sidebar-overlay').addEventListener('click', closeSpecialMonthlySidebar);
+
+            document.getElementById('close-video-modal').addEventListener('click', closeVideoPlayer);
+            document.getElementById('video-player-modal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('video-player-modal')) closeVideoPlayer();
+            });
+
+            document.getElementById('comment-modal-close').addEventListener('click', closeCommentModal);
+            document.getElementById('comment-modal-cancel').addEventListener('click', closeCommentModal);
+            document.getElementById('comment-modal-save').addEventListener('click', () => {
+                const newComment = document.getElementById('comment-modal-textarea').value;
+                if (currentEditingConfig) updateCardComment(currentEditingConfig, newComment);
+            });
+
+            document.getElementById('daily-global-check-date').addEventListener('change', refreshDailyCurrentView);
+            document.getElementById('daily-refresh-button').addEventListener('click', refreshDailyCurrentView);
+            
+            document.getElementById('monthly-global-check-month').addEventListener('change', refreshMonthlyCurrentView);
+            document.getElementById('monthly-refresh-button').addEventListener('click', refreshMonthlyCurrentView);
+
+            document.getElementById('special-monthly-global-check-month').addEventListener('change', refreshSpecialMonthlyCurrentView);
+            document.getElementById('special-monthly-refresh-button').addEventListener('click', refreshSpecialMonthlyCurrentView);
+
+// Event เชื่อมปุ่มหน้าหลัก
+            document.getElementById('menu-defect').addEventListener('click', (e) => { e.preventDefault(); showDefectApp(); });
+            document.getElementById('defect-back-to-menu').addEventListener('click', showMainMenu);
+
+            // Event ของหน้ารายงานชำรุด
+            document.getElementById('defect-refresh-button').addEventListener('click', startDefectScan);
+            document.getElementById('defect-filter-date').addEventListener('change', triggerDefectAutoScan);
+            document.getElementById('defect-filter-all-month').addEventListener('change', triggerDefectAutoScan);
+
+            // Dropdown สาขาของหน้าชำรุด
+            document.getElementById('defect-branch-dropdown-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('defect-branch-dropdown-menu').classList.toggle('hidden');
+                document.getElementById('defect-branch-arrow').classList.toggle('rotate-180');
+                document.getElementById('defect-device-dropdown-menu').classList.add('hidden');
+                document.getElementById('defect-device-arrow').classList.remove('rotate-180');
+            });
+
+            // Dropdown อุปกรณ์ของหน้าชำรุด
+            document.getElementById('defect-device-dropdown-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('defect-device-dropdown-menu').classList.toggle('hidden');
+                document.getElementById('defect-device-arrow').classList.toggle('rotate-180');
+                document.getElementById('defect-branch-dropdown-menu').classList.add('hidden');
+                document.getElementById('defect-branch-arrow').classList.remove('rotate-180');
+            });
+
+            document.getElementById('defect-branch-select-all').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('#defect-branch-checkboxes input').forEach(cb => cb.checked = true);
+                defectSelectedBranches = new Set(allUsersList);
+                updateDefectBranchLabel();
+                triggerDefectAutoScan();
+            });
+
+            document.getElementById('defect-branch-clear-all').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('#defect-branch-checkboxes input').forEach(cb => cb.checked = false);
+                defectSelectedBranches.clear();
+                updateDefectBranchLabel();
+                triggerDefectAutoScan();
+            });
+
+            document.getElementById('defect-device-select-all').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('#defect-device-checkboxes input').forEach(cb => cb.checked = true);
+                defectSelectedDevices = new Set(masterDevices);
+                updateDefectDeviceLabel();
+                triggerDefectAutoScan();
+            });
+
+            document.getElementById('defect-device-clear-all').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('#defect-device-checkboxes input').forEach(cb => cb.checked = false);
+                defectSelectedDevices.clear();
+                updateDefectDeviceLabel();
+                triggerDefectAutoScan();
+            });
+
+            document.addEventListener('click', (e) => {
+                const branchCont = document.getElementById('defect-branch-select-container');
+                const deviceCont = document.getElementById('defect-device-select-container');
+                if (branchCont && !branchCont.contains(e.target)) {
+                    document.getElementById('defect-branch-dropdown-menu')?.classList.add('hidden');
+                    document.getElementById('defect-branch-arrow')?.classList.remove('rotate-180');
+                }
+                if (deviceCont && !deviceCont.contains(e.target)) {
+                    document.getElementById('defect-device-dropdown-menu')?.classList.add('hidden');
+                    document.getElementById('defect-device-arrow')?.classList.remove('rotate-180');
+                }
+            });
+
+            setupSearch('daily-user-search-input', 'daily-user-buttons-container');
+            setupSearch('monthly-user-search-input', 'monthly-user-buttons-container');
+            setupSearch('special-monthly-user-search-input', 'special-monthly-user-buttons-container');
+            
+            // Export Buttons Logic
+            const exportMonthlyDetailBtn = document.getElementById('monthly-detail-export-button');
+            if (exportMonthlyDetailBtn) {
+                exportMonthlyDetailBtn.addEventListener('click', () => {
+                    // Logic for export if implemented
+                    showCustomMessage('แจ้งเตือน', 'ฟังก์ชันนี้กำลังอยู่ระหว่างการพัฒนา');
+                });
+            }
+        });
 // ==========================================
         // DEFECT SUMMARY LOGIC (อุปกรณ์ชำรุด)
         // ==========================================
@@ -3892,19 +3953,5 @@
             });
         }
     </script>
-// กดจากหน้าเมนูหลักเพื่อเปิด Dashboard
-
-        document.getElementById('menu-dashboard').addEventListener('click', (e) => {
-
-            e.preventDefault();
-
-            showDashboardApp();
-
-        });
-
-
-        // กดปุ่มกลับจากหน้า Dashboard เพื่อไปเมนูหลัก
-
-        document.getElementById('dashboard-back-to-menu-button').addEventListener('click', showMainMenu);
 </body>
 </html>
