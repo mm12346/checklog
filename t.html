@@ -3892,5 +3892,19 @@
             });
         }
     </script>
+// กดจากหน้าเมนูหลักเพื่อเปิด Dashboard
+
+        document.getElementById('menu-dashboard').addEventListener('click', (e) => {
+
+            e.preventDefault();
+
+            showDashboardApp();
+
+        });
+
+
+        // กดปุ่มกลับจากหน้า Dashboard เพื่อไปเมนูหลัก
+
+        document.getElementById('dashboard-back-to-menu-button').addEventListener('click', showMainMenu);
 </body>
 </html>
