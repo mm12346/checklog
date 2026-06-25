@@ -2966,12 +2966,7 @@
 
         let dashboardDataCache = {};
         let dashboardIsFetching = false;
-        let currentDashboardFetchId = 0;
-        let allUsersList = [];
-        let selectedBranches = new Set();
-        let usersFetchPromise = null;
         
-        const dashboardBatchSize = 10;
         const masterDevices = ["แก๊ส LPG", "สลิงผ้าแผนกเหล็ก", "เครนโครงสร้าง", "เครื่องตัดไฟเบอร์", "Stacker ไฟฟ้า", "รถเฮี้ยบ จัดส่ง", "รถจัดส่ง", "โฟล์คลิฟท์ประเภทเครื่องยนต์", "รถโฟล์คลิฟท์ไฟฟ้า", "รถสแตกเกอร์จัดส่ง", "สลิงผ้า รถจัดส่งติดเครน", "ตู้น้ำดับเพลิง", "ถังดับเพลิง", "ถังดับเพลิงCo2", "ไฟฉุกเฉิน"];
         let selectedDevices = new Set(masterDevices);
 
