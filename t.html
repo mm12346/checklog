@@ -2979,9 +2979,8 @@
             const today = new Date();
             const yyyy = today.getFullYear();
             const mm = String(today.getMonth() + 1).padStart(2, '0');
-            // เตรียม Dropdown วันที่
             const dSelect = document.getElementById('dashboard-day-select');
-            if (dSelect.options.length <= 1) {
+            if (dSelect && dSelect.options.length <= 1) {
                 for (let i = 1; i <= 31; i++) {
                     const opt = document.createElement('option');
                     opt.value = i;
@@ -2993,7 +2992,7 @@
             const mSelect = document.getElementById('dashboard-month-select');
             const ySelect = document.getElementById('dashboard-year-select');
             
-            if (ySelect.options.length === 0) {
+            if (ySelect && ySelect.options.length === 0) {
                 for (let y = yyyy - 5; y <= yyyy + 5; y++) {
                     const opt = document.createElement('option');
                     opt.value = y;
@@ -3002,9 +3001,10 @@
                 }
             }
 
-            mSelect.value = mm;
-            ySelect.value = yyyy;
-            document.getElementById('dashboard-month-picker').value = `${yyyy}-${mm}`;
+            if(mSelect) mSelect.value = mm;
+            if(ySelect) ySelect.value = yyyy;
+            const mp = document.getElementById('dashboard-month-picker');
+            if(mp) mp.value = `${yyyy}-${mm}`;
             
             startDashboardLoad();
         }
@@ -3032,9 +3032,13 @@
             const fetchId = currentDashboardFetchId;
             dashboardIsFetching = true;
 
-            document.getElementById('dashboard-status-text').textContent = 'กำลังเตรียมตาราง...';
+            const statusText = document.getElementById('dashboard-status-text');
+            if(statusText) statusText.textContent = 'กำลังเตรียมตาราง...';
+            
             const tbody = document.getElementById('dashboard-table-body');
+            if(!tbody) return;
             tbody.innerHTML = '';
+            
             try {
                 if (allUsersList.length === 0) {
                     if (!usersFetchPromise) {
@@ -3068,7 +3072,7 @@
                     headerHtml += `<th scope="col" class="px-6 py-3 border-r border-slate-300 text-center tracking-wider" ${displayStyle}>${device}</th>`;
                 });
                 headerHtml += '</tr>';
-                thead.innerHTML = headerHtml;
+                if(thead) thead.innerHTML = headerHtml;
 
                 allUsersList.forEach((user, index) => {
                     let rowHtml = `<tr id="dash-row-${index}" class="hover:bg-slate-50 transition-colors" data-user="${user}">`;
@@ -3096,12 +3100,16 @@
                 applyDashboardFilters();
                 setupDashboardSearch();
                 
-                const filterDay = document.getElementById('dashboard-day-select').value;
-                fetchDashboardInBatches(usersToFetch, devicesToFetch, document.getElementById('dashboard-month-picker').value, filterDay, fetchId, signal);
+                const daySelect = document.getElementById('dashboard-day-select');
+                const filterDay = daySelect ? daySelect.value : 'ALL';
+                const monthPicker = document.getElementById('dashboard-month-picker');
+                const monthVal = monthPicker ? monthPicker.value : '2025-01';
+                
+                fetchDashboardInBatches(usersToFetch, devicesToFetch, monthVal, filterDay, fetchId, signal);
             } catch (err) {
                 if (err.name === 'AbortError') { return; }
-                if (fetchId === currentDashboardFetchId) {
-                    document.getElementById('dashboard-status-text').textContent = 'เกิดข้อผิดพลาด: ' + err.message;
+                if (fetchId === currentDashboardFetchId && statusText) {
+                    statusText.textContent = 'เกิดข้อผิดพลาด: ' + err.message;
                 }
             }
         }
@@ -3111,7 +3119,9 @@
             let completedCount = 0;
             if (fetchId !== currentDashboardFetchId || signal.aborted) return;
 
-            document.getElementById('dashboard-status-text').textContent = `กำลังโหลดข้อมูล... (0/${users.length})`;
+            const statusText = document.getElementById('dashboard-status-text');
+            if(statusText) statusText.textContent = `กำลังโหลดข้อมูล... (0/${users.length})`;
+            
             const [year, month] = monthYear.split('-').map(Number);
             const specialDevices = ['ตู้น้ำดับเพลิง', 'ถังดับเพลิง', 'ถังดับเพลิงCo2', 'ไฟฉุกเฉิน'];
             
@@ -3268,7 +3278,7 @@
                     
                     if (fetchId !== currentDashboardFetchId || signal.aborted) return;
                     completedCount++;
-                    document.getElementById('dashboard-status-text').textContent = `กำลังโหลดข้อมูล... (${completedCount}/${users.length})`;
+                    if(statusText) statusText.textContent = `กำลังโหลดข้อมูล... (${completedCount}/${users.length})`;
                 }
             }
 
@@ -3279,7 +3289,7 @@
 
             await Promise.all(workers);
             if (fetchId === currentDashboardFetchId && !signal.aborted) {
-                document.getElementById('dashboard-status-text').textContent = `โหลดข้อมูลเสร็จสิ้น (${users.length} สาขา)`;
+                if(statusText) statusText.textContent = `โหลดข้อมูลเสร็จสิ้น (${users.length} สาขา)`;
                 dashboardIsFetching = false;
             }
         }
@@ -3287,7 +3297,7 @@
         // --- MULTI-SELECT BRANCH DROPDOWN LOGIC ---
         function setupBranchDropdown() {
             const container = document.getElementById('branch-checkboxes');
-            if (container.children.length === 0) {
+            if (container && container.children.length === 0) {
                 allUsersList.forEach(user => {
                     const label = document.createElement('label');
                     label.className = 'flex items-center gap-2 py-1 px-1.5 hover:bg-slate-100 rounded-lg cursor-pointer text-xs font-semibold text-slate-700';
@@ -3316,6 +3326,7 @@
 
         function updateBranchDropdownLabel() {
             const label = document.getElementById('branch-dropdown-label');
+            if(!label) return;
             if (selectedBranches.size === 0) {
                 label.textContent = "ไม่ได้เลือกสาขาเลย";
             } else if (selectedBranches.size === allUsersList.length) {
@@ -3323,7 +3334,7 @@
             } else {
                 label.textContent = `เลือกแล้ว (${selectedBranches.size} สาขา)`;
             }
-       }
+        }
 
         // --- MULTI-SELECT DEVICE DROPDOWN LOGIC ---
         function setupDeviceDropdown() {
@@ -3396,6 +3407,7 @@
 
             rows.forEach(row => {
                 const user = row.dataset.user;
+                if(!user) return;
                 const userLower = user.toLowerCase();
                 
                 let matchSearch = userLower.includes(term);
@@ -3453,7 +3465,6 @@
             });
         }
 
-// --- Dashboard Event Listeners ---
         window.showDashboardDetail = function(device, user, daysStr) {
             document.getElementById('dash-modal-title').textContent = `${device}`;
             document.getElementById('dash-modal-subtitle').textContent = `สาขา: ${user}`;
@@ -3470,40 +3481,6 @@
             document.getElementById('dashboard-detail-modal').classList.remove('hidden');
         };
 
-        const statusFilterElement = document.getElementById('dashboard-filter-status');
-        if (statusFilterElement) {
-            statusFilterElement.addEventListener('change', () => {
-                applyDashboardFilters();
-            });
-        }
-
-        document.getElementById('dash-modal-close').addEventListener('click', () => {
-            document.getElementById('dashboard-detail-modal').classList.add('hidden');
-        });
-
-        document.getElementById('dashboard-refresh-button').addEventListener('click', () => {
-            startDashboardLoad();
-        });
-
-        // --- เพิ่ม Event ของวันที่ตรงนี้ ---
-        document.getElementById('dashboard-day-select').addEventListener('change', () => {
-            startDashboardLoad();
-        });
-
-        document.getElementById('dashboard-month-select').addEventListener('change', () => {
-            const m = document.getElementById('dashboard-month-select').value;
-            const y = document.getElementById('dashboard-year-select').value;
-            document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
-            startDashboardLoad();
-        });
-
-        document.getElementById('dashboard-year-select').addEventListener('change', () => {
-            const m = document.getElementById('dashboard-month-select').value;
-            const y = document.getElementById('dashboard-year-select').value;
-            document.getElementById('dashboard-month-picker').value = `${y}-${m}`;
-            startDashboardLoad();
-        });
-
         // --- Event Listeners Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
             const today = new Date();
@@ -3517,85 +3494,203 @@
             document.getElementById('monthly-global-check-month').value = thisMonthStr;
             document.getElementById('special-monthly-global-check-month').value = thisMonthStr;
 
-            document.getElementById('menu-daily-check').addEventListener('click', (e) => { e.preventDefault(); showDailyApp(); loadAllUsers(document.getElementById('daily-user-buttons-container'), 'last_selected_daily_user', displayDailyUserCards); });
-            document.getElementById('menu-summary').addEventListener('click', (e) => { e.preventDefault(); showMonthlyApp(); loadAllUsers(document.getElementById('monthly-user-buttons-container'), 'last_selected_monthly_user', displayMonthlyUserCards); });
-            document.getElementById('menu-special-monthly').addEventListener('click', (e) => { e.preventDefault(); showSpecialMonthlyApp(); loadAllUsers(document.getElementById('special-monthly-user-buttons-container'), 'last_selected_special_monthly_user', displaySpecialMonthlyUserCards); });
-            document.getElementById('menu-dashboard').addEventListener('click', (e) => { e.preventDefault(); showDashboardApp(); });
-            document.getElementById('menu-user-manual').addEventListener('click', (e) => { e.preventDefault(); showUserManual(); populateVideoList(); });
+            // MENU CLICKS
+            document.getElementById('menu-daily-check')?.addEventListener('click', (e) => { e.preventDefault(); showDailyApp(); loadAllUsers(document.getElementById('daily-user-buttons-container'), 'last_selected_daily_user', displayDailyUserCards); });
+            document.getElementById('menu-summary')?.addEventListener('click', (e) => { e.preventDefault(); showMonthlyApp(); loadAllUsers(document.getElementById('monthly-user-buttons-container'), 'last_selected_monthly_user', displayMonthlyUserCards); });
+            document.getElementById('menu-special-monthly')?.addEventListener('click', (e) => { e.preventDefault(); showSpecialMonthlyApp(); loadAllUsers(document.getElementById('special-monthly-user-buttons-container'), 'last_selected_special_monthly_user', displaySpecialMonthlyUserCards); });
+            document.getElementById('menu-dashboard')?.addEventListener('click', (e) => { e.preventDefault(); showDashboardApp(); });
+            document.getElementById('menu-user-manual')?.addEventListener('click', (e) => { e.preventDefault(); showUserManual(); populateVideoList(); });
+            document.getElementById('menu-defect')?.addEventListener('click', (e) => { e.preventDefault(); showDefectApp(); });
 
-            document.getElementById('daily-back-to-menu-button').addEventListener('click', showMainMenu);
-            document.getElementById('monthly-back-to-menu-button').addEventListener('click', showMainMenu);
-            document.getElementById('special-monthly-back-to-menu-button').addEventListener('click', showMainMenu);
-            document.getElementById('manual-back-to-menu-button').addEventListener('click', showMainMenu);
-            document.getElementById('dashboard-back-to-menu-button').addEventListener('click', showMainMenu);
-            document.getElementById('detail-page-back-button').addEventListener('click', showDailyApp);
+            // BACK BUTTONS
+            document.getElementById('daily-back-to-menu-button')?.addEventListener('click', showMainMenu);
+            document.getElementById('monthly-back-to-menu-button')?.addEventListener('click', showMainMenu);
+            document.getElementById('special-monthly-back-to-menu-button')?.addEventListener('click', showMainMenu);
+            document.getElementById('manual-back-to-menu-button')?.addEventListener('click', showMainMenu);
+            document.getElementById('dashboard-back-to-menu-button')?.addEventListener('click', showMainMenu);
+            document.getElementById('detail-page-back-button')?.addEventListener('click', showDailyApp);
+            document.getElementById('defect-back-to-menu')?.addEventListener('click', showMainMenu);
             
-            document.getElementById('monthly-detail-page-back-button').addEventListener('click', () => {
+            document.getElementById('monthly-detail-page-back-button')?.addEventListener('click', () => {
                 showView(lastViewBeforeMonthlyDetail);
             });
-
-            document.getElementById('monthly-detail-print-button').addEventListener('click', () => {
+            document.getElementById('monthly-detail-print-button')?.addEventListener('click', () => {
                 showPrintPreview(true);
             });
 
-            document.getElementById('daily-sidebar-toggle').addEventListener('click', openDailySidebar);
-            document.getElementById('daily-sidebar-overlay').addEventListener('click', closeDailySidebar);
+            // SIDEBAR TOGGLES
+            document.getElementById('daily-sidebar-toggle')?.addEventListener('click', openDailySidebar);
+            document.getElementById('daily-sidebar-overlay')?.addEventListener('click', closeDailySidebar);
+            document.getElementById('monthly-sidebar-toggle')?.addEventListener('click', openMonthlySidebar);
+            document.getElementById('monthly-sidebar-overlay')?.addEventListener('click', closeMonthlySidebar);
+            document.getElementById('special-monthly-sidebar-toggle')?.addEventListener('click', openSpecialMonthlySidebar);
+            document.getElementById('special-monthly-sidebar-overlay')?.addEventListener('click', closeSpecialMonthlySidebar);
 
-            document.getElementById('monthly-sidebar-toggle').addEventListener('click', openMonthlySidebar);
-            document.getElementById('monthly-sidebar-overlay').addEventListener('click', closeMonthlySidebar);
-
-            document.getElementById('special-monthly-sidebar-toggle').addEventListener('click', openSpecialMonthlySidebar);
-            document.getElementById('special-monthly-sidebar-overlay').addEventListener('click', closeSpecialMonthlySidebar);
-
-            document.getElementById('close-video-modal').addEventListener('click', closeVideoPlayer);
-            document.getElementById('video-player-modal').addEventListener('click', (e) => {
+            // MODALS
+            document.getElementById('close-video-modal')?.addEventListener('click', closeVideoPlayer);
+            document.getElementById('video-player-modal')?.addEventListener('click', (e) => {
                 if (e.target === document.getElementById('video-player-modal')) closeVideoPlayer();
             });
-
-            document.getElementById('comment-modal-close').addEventListener('click', closeCommentModal);
-            document.getElementById('comment-modal-cancel').addEventListener('click', closeCommentModal);
-            document.getElementById('comment-modal-save').addEventListener('click', () => {
+            document.getElementById('comment-modal-close')?.addEventListener('click', closeCommentModal);
+            document.getElementById('comment-modal-cancel')?.addEventListener('click', closeCommentModal);
+            document.getElementById('comment-modal-save')?.addEventListener('click', () => {
                 const newComment = document.getElementById('comment-modal-textarea').value;
                 if (currentEditingConfig) updateCardComment(currentEditingConfig, newComment);
             });
 
-            document.getElementById('daily-global-check-date').addEventListener('change', refreshDailyCurrentView);
-            document.getElementById('daily-refresh-button').addEventListener('click', refreshDailyCurrentView);
+            // REFRESH BUTTONS
+            document.getElementById('daily-global-check-date')?.addEventListener('change', refreshDailyCurrentView);
+            document.getElementById('daily-refresh-button')?.addEventListener('click', refreshDailyCurrentView);
+            document.getElementById('monthly-global-check-month')?.addEventListener('change', refreshMonthlyCurrentView);
+            document.getElementById('monthly-refresh-button')?.addEventListener('click', refreshMonthlyCurrentView);
+            document.getElementById('special-monthly-global-check-month')?.addEventListener('change', refreshSpecialMonthlyCurrentView);
+            document.getElementById('special-monthly-refresh-button')?.addEventListener('click', refreshSpecialMonthlyCurrentView);
+
+            // ==========================================
+            // DASHBOARD EVENTS (ย้ายเข้ามาใน DOMContentLoaded เพื่อความปลอดภัย)
+            // ==========================================
+            const statusFilterElement = document.getElementById('dashboard-filter-status');
+            if (statusFilterElement) {
+                statusFilterElement.addEventListener('change', applyDashboardFilters);
+            }
+
+            document.getElementById('dash-modal-close')?.addEventListener('click', () => {
+                document.getElementById('dashboard-detail-modal')?.classList.add('hidden');
+            });
+
+            document.getElementById('dashboard-refresh-button')?.addEventListener('click', () => {
+                startDashboardLoad();
+            });
+
+            document.getElementById('dashboard-day-select')?.addEventListener('change', () => {
+                startDashboardLoad();
+            });
+
+            document.getElementById('dashboard-month-select')?.addEventListener('change', () => {
+                const m = document.getElementById('dashboard-month-select').value;
+                const y = document.getElementById('dashboard-year-select').value;
+                const mp = document.getElementById('dashboard-month-picker');
+                if(mp) mp.value = `${y}-${m}`;
+                startDashboardLoad();
+            });
+
+            document.getElementById('dashboard-year-select')?.addEventListener('change', () => {
+                const m = document.getElementById('dashboard-month-select').value;
+                const y = document.getElementById('dashboard-year-select').value;
+                const mp = document.getElementById('dashboard-month-picker');
+                if(mp) mp.value = `${y}-${m}`;
+                startDashboardLoad();
+            });
+
+            // Dashboard Dropdown Toggles
+            const branchDropdownBtn = document.getElementById('branch-dropdown-btn');
+            const branchDropdownMenu = document.getElementById('branch-dropdown-menu');
+            const branchDropdownArrow = document.getElementById('branch-arrow');
+
+            if(branchDropdownBtn) {
+                branchDropdownBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if(branchDropdownMenu) branchDropdownMenu.classList.toggle('hidden');
+                    if(branchDropdownArrow) branchDropdownArrow.classList.toggle('rotate-180');
+                    // ปิดอีกอัน
+                    const devDropdownMenu = document.getElementById('device-dropdown-menu');
+                    const devDropdownArrow = document.getElementById('device-arrow');
+                    if(devDropdownMenu) devDropdownMenu.classList.add('hidden');
+                    if(devDropdownArrow) devDropdownArrow.classList.remove('rotate-180');
+                });
+            }
+
+            document.getElementById('branch-select-all')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedBranches.clear();
+                document.querySelectorAll('#branch-checkboxes input[type="checkbox"]').forEach(cb => {
+                    cb.checked = true;
+                    selectedBranches.add(cb.value);
+                });
+                updateBranchDropdownLabel();
+                startDashboardLoad();
+            });
+
+            document.getElementById('branch-clear-all')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedBranches.clear();
+                document.querySelectorAll('#branch-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+                updateBranchDropdownLabel();
+                startDashboardLoad();
+            });
+
+            const devDropdownBtn = document.getElementById('device-dropdown-btn');
+            const devDropdownMenu = document.getElementById('device-dropdown-menu');
+            const devDropdownArrow = document.getElementById('device-arrow');
             
-            document.getElementById('monthly-global-check-month').addEventListener('change', refreshMonthlyCurrentView);
-            document.getElementById('monthly-refresh-button').addEventListener('click', refreshMonthlyCurrentView);
+            if(devDropdownBtn) {
+                devDropdownBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if(devDropdownMenu) devDropdownMenu.classList.toggle('hidden');
+                    if(devDropdownArrow) devDropdownArrow.classList.toggle('rotate-180');
+                    // ปิดอีกอัน
+                    if(branchDropdownMenu) branchDropdownMenu.classList.add('hidden');
+                    if(branchDropdownArrow) branchDropdownArrow.classList.remove('rotate-180');
+                });
+            }
 
-            document.getElementById('special-monthly-global-check-month').addEventListener('change', refreshSpecialMonthlyCurrentView);
-            document.getElementById('special-monthly-refresh-button').addEventListener('click', refreshSpecialMonthlyCurrentView);
-
-// Event เชื่อมปุ่มหน้าหลัก
-            document.getElementById('menu-defect').addEventListener('click', (e) => { e.preventDefault(); showDefectApp(); });
-            document.getElementById('defect-back-to-menu').addEventListener('click', showMainMenu);
-
-            // Event ของหน้ารายงานชำรุด
-            document.getElementById('defect-refresh-button').addEventListener('click', startDefectScan);
-            document.getElementById('defect-filter-date').addEventListener('change', triggerDefectAutoScan);
-            document.getElementById('defect-filter-all-month').addEventListener('change', triggerDefectAutoScan);
-
-            // Dropdown สาขาของหน้าชำรุด
-            document.getElementById('defect-branch-dropdown-btn').addEventListener('click', (e) => {
+            document.getElementById('device-select-all')?.addEventListener('click', (e) => {
                 e.stopPropagation();
-                document.getElementById('defect-branch-dropdown-menu').classList.toggle('hidden');
-                document.getElementById('defect-branch-arrow').classList.toggle('rotate-180');
-                document.getElementById('defect-device-dropdown-menu').classList.add('hidden');
-                document.getElementById('defect-device-arrow').classList.remove('rotate-180');
+                document.querySelectorAll('#device-checkboxes input[type="checkbox"]').forEach(cb => {
+                    cb.checked = true;
+                    selectedDevices.add(cb.value);
+                });
+                updateDeviceDropdownLabel();
+                startDashboardLoad();
             });
 
-            // Dropdown อุปกรณ์ของหน้าชำรุด
-            document.getElementById('defect-device-dropdown-btn').addEventListener('click', (e) => {
+            document.getElementById('device-clear-all')?.addEventListener('click', (e) => {
                 e.stopPropagation();
-                document.getElementById('defect-device-dropdown-menu').classList.toggle('hidden');
-                document.getElementById('defect-device-arrow').classList.toggle('rotate-180');
-                document.getElementById('defect-branch-dropdown-menu').classList.add('hidden');
-                document.getElementById('defect-branch-arrow').classList.remove('rotate-180');
+                selectedDevices.clear();
+                document.querySelectorAll('#device-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+                updateDeviceDropdownLabel();
+                startDashboardLoad();
             });
 
-            document.getElementById('defect-branch-select-all').addEventListener('click', (e) => {
+            document.addEventListener('click', (e) => {
+                const branchCont = document.getElementById('branch-select-container');
+                if (branchCont && branchDropdownMenu && !branchCont.contains(e.target)) {
+                    branchDropdownMenu.classList.add('hidden');
+                    if(branchDropdownArrow) branchDropdownArrow.classList.remove('rotate-180');
+                }
+
+                const devCont = document.getElementById('device-select-container');
+                if (devCont && devDropdownMenu && !devCont.contains(e.target)) {
+                    devDropdownMenu.classList.add('hidden');
+                    if(devDropdownArrow) devDropdownArrow.classList.remove('rotate-180');
+                }
+            });
+
+
+            // ==========================================
+            // DEFECT PAGE EVENTS
+            // ==========================================
+            document.getElementById('defect-refresh-button')?.addEventListener('click', startDefectScan);
+            document.getElementById('defect-filter-date')?.addEventListener('change', triggerDefectAutoScan);
+            document.getElementById('defect-filter-all-month')?.addEventListener('change', triggerDefectAutoScan);
+
+            document.getElementById('defect-branch-dropdown-btn')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('defect-branch-dropdown-menu')?.classList.toggle('hidden');
+                document.getElementById('defect-branch-arrow')?.classList.toggle('rotate-180');
+                document.getElementById('defect-device-dropdown-menu')?.classList.add('hidden');
+                document.getElementById('defect-device-arrow')?.classList.remove('rotate-180');
+            });
+
+            document.getElementById('defect-device-dropdown-btn')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('defect-device-dropdown-menu')?.classList.toggle('hidden');
+                document.getElementById('defect-device-arrow')?.classList.toggle('rotate-180');
+                document.getElementById('defect-branch-dropdown-menu')?.classList.add('hidden');
+                document.getElementById('defect-branch-arrow')?.classList.remove('rotate-180');
+            });
+
+            document.getElementById('defect-branch-select-all')?.addEventListener('click', (e) => {
                 e.stopPropagation();
                 document.querySelectorAll('#defect-branch-checkboxes input').forEach(cb => cb.checked = true);
                 defectSelectedBranches = new Set(allUsersList);
@@ -3603,7 +3698,7 @@
                 triggerDefectAutoScan();
             });
 
-            document.getElementById('defect-branch-clear-all').addEventListener('click', (e) => {
+            document.getElementById('defect-branch-clear-all')?.addEventListener('click', (e) => {
                 e.stopPropagation();
                 document.querySelectorAll('#defect-branch-checkboxes input').forEach(cb => cb.checked = false);
                 defectSelectedBranches.clear();
@@ -3611,7 +3706,7 @@
                 triggerDefectAutoScan();
             });
 
-            document.getElementById('defect-device-select-all').addEventListener('click', (e) => {
+            document.getElementById('defect-device-select-all')?.addEventListener('click', (e) => {
                 e.stopPropagation();
                 document.querySelectorAll('#defect-device-checkboxes input').forEach(cb => cb.checked = true);
                 defectSelectedDevices = new Set(masterDevices);
@@ -3619,7 +3714,7 @@
                 triggerDefectAutoScan();
             });
 
-            document.getElementById('defect-device-clear-all').addEventListener('click', (e) => {
+            document.getElementById('defect-device-clear-all')?.addEventListener('click', (e) => {
                 e.stopPropagation();
                 document.querySelectorAll('#defect-device-checkboxes input').forEach(cb => cb.checked = false);
                 defectSelectedDevices.clear();
@@ -3628,13 +3723,13 @@
             });
 
             document.addEventListener('click', (e) => {
-                const branchCont = document.getElementById('defect-branch-select-container');
-                const deviceCont = document.getElementById('defect-device-select-container');
-                if (branchCont && !branchCont.contains(e.target)) {
+                const branchContDefect = document.getElementById('defect-branch-select-container');
+                const deviceContDefect = document.getElementById('defect-device-select-container');
+                if (branchContDefect && !branchContDefect.contains(e.target)) {
                     document.getElementById('defect-branch-dropdown-menu')?.classList.add('hidden');
                     document.getElementById('defect-branch-arrow')?.classList.remove('rotate-180');
                 }
-                if (deviceCont && !deviceCont.contains(e.target)) {
+                if (deviceContDefect && !deviceContDefect.contains(e.target)) {
                     document.getElementById('defect-device-dropdown-menu')?.classList.add('hidden');
                     document.getElementById('defect-device-arrow')?.classList.remove('rotate-180');
                 }
@@ -3643,17 +3738,16 @@
             setupSearch('daily-user-search-input', 'daily-user-buttons-container');
             setupSearch('monthly-user-search-input', 'monthly-user-buttons-container');
             setupSearch('special-monthly-user-search-input', 'special-monthly-user-buttons-container');
-            
-            // Export Buttons Logic
+
             const exportMonthlyDetailBtn = document.getElementById('monthly-detail-export-button');
             if (exportMonthlyDetailBtn) {
                 exportMonthlyDetailBtn.addEventListener('click', () => {
-                    // Logic for export if implemented
                     showCustomMessage('แจ้งเตือน', 'ฟังก์ชันนี้กำลังอยู่ระหว่างการพัฒนา');
                 });
             }
         });
-// ==========================================
+
+        // ==========================================
         // DEFECT SUMMARY LOGIC (อุปกรณ์ชำรุด)
         // ==========================================
         let defectSelectedBranches = new Set();
@@ -3667,11 +3761,12 @@
             const yyyy = today.getFullYear();
             const mm = String(today.getMonth() + 1).padStart(2, '0');
             const dd = String(today.getDate()).padStart(2, '0');
-            document.getElementById('defect-filter-date').value = `${yyyy}-${mm}-${dd}`;
-
-            document.getElementById('defect-branch-dropdown-label').textContent = "กำลังโหลดสาขา...";
+            const dfd = document.getElementById('defect-filter-date');
+            if(dfd) dfd.value = `${yyyy}-${mm}-${dd}`;
             
-            // ใช้รายชื่อสาขาจากที่ Dashboard โหลดไว้แล้ว
+            const dbdl = document.getElementById('defect-branch-dropdown-label');
+            if(dbdl) dbdl.textContent = "กำลังโหลดสาขา...";
+            
             if (allUsersList.length === 0) {
                 const cachedUsers = localStorage.getItem('cached_user_list');
                 if (cachedUsers) allUsersList = JSON.parse(cachedUsers);
@@ -3688,6 +3783,7 @@
 
         function setupDefectBranchDropdown() {
             const container = document.getElementById('defect-branch-checkboxes');
+            if(!container) return;
             container.innerHTML = '';
             defectSelectedBranches.clear();
 
@@ -3718,6 +3814,7 @@
 
         function updateDefectBranchLabel() {
             const label = document.getElementById('defect-branch-dropdown-label');
+            if(!label) return;
             if (defectSelectedBranches.size === 0) label.textContent = "ไม่ได้เลือกสาขา";
             else if (defectSelectedBranches.size === allUsersList.length) label.textContent = `เลือกทุกสาขา (${allUsersList.length})`;
             else label.textContent = `เลือกแล้ว (${defectSelectedBranches.size} สาขา)`;
@@ -3725,12 +3822,13 @@
 
         function setupDefectDeviceDropdown() {
             const container = document.getElementById('defect-device-checkboxes');
+            if(!container) return;
             container.innerHTML = '';
             defectSelectedDevices.clear();
 
             masterDevices.forEach(device => {
                 const label = document.createElement('label');
-                label.className = 'flex items-center gap-2 py-1 px-1.5 hover:bg-slate-100 rounded-lg cursor-pointer text-xs font-semibold text-slate-700';
+                label.className = 'flex items-center gap-2 py-1 px-1.5 hover:bg-slate-100 rounded-md cursor-pointer text-xs font-semibold text-slate-700';
                 
                 const cb = document.createElement('input');
                 cb.type = 'checkbox';
@@ -3747,7 +3845,7 @@
                 });
 
                 label.appendChild(cb);
-                label.appendChild(document.createTextNode(device)); 
+                label.appendChild(document.createTextNode(device));
                 container.appendChild(label);
             });
             updateDefectDeviceLabel();
@@ -3755,6 +3853,7 @@
 
         function updateDefectDeviceLabel() {
             const label = document.getElementById('defect-device-dropdown-label');
+            if(!label) return;
             if (defectSelectedDevices.size === 0) label.textContent = "ไม่ได้เลือกอุปกรณ์";
             else if (defectSelectedDevices.size === masterDevices.length) label.textContent = `ทุกอุปกรณ์ (${masterDevices.length})`;
             else label.textContent = `เลือกแล้ว (${defectSelectedDevices.size})`;
@@ -3771,43 +3870,46 @@
             const tbody = document.getElementById('defect-table-body');
             const statusText = document.getElementById('defect-status-text');
             const loader = document.getElementById('defect-loading-indicator');
+            if(!tbody) return;
 
             if (defectSelectedBranches.size === 0 || defectSelectedDevices.size === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-orange-500 font-medium">กรุณาเลือก "สาขา" และ "อุปกรณ์" อย่างน้อย 1 รายการเพื่อดูข้อมูล</td></tr>`;
                 document.getElementById('defect-total-defects').textContent = "0";
-                statusText.textContent = "รอการเลือกตัวกรอง...";
+                if(statusText) statusText.textContent = "รอการเลือกตัวกรอง...";
                 if (defectAbortController) defectAbortController.abort();
-                loader.classList.add('hidden');
+                if(loader) loader.classList.add('hidden');
                 return;
             }
             
-            const dateValue = document.getElementById('defect-filter-date').value;
+            const dateInput = document.getElementById('defect-filter-date');
+            const dateValue = dateInput ? dateInput.value : '';
             if (!dateValue) return;
 
-            const isAllMonth = document.getElementById('defect-filter-all-month').checked;
+            const filterAllMonth = document.getElementById('defect-filter-all-month');
+            const isAllMonth = filterAllMonth ? filterAllMonth.checked : false;
 
             if (defectAbortController) defectAbortController.abort();
             defectAbortController = new AbortController();
             const signal = defectAbortController.signal;
-
+            
             const [targetYearStr, targetMonthStr, targetDayStr] = dateValue.split('-');
             const targetYear = parseInt(targetYearStr);
             const targetMonth = parseInt(targetMonthStr);
             const targetDay = parseInt(targetDayStr);
-            
             const branchesToScan = Array.from(defectSelectedBranches);
             
             tbody.innerHTML = '';
             defectFoundCount = 0;
-            document.getElementById('defect-total-defects').textContent = "0";
+            const dtd = document.getElementById('defect-total-defects');
+            if(dtd) dtd.textContent = "0";
             
-            loader.classList.remove('hidden');
-            document.getElementById('defect-refresh-button').disabled = true;
-
+            if(loader) loader.classList.remove('hidden');
+            const refreshBtn = document.getElementById('defect-refresh-button');
+            if(refreshBtn) refreshBtn.disabled = true;
             let completedBranches = 0;
             const BATCH_SIZE = 5; 
             const queue = [...branchesToScan];
-
+            
             async function worker() {
                 while (queue.length > 0) {
                     if (signal.aborted) return;
@@ -3823,7 +3925,7 @@
                             try {
                                 const result = await apiCall('getMonthlySheetData', { sheetId: config.sheetId, sheetName: config.sheetName, year: targetYear, month: targetMonth }, 'monthly', signal);
                                 const data = Array.isArray(result?.data) ? result.data : [];
-                                const labels = await fetchDataLabelsForCard(config.title); // ใช้ function ที่มีอยู่แล้วใน V4.5
+                                const labels = await fetchDataLabelsForCard(config.title);
                                 
                                 const numberColIdx = getNumberColumnIndex(config.title);
                                 const dataStartIndex = getDataStartIndex(config.title, numberColIdx);
@@ -3834,7 +3936,7 @@
                                     if (rowYear > 2500) rowYear -= 543;
                                     let rowMonth = parseInt(row[2]);
                                     let rowDay = parseInt(row[1]);
-
+                                    
                                     if(isNaN(rowMonth) && row[0]) {
                                         const d = new Date(row[0]);
                                         if(!isNaN(d.getTime())){
@@ -3847,7 +3949,7 @@
                                     const isMatchDate = isAllMonth 
                                         ? (rowYear === targetYear && rowMonth === targetMonth)
                                         : (rowYear === targetYear && rowMonth === targetMonth && rowDay === targetDay);
-
+                                        
                                     if (isMatchDate) {
                                         let isDefect = false;
                                         let defectDetails = [];
@@ -3872,18 +3974,18 @@
                                         else if (['รถจัดส่ง', 'รถสแตกเกอร์จัดส่ง'].includes(deviceName)) remarkIdx = 29;
                                         else if (deviceName === 'รถโฟล์คลิฟท์ไฟฟ้า') remarkIdx = 25;
                                         else if (deviceName === 'ไฟฉุกเฉิน' || deviceName === 'ถังดับเพลิง') remarkIdx = 14;
-
+                                        
                                         let remark = String(row[remarkIdx] || '').trim();
                                         if (remark === 'ปกติ' || remark === '-') remark = '';
-
+                                        
                                         if (isDefect) {
                                             const number = extractNumber(row, numberColIdx) || 'ไม่ระบุ';
                                             const dateStr = `${rowDay.toString().padStart(2,'0')}/${targetMonth.toString().padStart(2,'0')}/${(targetYear+543).toString().slice(-2)}`;
                                             const defectKey = number + '_' + dateStr;
                                             
                                             if (processedDefectNumbers.has(defectKey)) return; 
-                                            processedDefectNumbers.add(defectKey); 
-
+                                            processedDefectNumbers.add(defectKey);
+                                            
                                             let detailText = '<ul class="list-none space-y-1.5 mt-2">';
                                             defectDetails.forEach(detail => {
                                                 detailText += `<li class="flex items-start gap-1.5 text-sm"><svg class="w-4 h-4 text-red-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg><span>${detail}</span></li>`;
@@ -3910,7 +4012,7 @@
                                             `;
                                             tbody.appendChild(tr);
                                             defectFoundCount++;
-                                            document.getElementById('defect-total-defects').textContent = defectFoundCount;
+                                            if(dtd) dtd.textContent = defectFoundCount;
                                         }
                                     }
                                 });
@@ -3921,18 +4023,18 @@
                     
                     if (signal.aborted) return;
                     completedBranches++;
-                    statusText.textContent = `กำลังสแกน... สำเร็จแล้ว ${completedBranches} จาก ${branchesToScan.length} สาขา`;
+                    if(statusText) statusText.textContent = `กำลังสแกน... สำเร็จแล้ว ${completedBranches} จาก ${branchesToScan.length} สาขา`;
                 }
             }
 
             const workers = [];
             for (let i = 0; i < Math.min(BATCH_SIZE, queue.length); i++) workers.push(worker());
             await Promise.all(workers);
-
+            
             if (!signal.aborted) {
-                statusText.textContent = `ค้นหาเสร็จสิ้น (สแกนครบ ${branchesToScan.length} สาขา)`;
-                loader.classList.add('hidden');
-                document.getElementById('defect-refresh-button').disabled = false;
+                if(statusText) statusText.textContent = `ค้นหาเสร็จสิ้น (สแกนครบ ${branchesToScan.length} สาขา)`;
+                if(loader) loader.classList.add('hidden');
+                if(refreshBtn) refreshBtn.disabled = false;
                 
                 if (defectFoundCount === 0) {
                     tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-green-600 bg-green-50/50"><svg class="w-16 h-16 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-lg font-bold">ยอดเยี่ยม!</span><br>ไม่พบอุปกรณ์ชำรุดในสาขา เครื่องมือ และวันที่ที่คุณเลือก</td></tr>`;
