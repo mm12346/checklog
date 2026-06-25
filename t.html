@@ -3185,20 +3185,20 @@
                                         });
                                         checkedDays = Array.from(dailyNumbers);
                                         actualCount = checkedDays.length;
-                                    } else if (isSpecial) {
-                                        const checkedNumbers = new Set();
-                                        data.forEach(row => {
-                                            let mValue = parseInt(row[2]);
-                                            if (mValue === month || isNaN(mValue)) {
-                                                const d = parseInt(row[1]);
-                                                if (isAllMonth || d === targetDay) {
-                                                    const num = extractNumber(row, numberColIdx);
-                                                    if (num) checkedNumbers.add(num);
-                                                    if (!isNaN(d) && !checkedDays.includes(d)) checkedDays.push(d);
-                                                }
-                                            }
-                                        });
-                                        actualCount = checkedNumbers.size;
+    				} else if (isSpecial) {
+                                    const checkedNumbers = new Set();
+                                    data.forEach(row => {
+                                        let mValue = parseInt(row[2]);
+                                       	 // ตรวจสอบแค่ว่าเป็นของเดือนที่เลือกหรือไม่ (ไม่สนใจวันที่)
+                                        if (mValue === month || isNaN(mValue)) {
+                                            const d = parseInt(row[1]);
+                                            const num = extractNumber(row, numberColIdx);
+                                            if (num) checkedNumbers.add(num);
+                                            if (!isNaN(d) && !checkedDays.includes(d)) checkedDays.push(d);
+                                        }
+                                    });
+                                    actualCount = checkedNumbers.size;
+                                }
                                     } else {
                                         const dailyNumbers = {};
                                         data.forEach(row => {
