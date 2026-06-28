@@ -4042,17 +4042,26 @@
             }
         }
         // --- Service Worker Registration ---
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then((registration) => {
-                        console.log('Service Worker ลงทะเบียนสำเร็จ: Scope คือ', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.error('Service Worker ลงทะเบียนไม่สำเร็จ:', error);
-                    });
-            });
-        }
+         if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then((registration) => {
+                    console.log('Service Worker ลงทะเบียนสำเร็จ: Scope คือ', registration.scope);
+                })
+                .catch((error) => {
+                    console.error('Service Worker ลงทะเบียนไม่สำเร็จ:', error);
+                });
+        });
+
+        // โค้ดที่ต้องเพิ่ม: สั่งให้หน้าเว็บรีเฟรชตัวเองเมื่อ Service Worker อัปเดตเสร็จ
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!refreshing) {
+                window.location.reload();
+                refreshing = true;
+            }
+        });
+    }
     </script>
 </body>
 </html>
