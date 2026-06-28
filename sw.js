@@ -1,4 +1,4 @@
-const CACHE_NAME = 'checklog-cache-v4.8.0';
+const CACHE_NAME = 'checklog-cache-v4.8.1';
 
 // ไฟล์ที่ต้องการแคชเก็บไว้เพื่อให้โหลดเร็วขึ้นหรือใช้งานตอนออฟไลน์ได้บางส่วน
 const ASSETS_TO_CACHE = [
@@ -40,16 +40,31 @@ self.addEventListener('activate', (event) => {
 
 // 3. Fetch Event: ดึงข้อมูลจาก Cache หรือ Network
 self.addEventListener('fetch', (event) => {
-    // ยกเว้นการแคช API ของ Google Apps Script เพื่อให้ดึงข้อมูลอัปเดตแบบเรียลไทม์เสมอ
+    // ยกเว้นการแคช API ของ Google Apps Script
     if (event.request.url.includes('script.google.com')) {
         return;
     }
 
-    // กลยุทธ์: Stale-While-Revalidate (ดึงของจาก Cache ก่อน แล้วแอบไปอัปเดตของใหม่จาก Network)
+    // สำหรับไฟล์ HTML (Navigation) ให้ดึงจาก Network ก่อน (Network First)
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request).then((networkResponse) => {
+                return caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, networkResponse.clone());
+                    return networkResponse;
+                });
+            }).catch(() => {
+                // ถ้า Offline ค่อยดึง HTML จาก Cache
+                return caches.match(event.request);
+            })
+        );
+        return;
+    }
+
+    // สำหรับไฟล์อื่นๆ (JS, CSS, รูปภาพ) ใช้ Stale-While-Revalidate ตามเดิม
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
             const fetchPromise = fetch(event.request).then((networkResponse) => {
-                // อัปเดต Cache ด้วยข้อมูลใหม่
                 if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
                     caches.open(CACHE_NAME).then((cache) => {
                         cache.put(event.request, networkResponse.clone());
@@ -57,10 +72,9 @@ self.addEventListener('fetch', (event) => {
                 }
                 return networkResponse;
             }).catch(() => {
-                // กรณี Offline และไม่มี Cache จะคืนค่าว่างๆ หรือหน้า Offline ไป
+                // กรณี Offline
             });
 
-            // คืนค่า Cache ทันทีถ้ามี ถ้าไม่มีให้รอผลจาก fetchPromise
             return cachedResponse || fetchPromise;
         })
     );
